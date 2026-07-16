@@ -344,6 +344,15 @@
       gap: 12px;
     }
 
+    .privacy-note {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--blue-soft);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
     .notice-list > div.warning {
       background: var(--amber-soft);
       border-color: var(--amber);
@@ -602,7 +611,7 @@
       <section id="familyDashboard" class="page">
         <div class="topbar"><div><h1>家属端</h1><p class="muted">家属只查看授权范围内的信息，协助提醒和接收必要通知。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
         <div class="grid three">
-          <div class="stat-card"><span class="muted">当前绑定老人</span><strong>李阿姨</strong><span>授权协助中</span></div>
+          <div class="stat-card"><span class="muted">当前绑定老人</span><strong>李阿姨</strong><span id="accessStatus">授权协助中</span></div>
           <div class="stat-card"><span class="muted">今日提醒</span><strong id="reminderStat">2 项</strong><span id="reminderDetail">1 项已完成，1 项待确认</span></div>
           <div class="stat-card"><span class="muted">风险通知</span><strong id="riskStat">0 条</strong><span id="riskDetail">暂无高风险事件</span></div>
         </div>
@@ -613,6 +622,11 @@
             <span>可接收紧急求助通知</span>
             <span>可查看老人主动分享的健康摘要</span>
             <span>不可查看完整私密对话</span>
+          </div>
+          <div class="privacy-note" id="privacyNote">当前状态：家属可以看到老人主动分享的提醒、健康摘要、风险核实和求助通知。</div>
+          <div class="actions">
+            <button class="btn" id="toggleFamilyAccess">暂停家属协助</button>
+            <button class="btn" id="clearFamilyEvents">清空最近通知</button>
           </div>
         </div>
         <div class="card">
@@ -682,6 +696,7 @@
       { title: "08:00 吃药提醒", detail: "老人已完成", level: "normal" },
       { title: "15:00 量血压提醒", detail: "等待老人确认", level: "normal" }
     ];
+    let familyAccessEnabled = true;
     let fraudResultState = "none";
     const fraudRules = [
       { label: "索要验证码", reason: "验证码等同于临时钥匙，正规人员不会要求您提供。", pattern: /验证码|动态码|短信码/ },
@@ -744,6 +759,7 @@
     }
 
     function addFamilyEvent(title, detail, level = "normal") {
+      if (!familyAccessEnabled) return;
       familyEvents = [{ title, detail, level }, ...familyEvents].slice(0, 8);
       renderFamilyDashboard();
       saveLocalState();
@@ -753,6 +769,13 @@
       const completed = reminders.filter(item => item.done).length;
       const waiting = Math.max(reminders.length - completed, 0);
       const warnings = familyEvents.filter(item => item.level === "warning" || item.level === "urgent").length;
+      document.getElementById("accessStatus").textContent = familyAccessEnabled ? "授权协助中" : "已暂停授权";
+      document.getElementById("privacyNote").textContent = familyAccessEnabled
+        ? "当前状态：家属可以看到老人主动分享的提醒、健康摘要、风险核实和求助通知。"
+        : "当前状态：授权已暂停，新的操作不会继续同步到家属端。";
+      const accessButton = document.getElementById("toggleFamilyAccess");
+      accessButton.textContent = familyAccessEnabled ? "暂停家属协助" : "恢复家属协助";
+      accessButton.className = familyAccessEnabled ? "btn" : "btn primary";
       document.getElementById("reminderStat").textContent = `${reminders.length} 项`;
       document.getElementById("reminderDetail").textContent = `${completed} 项已完成，${waiting} 项待确认`;
       document.getElementById("riskStat").textContent = `${warnings} 条`;
@@ -770,6 +793,7 @@
         const saved = JSON.parse(raw);
         if (Array.isArray(saved.reminders) && saved.reminders.length > 0) reminders = saved.reminders;
         if (Array.isArray(saved.familyEvents) && saved.familyEvents.length > 0) familyEvents = saved.familyEvents;
+        familyAccessEnabled = saved.familyAccessEnabled !== false;
         if (saved.largeFont) {
           document.documentElement.style.setProperty("--font-scale", 1.25);
           document.getElementById("fontBtn").textContent = "恢复字体";
@@ -799,6 +823,7 @@
       const state = {
         reminders,
         familyEvents,
+        familyAccessEnabled,
         largeFont: Number(document.documentElement.style.getPropertyValue("--font-scale") || 1) > 1,
         loudVolume: document.getElementById("volumeBtn").textContent === "音量较大",
         fraudText: document.getElementById("fraudText").value,
@@ -980,6 +1005,18 @@
     };
 
     document.getElementById("viewPermission").onclick = () => setStatus("已查看授权范围。");
+    document.getElementById("toggleFamilyAccess").onclick = () => {
+      familyAccessEnabled = !familyAccessEnabled;
+      renderFamilyDashboard();
+      saveLocalState();
+      setStatus(familyAccessEnabled ? "已恢复家属协助授权。" : "已暂停家属协助授权。");
+    };
+    document.getElementById("clearFamilyEvents").onclick = () => {
+      familyEvents = [];
+      renderFamilyDashboard();
+      saveLocalState();
+      setStatus("最近通知已清空。");
+    };
 
     document.getElementById("prepareMessage").onclick = () => {
       const contact = document.querySelector("input[name='contact']:checked").value;

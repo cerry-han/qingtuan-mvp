@@ -60,6 +60,7 @@ export default function Home() {
   const [status, setStatus] = useState("已准备好。");
   const [largeFont, setLargeFont] = useState(false);
   const [loudVolume, setLoudVolume] = useState(false);
+  const [familyAccessEnabled, setFamilyAccessEnabled] = useState(true);
   const [homeInput, setHomeInput] = useState("");
   const [chatInput, setChatInput] = useState("");
   const [fraudText, setFraudText] = useState("");
@@ -93,6 +94,7 @@ export default function Home() {
         const saved = JSON.parse(raw);
         setLargeFont(Boolean(saved.largeFont));
         setLoudVolume(Boolean(saved.loudVolume));
+        setFamilyAccessEnabled(saved.familyAccessEnabled !== false);
         setFraudText(saved.fraudText || "");
         setFraudResult(saved.fraudResult || "none");
         setHealthText(saved.healthText || "");
@@ -118,6 +120,7 @@ export default function Home() {
     const state = {
       largeFont,
       loudVolume,
+      familyAccessEnabled,
       fraudText,
       fraudResult,
       healthText,
@@ -128,7 +131,7 @@ export default function Home() {
       familyEvents,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [familyEvents, familyMessage, fraudResult, fraudText, healthSummary, healthText, largeFont, loudVolume, reminders, selectedContact, storageReady]);
+  }, [familyAccessEnabled, familyEvents, familyMessage, fraudResult, fraudText, healthSummary, healthText, largeFont, loudVolume, reminders, selectedContact, storageReady]);
 
   function go(next: Page) {
     setPage(next);
@@ -140,7 +143,16 @@ export default function Home() {
   }
 
   function addFamilyEvent(title: string, detail: string, level: FamilyEvent["level"] = "normal") {
+    if (!familyAccessEnabled) return;
     setFamilyEvents((items) => [{ title, detail, level }, ...items].slice(0, 8));
+  }
+
+  function toggleFamilyAccess() {
+    setFamilyAccessEnabled((enabled) => {
+      const next = !enabled;
+      setStatus(next ? "已恢复家属协助授权。" : "已暂停家属协助授权。");
+      return next;
+    });
   }
 
   function replyTo(text: string) {
@@ -650,7 +662,7 @@ export default function Home() {
               <div className="stat-card">
                 <span className="muted">当前绑定老人</span>
                 <strong>李阿姨</strong>
-                <span>授权协助中</span>
+                <span>{familyAccessEnabled ? "授权协助中" : "已暂停授权"}</span>
               </div>
               <div className="stat-card">
                 <span className="muted">今日提醒</span>
@@ -670,6 +682,23 @@ export default function Home() {
                 <span>可接收紧急求助通知</span>
                 <span>可查看老人主动分享的健康摘要</span>
                 <span>不可查看完整私密对话</span>
+              </div>
+              <div className="privacy-note">
+                当前状态：{familyAccessEnabled ? "家属可以看到老人主动分享的提醒、健康摘要、风险核实和求助通知。" : "授权已暂停，新的操作不会继续同步到家属端。"}
+              </div>
+              <div className="actions top-gap">
+                <button className={familyAccessEnabled ? "btn" : "btn primary"} onClick={toggleFamilyAccess}>
+                  {familyAccessEnabled ? "暂停家属协助" : "恢复家属协助"}
+                </button>
+                <button
+                  className="btn"
+                  onClick={() => {
+                    setFamilyEvents([]);
+                    setStatus("最近通知已清空。");
+                  }}
+                >
+                  清空最近通知
+                </button>
               </div>
             </div>
             <div className="card">
