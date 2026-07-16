@@ -1,10 +1,13 @@
 ﻿"use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Page = "welcome" | "home" | "chat" | "reminders" | "guide" | "health" | "fraud" | "familyDashboard" | "family" | "help";
 type ChatMessage = { role: "bot" | "user"; text: string };
 type Reminder = { title: string; time: string; done: boolean };
+type FraudResult = "none" | "high" | "careful";
+
+const STORAGE_KEY = "qingtuan-mvp-state";
 
 const pageNames: Record<Page, string> = {
   welcome: "欢迎页",
@@ -25,15 +28,21 @@ const guideFlows = {
   qr: ["确认二维码来源是否可信", "打开扫一扫", "不要输入银行卡密码或验证码", "看清页面标题和收款方", "不确定时先问家人"],
 };
 
+const defaultReminders: Reminder[] = [
+  { title: "吃降压药", time: "08:00", done: false },
+  { title: "量血压", time: "15:00", done: false },
+];
+
 export default function Home() {
   const [page, setPage] = useState<Page>("welcome");
+  const [storageReady, setStorageReady] = useState(false);
   const [status, setStatus] = useState("已准备好。");
   const [largeFont, setLargeFont] = useState(false);
   const [loudVolume, setLoudVolume] = useState(false);
   const [homeInput, setHomeInput] = useState("");
   const [chatInput, setChatInput] = useState("");
   const [fraudText, setFraudText] = useState("");
-  const [fraudResult, setFraudResult] = useState<"none" | "high" | "careful">("none");
+  const [fraudResult, setFraudResult] = useState<FraudResult>("none");
   const [guideType, setGuideType] = useState<keyof typeof guideFlows>("hospital");
   const [guideStep, setGuideStep] = useState(0);
   const [healthText, setHealthText] = useState("");
@@ -48,12 +57,49 @@ export default function Home() {
   const [chat, setChat] = useState<ChatMessage[]>([
     { role: "bot", text: "您好，我在。想聊聊天，还是让我帮您办点事？" },
   ]);
-  const [reminders, setReminders] = useState<Reminder[]>([
-    { title: "吃降压药", time: "08:00", done: false },
-    { title: "量血压", time: "15:00", done: false },
-  ]);
+  const [reminders, setReminders] = useState<Reminder[]>(defaultReminders);
 
   const appClass = useMemo(() => `app-shell${largeFont ? " large-font" : ""}`, [largeFont]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        setLargeFont(Boolean(saved.largeFont));
+        setLoudVolume(Boolean(saved.loudVolume));
+        setFraudText(saved.fraudText || "");
+        setFraudResult(saved.fraudResult || "none");
+        setHealthText(saved.healthText || "");
+        setHealthSummary(saved.healthSummary || "");
+        setFamilyMessage(saved.familyMessage || "");
+        setSelectedContact(saved.selectedContact || "女儿王敏");
+        if (Array.isArray(saved.reminders) && saved.reminders.length > 0) {
+          setReminders(saved.reminders);
+        }
+      }
+    } catch {
+      setStatus("本地保存读取失败，已使用默认数据。");
+    } finally {
+      setStorageReady(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!storageReady) return;
+    const state = {
+      largeFont,
+      loudVolume,
+      fraudText,
+      fraudResult,
+      healthText,
+      healthSummary,
+      familyMessage,
+      selectedContact,
+      reminders,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }, [familyMessage, fraudResult, fraudText, healthSummary, healthText, largeFont, loudVolume, reminders, selectedContact, storageReady]);
 
   function go(next: Page) {
     setPage(next);

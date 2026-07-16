@@ -608,6 +608,7 @@
     const pages = document.querySelectorAll(".page");
     const navButtons = document.querySelectorAll(".nav button");
     const statusEl = document.getElementById("status");
+    const STORAGE_KEY = "qingtuan-mvp-state";
     const guideFlows = {
       hospital: ["确认要去的医院或科室", "打开医院官方小程序或公众号", "选择挂号/预约挂号", "选择日期、医生和时间段", "确认信息，不要把验证码告诉别人"],
       bus: ["说出出发地和目的地", "查看推荐路线", "确认上车站和下车站", "记住换乘点", "出门前再次确认末班车时间"],
@@ -619,8 +620,52 @@
       { title: "吃降压药", time: "08:00", done: false },
       { title: "量血压", time: "15:00", done: false }
     ];
+    let fraudResultState = "none";
 
     function setStatus(text) { statusEl.textContent = text; }
+
+    function loadLocalState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+        if (Array.isArray(saved.reminders) && saved.reminders.length > 0) reminders = saved.reminders;
+        if (saved.largeFont) {
+          document.documentElement.style.setProperty("--font-scale", 1.25);
+          document.getElementById("fontBtn").textContent = "恢复字体";
+        }
+        if (saved.loudVolume) document.getElementById("volumeBtn").textContent = "音量较大";
+        document.getElementById("fraudText").value = saved.fraudText || "";
+        document.getElementById("healthText").value = saved.healthText || "";
+        document.getElementById("familyMessage").value = saved.familyMessage || "";
+        const contact = saved.selectedContact || "女儿王敏";
+        const contactInput = document.querySelector(`input[name="contact"][value="${contact}"]`);
+        if (contactInput) contactInput.checked = true;
+        fraudResultState = saved.fraudResult || "none";
+        if (saved.healthSummary) {
+          const result = document.getElementById("healthResult");
+          result.style.display = "block";
+          result.textContent = saved.healthSummary;
+        }
+      } catch {
+        setStatus("本地保存读取失败，已使用默认数据。");
+      }
+    }
+
+    function saveLocalState() {
+      const state = {
+        reminders,
+        largeFont: Number(document.documentElement.style.getPropertyValue("--font-scale") || 1) > 1,
+        loudVolume: document.getElementById("volumeBtn").textContent === "音量较大",
+        fraudText: document.getElementById("fraudText").value,
+        fraudResult: fraudResultState,
+        healthText: document.getElementById("healthText").value,
+        healthSummary: document.getElementById("healthResult").style.display === "none" ? "" : document.getElementById("healthResult").textContent,
+        familyMessage: document.getElementById("familyMessage").value,
+        selectedContact: document.querySelector("input[name='contact']:checked").value
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
 
     function showPage(id) {
       document.querySelector(".app").classList.toggle("welcome-mode", id === "welcome");
@@ -655,10 +700,14 @@
     window.completeReminder = index => {
       reminders[index].done = true;
       renderReminders();
+      saveLocalState();
       setStatus("已记录完成：" + reminders[index].title);
     };
 
-    window.delayReminder = index => setStatus("已延后 10 分钟：" + reminders[index].title);
+    window.delayReminder = index => {
+      saveLocalState();
+      setStatus("已延后 10 分钟：" + reminders[index].title);
+    };
 
     function addChat(role, text) {
       const bubble = document.createElement("div");
@@ -710,11 +759,13 @@
       const next = current >= 1.25 ? 1 : 1.25;
       document.documentElement.style.setProperty("--font-scale", next);
       document.getElementById("fontBtn").textContent = next > 1 ? "恢复字体" : "字体加大";
+      saveLocalState();
       setStatus(next > 1 ? "字体已加大。" : "字体已恢复。");
     };
     document.getElementById("volumeBtn").onclick = () => {
       const btn = document.getElementById("volumeBtn");
       btn.textContent = btn.textContent === "音量正常" ? "音量较大" : "音量正常";
+      saveLocalState();
       setStatus("音量设置已切换。");
     };
 
@@ -728,6 +779,7 @@
       document.getElementById("confirmReminder").onclick = () => {
         reminders.push({ title, time, done: false });
         renderReminders();
+        saveLocalState();
         box.style.display = "none";
         setStatus("提醒已创建。");
       };
@@ -754,6 +806,7 @@
 
     document.getElementById("healthSample").onclick = () => {
       document.getElementById("healthText").value = "2026-07-16 血压 145/92，近期偶尔头晕。正在按医嘱服用降压药。";
+      saveLocalState();
     };
     document.getElementById("makeSummary").onclick = () => {
       const text = document.getElementById("healthText").value.trim();
@@ -761,21 +814,25 @@
       if (!text) { setStatus("请先填写或粘贴健康资料内容。"); return; }
       result.style.display = "block";
       result.textContent = `复诊摘要：\n1. 已记录资料：${text.slice(0, 80)}${text.length > 80 ? "……" : ""}\n2. 建议向医生说明：最近症状变化、用药情况、检查时间。\n3. 可询问医生：是否需要复查、指标是否需要继续观察、日常注意事项。\n\n提醒：青团只整理资料，不做诊断，不建议改药量。`;
+      saveLocalState();
       setStatus("复诊摘要已生成。");
     };
 
     document.getElementById("fraudSample").onclick = () => {
       document.getElementById("fraudText").value = "客服说可以退款，但要我提供短信验证码，还让我赶紧转账验证。";
+      saveLocalState();
     };
     document.getElementById("analyzeFraud").onclick = () => {
       const text = document.getElementById("fraudText").value.trim();
       const result = document.getElementById("fraudResult");
       if (!text) { setStatus("请先输入要分析的内容。"); return; }
       const high = /验证码|转账|银行卡|密码|退款|中奖|远程控制/.test(text);
+      fraudResultState = high ? "high" : "careful";
       result.style.display = "block";
       result.className = "result" + (high ? " high" : "");
       result.innerHTML = high ? `<strong>风险等级：高</strong><br>发现了索要验证码、诱导转账或冒充客服的风险。<br>建议：不要回复，不要转账，不要提供验证码。请联系家人或官方客服核实。<div class="actions"><button class="btn primary" data-page-link="family">联系家人核实</button><button class="btn">保存记录</button></div>` : `<strong>风险等级：需谨慎</strong><br>暂未发现明显高风险词，但仍建议通过官方渠道核实，不要轻易转账或透露个人信息。`;
       result.querySelectorAll("[data-page-link]").forEach(el => el.onclick = () => showPage(el.dataset.pageLink));
+      saveLocalState();
       setStatus("反诈骗分析已完成。");
     };
 
@@ -786,6 +843,7 @@
       const message = document.getElementById("familyMessage").value.trim();
       const box = document.getElementById("messageConfirm");
       if (!message) { setStatus("请先填写要发给家人的消息。"); return; }
+      saveLocalState();
       box.style.display = "block";
       box.innerHTML = `<strong>发送前请确认：</strong><br>接收人：${contact}<br>消息：${message}<div class="actions"><button class="btn primary" id="sendFamilyMessage">确认发送</button><button class="btn" id="cancelFamilyMessage">先不发送</button></div>`;
       document.getElementById("sendFamilyMessage").onclick = () => { box.className = "result"; box.textContent = "消息已模拟发送给" + contact + "。"; };
@@ -802,6 +860,14 @@
     document.getElementById("callEmergency").onclick = () => showHelpConfirm("拨打 120");
     document.getElementById("callFamily").onclick = () => showHelpConfirm("联系女儿王敏");
 
+    ["fraudText", "healthText", "familyMessage"].forEach(id => {
+      document.getElementById(id).addEventListener("input", saveLocalState);
+    });
+    document.querySelectorAll("input[name='contact']").forEach(input => {
+      input.addEventListener("change", saveLocalState);
+    });
+
+    loadLocalState();
     renderReminders();
     renderGuide();
   </script>
