@@ -310,6 +310,18 @@ textarea {
   margin-top: 14px;
 }
 
+.step-number {
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.step-text {
+  margin: 0 0 18px;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
 .result.high {
   background: var(--red-soft);
   border: 2px solid var(--red);

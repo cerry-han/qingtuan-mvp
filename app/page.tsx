@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-type Page = "home" | "chat" | "reminders" | "fraud" | "family" | "help";
+type Page = "home" | "chat" | "reminders" | "guide" | "health" | "fraud" | "family" | "help";
 type ChatMessage = { role: "bot" | "user"; text: string };
 type Reminder = { title: string; time: string; done: boolean };
 
@@ -10,9 +10,17 @@ const pageNames: Record<Page, string> = {
   home: "首页",
   chat: "对话陪伴",
   reminders: "提醒管理",
+  guide: "办事指导",
+  health: "健康资料",
   fraud: "查诈骗风险",
   family: "找家里人",
   help: "紧急求助",
+};
+
+const guideFlows = {
+  hospital: ["确认要去的医院或科室", "打开医院官方小程序或公众号", "选择挂号/预约挂号", "选择日期、医生和时间段", "确认信息，不要把验证码告诉别人"],
+  bus: ["说出出发地和目的地", "查看推荐路线", "确认上车站和下车站", "记住换乘点", "出门前再次确认末班车时间"],
+  qr: ["确认二维码来源是否可信", "打开扫一扫", "不要输入银行卡密码或验证码", "看清页面标题和收款方", "不确定时先问家人"],
 };
 
 export default function Home() {
@@ -24,6 +32,10 @@ export default function Home() {
   const [chatInput, setChatInput] = useState("");
   const [fraudText, setFraudText] = useState("");
   const [fraudResult, setFraudResult] = useState<"none" | "high" | "careful">("none");
+  const [guideType, setGuideType] = useState<keyof typeof guideFlows>("hospital");
+  const [guideStep, setGuideStep] = useState(0);
+  const [healthText, setHealthText] = useState("");
+  const [healthSummary, setHealthSummary] = useState("");
   const [familyMessage, setFamilyMessage] = useState("");
   const [selectedContact, setSelectedContact] = useState("女儿王敏");
   const [messageConfirm, setMessageConfirm] = useState("");
@@ -130,6 +142,16 @@ export default function Home() {
     setStatus("反诈骗分析已完成。");
   }
 
+  function generateHealthSummary() {
+    const text = healthText.trim();
+    if (!text) {
+      setStatus("请先填写或粘贴健康资料内容。");
+      return;
+    }
+    setHealthSummary(`复诊摘要：\n1. 已记录资料：${text.slice(0, 80)}${text.length > 80 ? "……" : ""}\n2. 建议向医生说明：最近症状变化、用药情况、检查时间。\n3. 可询问医生：是否需要复查、指标是否需要继续观察、日常注意事项。\n\n提醒：青团只整理资料，不做诊断，不建议改药量。`);
+    setStatus("复诊摘要已生成。");
+  }
+
   function prepareMessage() {
     if (!familyMessage.trim()) {
       setStatus("请先填写要发给家人的消息。");
@@ -165,7 +187,7 @@ export default function Home() {
           <span>青团智能体</span>
         </div>
         <nav className="nav">
-          {(["home", "chat", "reminders", "fraud", "family", "help"] as Page[]).map((item) => (
+          {(["home", "chat", "reminders", "guide", "health", "fraud", "family", "help"] as Page[]).map((item) => (
             <button className={page === item ? "active" : ""} key={item} onClick={() => go(item)}>
               {pageNames[item]}
             </button>
@@ -238,25 +260,13 @@ export default function Home() {
                 <button className="btn feature" onClick={() => go("reminders")}>
                   设置提醒
                 </button>
-                <button
-                  className="btn feature"
-                  onClick={() => {
-                    go("chat");
-                    addChat("bot", "办事指导演示：我会一次只讲一步。比如挂号，第一步是打开医院官方小程序或公众号。需要下一步时请说“下一步”。");
-                  }}
-                >
+                <button className="btn feature" onClick={() => go("guide")}>
                   办事指导
                 </button>
                 <button className="btn feature" onClick={() => go("fraud")}>
                   查诈骗风险
                 </button>
-                <button
-                  className="btn feature"
-                  onClick={() => {
-                    go("chat");
-                    addChat("bot", "健康资料整理演示：第一版先做上传和摘要占位。正式版会加入 OCR 识别和复诊问题清单，但不会做诊断。");
-                  }}
-                >
+                <button className="btn feature" onClick={() => go("health")}>
                   整理健康资料
                 </button>
                 <button className="btn feature" onClick={() => go("family")}>
@@ -342,6 +352,76 @@ export default function Home() {
               <h2>今日提醒</h2>
               <div className="grid">{renderReminders()}</div>
             </div>
+          </section>
+        )}
+
+        {page === "guide" && (
+          <section className="page active">
+            <PageHeader title="办事分步指导" desc="一次只讲一步，老人可以重复、上一步、下一步或退出。" onBack={() => go("home")} />
+            <div className="card">
+              <h2>选择要办的事</h2>
+              <div className="grid three">
+                <button className={`btn feature ${guideType === "hospital" ? "primary" : ""}`} onClick={() => { setGuideType("hospital"); setGuideStep(0); }}>
+                  手机挂号
+                </button>
+                <button className={`btn feature ${guideType === "bus" ? "primary" : ""}`} onClick={() => { setGuideType("bus"); setGuideStep(0); }}>
+                  查公交路线
+                </button>
+                <button className={`btn feature ${guideType === "qr" ? "primary" : ""}`} onClick={() => { setGuideType("qr"); setGuideStep(0); }}>
+                  扫二维码
+                </button>
+              </div>
+            </div>
+            <div className="card">
+              <h2>当前步骤</h2>
+              <div className="step-number">第 {guideStep + 1} 步 / 共 {guideFlows[guideType].length} 步</div>
+              <p className="step-text">{guideFlows[guideType][guideStep]}</p>
+              <div className="actions">
+                <button className="btn" onClick={() => setStatus(`重复：${guideFlows[guideType][guideStep]}`)}>
+                  重复这一句
+                </button>
+                <button className="btn" disabled={guideStep === 0} onClick={() => setGuideStep(Math.max(0, guideStep - 1))}>
+                  上一步
+                </button>
+                <button className="btn primary" disabled={guideStep === guideFlows[guideType].length - 1} onClick={() => setGuideStep(Math.min(guideFlows[guideType].length - 1, guideStep + 1))}>
+                  下一步
+                </button>
+                <button className="btn" onClick={() => go("home")}>
+                  退出指导
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {page === "health" && (
+          <section className="page active">
+            <PageHeader title="健康资料整理" desc="整理检查报告、处方和测量记录，只做复诊准备，不做诊断。" onBack={() => go("home")} />
+            <div className="card">
+              <h2>录入资料</h2>
+              <textarea value={healthText} onChange={(event) => setHealthText(event.target.value)} placeholder="可以先粘贴检查报告文字、处方内容或血压血糖记录。图片 OCR 后续接入。" />
+              <div className="actions top-gap">
+                <button className="btn primary" onClick={generateHealthSummary}>
+                  生成复诊摘要
+                </button>
+                <button className="btn" onClick={() => setHealthText("2026-07-16 血压 145/92，近期偶尔头晕。正在按医嘱服用降压药。")}>
+                  填入示例
+                </button>
+              </div>
+            </div>
+            {healthSummary && (
+              <div className="result">
+                <pre>{healthSummary}</pre>
+                <div className="actions top-gap">
+                  <button className="btn primary" onClick={() => setStatus("复诊摘要已保存。")}>
+                    保存摘要
+                  </button>
+                  <button className="btn" onClick={() => go("family")}>
+                    分享给家人
+                  </button>
+                </div>
+              </div>
+            )}
           </section>
         )}
 

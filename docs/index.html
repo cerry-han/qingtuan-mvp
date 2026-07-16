@@ -8,13 +8,12 @@
     :root {
       --bg: #f6f1e8;
       --panel: #fffaf2;
-      --panel-strong: #ffffff;
+      --card: #ffffff;
       --text: #1f2a28;
       --muted: #5d6762;
       --line: #d9d0c2;
       --green: #1f7a5c;
       --green-soft: #dff0e7;
-      --blue: #245b89;
       --blue-soft: #e0edf7;
       --amber: #98670f;
       --amber-soft: #f7ead0;
@@ -28,15 +27,13 @@
 
     body {
       margin: 0;
-      color: var(--text);
       background: var(--bg);
+      color: var(--text);
       font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
       font-size: calc(18px * var(--font-scale));
     }
 
-    button, input, textarea, select {
-      font: inherit;
-    }
+    button, input, textarea { font: inherit; }
 
     .app {
       min-height: 100vh;
@@ -59,7 +56,6 @@
       gap: 12px;
       font-size: 1.35rem;
       font-weight: 700;
-      margin-bottom: 8px;
     }
 
     .logo {
@@ -108,6 +104,9 @@
       align-content: start;
     }
 
+    .page { display: none; }
+    .page.active { display: grid; gap: 20px; }
+
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -115,62 +114,22 @@
       align-items: center;
     }
 
-    .hello h1 {
+    h1 {
       margin: 0 0 8px;
       font-size: 2.1rem;
-      letter-spacing: 0;
     }
 
-    .hello p {
-      margin: 0;
+    h2 {
+      margin: 0 0 14px;
+      font-size: 1.35rem;
+    }
+
+    p { line-height: 1.7; }
+
+    .muted {
       color: var(--muted);
+      margin: 0;
     }
-
-    .quick-settings {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .btn {
-      border: 2px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel-strong);
-      color: var(--text);
-      padding: 12px 18px;
-      cursor: pointer;
-      min-height: 52px;
-    }
-
-    .btn:hover { border-color: var(--green); }
-
-    .btn.primary {
-      background: var(--green);
-      border-color: var(--green);
-      color: #ffffff;
-    }
-
-    .btn.danger {
-      background: var(--red);
-      border-color: var(--red);
-      color: #ffffff;
-    }
-
-    .btn.block {
-      width: 100%;
-      min-height: 76px;
-      font-size: 1.15rem;
-      font-weight: 700;
-    }
-
-    .grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
     .card {
       background: var(--panel);
@@ -180,9 +139,51 @@
       box-shadow: var(--shadow);
     }
 
-    .card h2 {
-      margin: 0 0 14px;
-      font-size: 1.35rem;
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .btn {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      color: var(--text);
+      padding: 12px 18px;
+      min-height: 52px;
+      cursor: pointer;
+    }
+
+    .btn:hover { border-color: var(--green); }
+
+    .primary {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .danger {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .block {
+      width: 100%;
+      min-height: 76px;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .feature {
+      min-height: 112px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-weight: 700;
     }
 
     .voice {
@@ -198,17 +199,13 @@
       box-shadow: var(--shadow);
     }
 
-    .voice.listening {
-      background: var(--amber);
-    }
-
     .text-row {
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 10px;
     }
 
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       border: 2px solid var(--line);
       border-radius: 14px;
@@ -223,41 +220,32 @@
       resize: vertical;
     }
 
-    .feature {
-      min-height: 112px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      font-weight: 700;
-      background: var(--panel-strong);
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
     }
 
     .reminder-item,
-    .message {
+    .family-card {
       display: grid;
       gap: 10px;
       padding: 16px;
       border: 1px solid var(--line);
       border-radius: 16px;
-      background: var(--panel-strong);
+      background: var(--card);
     }
 
-    .reminder-actions,
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+    .family-card {
+      grid-template-columns: 1fr auto;
+      align-items: center;
     }
-
-    .muted { color: var(--muted); }
-
-    .page { display: none; }
-    .page.active { display: grid; gap: 20px; }
 
     .chat-box {
       display: grid;
       gap: 12px;
-      min-height: 330px;
+      min-height: 300px;
       align-content: start;
     }
 
@@ -282,10 +270,11 @@
       border-radius: 16px;
       padding: 16px;
       background: var(--blue-soft);
-      line-height: 1.7;
+      line-height: 1.8;
+      white-space: pre-wrap;
     }
 
-    .result.high {
+    .high {
       background: var(--red-soft);
       border: 2px solid var(--red);
     }
@@ -295,15 +284,16 @@
       border: 2px solid var(--amber);
     }
 
-    .family-card {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
-      background: var(--panel-strong);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
+    .step-number {
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .step-text {
+      margin: 0 0 18px;
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.7;
     }
 
     .footer-status {
@@ -318,71 +308,64 @@
 
     @media (max-width: 860px) {
       .app { grid-template-columns: 1fr; }
-      .side { position: static; }
       .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .grid.two, .grid.three { grid-template-columns: 1fr; }
+      .two, .three { grid-template-columns: 1fr; }
       .topbar { align-items: stretch; flex-direction: column; }
-      .quick-settings { justify-content: stretch; }
-      .quick-settings .btn { flex: 1; }
-      .text-row { grid-template-columns: 1fr; }
-      .family-card { grid-template-columns: 1fr; }
+      .text-row, .family-card { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <aside class="side" aria-label="主导航">
+    <aside class="side">
       <div class="brand"><div class="logo">青</div><span>青团智能体</span></div>
-      <nav class="nav">
+      <nav class="nav" id="nav">
         <button class="active" data-page="home">首页</button>
-        <button data-page="chat">陪我说说话</button>
-        <button data-page="reminders">设置提醒</button>
+        <button data-page="chat">对话陪伴</button>
+        <button data-page="reminders">提醒管理</button>
+        <button data-page="guide">办事指导</button>
+        <button data-page="health">健康资料</button>
         <button data-page="fraud">查诈骗风险</button>
         <button data-page="family">找家里人</button>
-        <button data-page="help">我需要帮助</button>
+        <button data-page="help">紧急求助</button>
       </nav>
-      <div class="side-note">MVP 演示版：先跑通老人端主要流程，真实语音、OCR 和消息接口后续接入。</div>
+      <div class="side-note">MVP 演示版：先跑通主流程，真实语音、OCR 和消息接口后续接入。</div>
     </aside>
 
     <main class="main">
       <section id="home" class="page active">
         <div class="topbar">
-          <div class="hello">
+          <div>
             <h1>您好，李阿姨。</h1>
-            <p>今天想让我帮您做什么？</p>
+            <p class="muted">今天想让我帮您做什么？</p>
           </div>
-          <div class="quick-settings">
+          <div class="actions">
             <button class="btn" id="fontBtn">字体加大</button>
             <button class="btn" id="volumeBtn">音量正常</button>
           </div>
         </div>
-
         <button class="voice" id="voiceBtn">按住和青团说话</button>
-
         <div class="card">
           <div class="text-row">
-            <input id="homeInput" aria-label="文字输入" placeholder="也可以打字：今天想问什么？">
+            <input id="homeInput" placeholder="也可以打字：今天想问什么？">
             <button class="btn primary" id="homeSend">发送</button>
           </div>
         </div>
-
         <div class="card">
           <h2>今日提醒</h2>
           <div class="grid two" id="homeReminders"></div>
         </div>
-
         <div class="card">
           <h2>常用功能</h2>
           <div class="grid three">
             <button class="btn feature" data-page-link="chat">陪我说说话</button>
             <button class="btn feature" data-page-link="reminders">设置提醒</button>
-            <button class="btn feature" id="guideBtn">办事指导</button>
+            <button class="btn feature" data-page-link="guide">办事指导</button>
             <button class="btn feature" data-page-link="fraud">查诈骗风险</button>
-            <button class="btn feature" id="healthBtn">整理健康资料</button>
+            <button class="btn feature" data-page-link="health">整理健康资料</button>
             <button class="btn feature" data-page-link="family">找家里人</button>
           </div>
         </div>
-
         <div class="grid two">
           <button class="btn danger block" data-page-link="help">我需要帮助</button>
           <button class="btn block" id="cancelBtn">先不做了</button>
@@ -390,113 +373,89 @@
       </section>
 
       <section id="chat" class="page">
-        <div class="topbar">
-          <div class="hello">
-            <h1>对话陪伴</h1>
-            <p>青团会简短回答，并在高风险场景提醒确认。</p>
-          </div>
-          <button class="btn" data-page-link="home">返回首页</button>
-        </div>
-        <div class="card chat-box" id="chatBox">
-          <div class="bubble bot">您好，我在。想聊聊天，还是让我帮您办点事？</div>
-        </div>
-        <div class="card">
-          <div class="text-row">
-            <input id="chatInput" placeholder="输入想说的话，例如：我今天有点闷">
-            <button class="btn primary" id="chatSend">发送</button>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="btn" id="repeatBtn">重复一遍</button>
-          <button class="btn" id="topicBtn">换个话题</button>
-          <button class="btn" data-page-link="family">联系家人</button>
-        </div>
+        <div class="topbar"><div><h1>对话陪伴</h1><p class="muted">青团会简短回答，并在高风险场景提醒确认。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="card chat-box" id="chatBox"><div class="bubble bot">您好，我在。想聊聊天，还是让我帮您办点事？</div></div>
+        <div class="card"><div class="text-row"><input id="chatInput" placeholder="输入想说的话，例如：我今天有点闷"><button class="btn primary" id="chatSend">发送</button></div></div>
+        <div class="actions"><button class="btn" id="repeatBtn">重复一遍</button><button class="btn" id="topicBtn">换个话题</button><button class="btn" data-page-link="family">联系家人</button></div>
       </section>
 
       <section id="reminders" class="page">
-        <div class="topbar">
-          <div class="hello">
-            <h1>提醒管理</h1>
-            <p>吃药、复诊、量血压，都要先复述确认。</p>
-          </div>
-          <button class="btn" data-page-link="home">返回首页</button>
-        </div>
+        <div class="topbar"><div><h1>提醒管理</h1><p class="muted">吃药、复诊、量血压，都要先复述确认。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
         <div class="card">
           <h2>新建提醒</h2>
-          <div class="grid two">
-            <input id="reminderTitle" placeholder="提醒内容，例如：吃降压药">
-            <input id="reminderTime" type="time" value="08:00">
+          <div class="grid two"><input id="reminderTitle" placeholder="提醒内容，例如：吃降压药"><input id="reminderTime" type="time" value="08:00"></div>
+          <div class="actions"><button class="btn primary" id="addReminder">创建提醒</button></div>
+          <div id="reminderConfirm" class="result confirm" style="display:none;"></div>
+        </div>
+        <div class="card"><h2>今日提醒</h2><div class="grid" id="reminderList"></div></div>
+      </section>
+
+      <section id="guide" class="page">
+        <div class="topbar"><div><h1>办事分步指导</h1><p class="muted">一次只讲一步，可以重复、上一步、下一步或退出。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="card">
+          <h2>选择要办的事</h2>
+          <div class="grid three">
+            <button class="btn feature primary" data-guide="hospital">手机挂号</button>
+            <button class="btn feature" data-guide="bus">查公交路线</button>
+            <button class="btn feature" data-guide="qr">扫二维码</button>
           </div>
-          <div class="actions" style="margin-top: 14px;">
-            <button class="btn primary" id="addReminder">创建提醒</button>
-          </div>
-          <div id="reminderConfirm" class="result confirm" style="display:none; margin-top: 14px;"></div>
         </div>
         <div class="card">
-          <h2>今日提醒</h2>
-          <div class="grid" id="reminderList"></div>
+          <h2>当前步骤</h2>
+          <div class="step-number" id="stepNumber"></div>
+          <p class="step-text" id="stepText"></p>
+          <div class="actions">
+            <button class="btn" id="repeatStep">重复这一句</button>
+            <button class="btn" id="prevStep">上一步</button>
+            <button class="btn primary" id="nextStep">下一步</button>
+            <button class="btn" data-page-link="home">退出指导</button>
+          </div>
         </div>
       </section>
 
-      <section id="fraud" class="page">
-        <div class="topbar">
-          <div class="hello">
-            <h1>查诈骗风险</h1>
-            <p>先暂停操作，不转账，不给验证码，再核实。</p>
-          </div>
-          <button class="btn" data-page-link="home">返回首页</button>
+      <section id="health" class="page">
+        <div class="topbar"><div><h1>健康资料整理</h1><p class="muted">整理检查报告、处方和测量记录，只做复诊准备，不做诊断。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="card">
+          <h2>录入资料</h2>
+          <textarea id="healthText" placeholder="可以先粘贴检查报告文字、处方内容或血压血糖记录。图片 OCR 后续接入。"></textarea>
+          <div class="actions"><button class="btn primary" id="makeSummary">生成复诊摘要</button><button class="btn" id="healthSample">填入示例</button></div>
         </div>
+        <div id="healthResult" class="result" style="display:none;"></div>
+      </section>
+
+      <section id="fraud" class="page">
+        <div class="topbar"><div><h1>查诈骗风险</h1><p class="muted">先暂停操作，不转账，不给验证码，再核实。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
         <div class="card">
           <h2>输入可疑内容</h2>
           <textarea id="fraudText" placeholder="把短信、聊天内容或电话里听到的话写在这里。"></textarea>
-          <div class="actions" style="margin-top: 14px;">
-            <button class="btn primary" id="analyzeFraud">开始分析</button>
-            <button class="btn" id="fraudSample">填入示例</button>
-          </div>
+          <div class="actions"><button class="btn primary" id="analyzeFraud">开始分析</button><button class="btn" id="fraudSample">填入示例</button></div>
         </div>
         <div id="fraudResult" class="result" style="display:none;"></div>
       </section>
 
       <section id="family" class="page">
-        <div class="topbar">
-          <div class="hello">
-            <h1>找家里人</h1>
-            <p>发送前会复述联系人和完整消息。</p>
-          </div>
-          <button class="btn" data-page-link="home">返回首页</button>
-        </div>
+        <div class="topbar"><div><h1>找家里人</h1><p class="muted">发送前会复述联系人和完整消息。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
         <div class="card">
           <h2>选择联系人</h2>
           <div class="grid">
-            <label class="family-card"><span>女儿 王敏 <span class="muted">主联系人</span></span><input type="radio" name="contact" value="女儿王敏" checked></label>
-            <label class="family-card"><span>儿子 李强 <span class="muted">备用联系人</span></span><input type="radio" name="contact" value="儿子李强"></label>
+            <label class="family-card"><span>女儿王敏 <span class="muted">主联系人</span></span><input type="radio" name="contact" value="女儿王敏" checked></label>
+            <label class="family-card"><span>儿子李强 <span class="muted">备用联系人</span></span><input type="radio" name="contact" value="儿子李强"></label>
           </div>
         </div>
         <div class="card">
           <h2>消息内容</h2>
           <textarea id="familyMessage" placeholder="例如：我今天挺好的，晚上不回家吃饭。"></textarea>
-          <div class="actions" style="margin-top: 14px;">
-            <button class="btn primary" id="prepareMessage">准备发送</button>
-          </div>
-          <div id="messageConfirm" class="result confirm" style="display:none; margin-top: 14px;"></div>
+          <div class="actions"><button class="btn primary" id="prepareMessage">准备发送</button></div>
+          <div id="messageConfirm" class="result confirm" style="display:none;"></div>
         </div>
       </section>
 
       <section id="help" class="page">
-        <div class="topbar">
-          <div class="hello">
-            <h1>紧急求助</h1>
-            <p>如果胸口痛、摔倒、明显不舒服，请尽快联系身边人或急救服务。</p>
-          </div>
-          <button class="btn" data-page-link="home">返回首页</button>
-        </div>
+        <div class="topbar"><div><h1>紧急求助</h1><p class="muted">如果胸口痛、摔倒、明显不舒服，请尽快联系身边人或急救服务。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
         <div class="card">
           <h2>请选择求助方式</h2>
-          <div class="grid two">
-            <button class="btn danger block" id="callEmergency">拨打 120</button>
-            <button class="btn primary block" id="callFamily">联系女儿王敏</button>
-          </div>
-          <div id="helpConfirm" class="result confirm" style="display:none; margin-top: 14px;"></div>
+          <div class="grid two"><button class="btn danger block" id="callEmergency">拨打 120</button><button class="btn primary block" id="callFamily">联系女儿王敏</button></div>
+          <div id="helpConfirm" class="result confirm" style="display:none;"></div>
         </div>
       </section>
 
@@ -508,32 +467,25 @@
     const pages = document.querySelectorAll(".page");
     const navButtons = document.querySelectorAll(".nav button");
     const statusEl = document.getElementById("status");
-
+    const guideFlows = {
+      hospital: ["确认要去的医院或科室", "打开医院官方小程序或公众号", "选择挂号/预约挂号", "选择日期、医生和时间段", "确认信息，不要把验证码告诉别人"],
+      bus: ["说出出发地和目的地", "查看推荐路线", "确认上车站和下车站", "记住换乘点", "出门前再次确认末班车时间"],
+      qr: ["确认二维码来源是否可信", "打开扫一扫", "不要输入银行卡密码或验证码", "看清页面标题和收款方", "不确定时先问家人"]
+    };
+    let guideType = "hospital";
+    let guideStep = 0;
     let reminders = [
       { title: "吃降压药", time: "08:00", done: false },
       { title: "量血压", time: "15:00", done: false }
     ];
 
-    function setStatus(text) {
-      statusEl.textContent = text;
-    }
+    function setStatus(text) { statusEl.textContent = text; }
 
     function showPage(id) {
       pages.forEach(page => page.classList.toggle("active", page.id === id));
       navButtons.forEach(button => button.classList.toggle("active", button.dataset.page === id));
-      setStatus("已进入：" + pageName(id));
+      setStatus("已进入：" + (document.querySelector(`[data-page="${id}"]`)?.textContent || "页面"));
       window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function pageName(id) {
-      return {
-        home: "首页",
-        chat: "对话陪伴",
-        reminders: "提醒管理",
-        fraud: "查诈骗风险",
-        family: "找家里人",
-        help: "紧急求助"
-      }[id] || "页面";
     }
 
     document.querySelectorAll("[data-page], [data-page-link]").forEach(el => {
@@ -541,157 +493,144 @@
     });
 
     function renderReminders() {
-      const home = document.getElementById("homeReminders");
-      const list = document.getElementById("reminderList");
       const html = reminders.map((item, index) => `
         <div class="reminder-item">
           <strong>${item.time} ${item.title}</strong>
           <span class="muted">${item.done ? "已完成" : "等待提醒"}</span>
-          <div class="reminder-actions">
+          <div class="actions">
             <button class="btn" onclick="completeReminder(${index})">完成</button>
             <button class="btn" onclick="delayReminder(${index})">延后10分钟</button>
           </div>
         </div>
       `).join("");
-      home.innerHTML = html;
-      list.innerHTML = html;
+      document.getElementById("homeReminders").innerHTML = html;
+      document.getElementById("reminderList").innerHTML = html;
     }
 
-    window.completeReminder = function(index) {
+    window.completeReminder = index => {
       reminders[index].done = true;
       renderReminders();
       setStatus("已记录完成：" + reminders[index].title);
     };
 
-    window.delayReminder = function(index) {
-      setStatus("已延后 10 分钟：" + reminders[index].title);
+    window.delayReminder = index => setStatus("已延后 10 分钟：" + reminders[index].title);
+
+    function addChat(role, text) {
+      const bubble = document.createElement("div");
+      bubble.className = "bubble " + role;
+      bubble.textContent = text;
+      document.getElementById("chatBox").appendChild(bubble);
+    }
+
+    function replyTo(text) {
+      if (/胸口|摔倒|急救|120/.test(text)) {
+        addChat("bot", "这可能比较紧急。请先坐稳或躺好，我建议您马上联系身边人或急救服务。");
+        showPage("help");
+        return;
+      }
+      if (/转账|验证码|银行卡|密码|退款|中奖|远程控制/.test(text)) {
+        addChat("bot", "这件事可能有风险。先不要转账，不要告诉任何人验证码。我可以帮您查一下风险。");
+        document.getElementById("fraudText").value = text;
+        showPage("fraud");
+        return;
+      }
+      if (/提醒|吃药|复诊|量血压/.test(text)) {
+        addChat("bot", "好的，我们去设置提醒。我会先复述一遍，再请您确认。");
+        document.getElementById("reminderTitle").value = text.replace("提醒我", "").trim() || "新的提醒";
+        showPage("reminders");
+        return;
+      }
+      addChat("bot", "我听着呢。您慢慢说。要是需要我帮忙，也可以直接说“设置提醒”或“找家里人”。");
+    }
+
+    function sendInput(inputId) {
+      const input = document.getElementById(inputId);
+      const text = input.value.trim();
+      if (!text) return;
+      showPage("chat");
+      addChat("user", text);
+      input.value = "";
+      replyTo(text);
+    }
+
+    document.getElementById("homeSend").onclick = () => sendInput("homeInput");
+    document.getElementById("chatSend").onclick = () => sendInput("chatInput");
+    document.getElementById("voiceBtn").onclick = () => { showPage("chat"); addChat("user", "我想设置一个吃药提醒。"); replyTo("提醒我吃药"); };
+    document.getElementById("repeatBtn").onclick = () => setStatus("已重复上一句播报。");
+    document.getElementById("topicBtn").onclick = () => addChat("bot", "我们可以聊聊今天的天气、家里人，或者您年轻时候喜欢做的事。");
+    document.getElementById("cancelBtn").onclick = () => setStatus("好的，先不做了。");
+
+    document.getElementById("fontBtn").onclick = () => {
+      const current = Number(document.documentElement.style.getPropertyValue("--font-scale") || 1);
+      const next = current >= 1.25 ? 1 : 1.25;
+      document.documentElement.style.setProperty("--font-scale", next);
+      document.getElementById("fontBtn").textContent = next > 1 ? "恢复字体" : "字体加大";
+      setStatus(next > 1 ? "字体已加大。" : "字体已恢复。");
+    };
+    document.getElementById("volumeBtn").onclick = () => {
+      const btn = document.getElementById("volumeBtn");
+      btn.textContent = btn.textContent === "音量正常" ? "音量较大" : "音量正常";
+      setStatus("音量设置已切换。");
     };
 
-    document.getElementById("addReminder").addEventListener("click", () => {
+    document.getElementById("addReminder").onclick = () => {
       const title = document.getElementById("reminderTitle").value.trim();
       const time = document.getElementById("reminderTime").value || "08:00";
       const box = document.getElementById("reminderConfirm");
-      if (!title) {
-        setStatus("请先填写提醒内容。");
-        return;
-      }
+      if (!title) { setStatus("请先填写提醒内容。"); return; }
       box.style.display = "block";
-      box.innerHTML = `
-        <strong>请确认：</strong><br>
-        我将为您创建提醒：每天 ${time}，${title}。<br>
-        ${title.includes("药") ? "我只负责提醒，不会建议改药量或停药。" : ""}
-        <div class="actions" style="margin-top:12px;">
-          <button class="btn primary" id="confirmReminder">确认创建</button>
-          <button class="btn" id="cancelReminder">先不创建</button>
-        </div>
-      `;
+      box.innerHTML = `<strong>请确认：</strong><br>我将为您创建提醒：每天 ${time}，${title}。${title.includes("药") ? "<br>我只负责提醒，不会建议改药量或停药。" : ""}<div class="actions"><button class="btn primary" id="confirmReminder">确认创建</button><button class="btn" id="cancelReminder">先不创建</button></div>`;
       document.getElementById("confirmReminder").onclick = () => {
         reminders.push({ title, time, done: false });
         renderReminders();
         box.style.display = "none";
         setStatus("提醒已创建。");
       };
-      document.getElementById("cancelReminder").onclick = () => {
-        box.style.display = "none";
-        setStatus("已取消创建提醒。");
+      document.getElementById("cancelReminder").onclick = () => { box.style.display = "none"; };
+    };
+
+    function renderGuide() {
+      const steps = guideFlows[guideType];
+      document.getElementById("stepNumber").textContent = `第 ${guideStep + 1} 步 / 共 ${steps.length} 步`;
+      document.getElementById("stepText").textContent = steps[guideStep];
+    }
+    document.querySelectorAll("[data-guide]").forEach(btn => {
+      btn.onclick = () => {
+        guideType = btn.dataset.guide;
+        guideStep = 0;
+        document.querySelectorAll("[data-guide]").forEach(item => item.classList.remove("primary"));
+        btn.classList.add("primary");
+        renderGuide();
       };
     });
+    document.getElementById("repeatStep").onclick = () => setStatus("重复：" + guideFlows[guideType][guideStep]);
+    document.getElementById("prevStep").onclick = () => { guideStep = Math.max(0, guideStep - 1); renderGuide(); };
+    document.getElementById("nextStep").onclick = () => { guideStep = Math.min(guideFlows[guideType].length - 1, guideStep + 1); renderGuide(); };
 
-    function addChat(role, text) {
-      const chatBox = document.getElementById("chatBox");
-      const bubble = document.createElement("div");
-      bubble.className = "bubble " + role;
-      bubble.textContent = text;
-      chatBox.appendChild(bubble);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function botReply(text) {
-      const risky = /转账|验证码|银行卡|密码|胸口|摔倒|急救|120/.test(text);
-      if (risky && /胸口|摔倒|急救|120/.test(text)) {
-        addChat("bot", "这可能比较紧急。请先坐稳或躺好，我建议您马上联系身边人或急救服务。");
-        showPage("help");
-        return;
-      }
-      if (risky) {
-        addChat("bot", "这件事可能有风险。先不要转账，不要告诉任何人验证码。我可以帮您查一下风险。");
-        showPage("fraud");
-        document.getElementById("fraudText").value = text;
-        return;
-      }
-      if (/提醒|吃药|复诊|量血压/.test(text)) {
-        addChat("bot", "好的，我们去设置提醒。我会先复述一遍，再请您确认。");
-        showPage("reminders");
-        document.getElementById("reminderTitle").value = text.replace("提醒我", "").trim() || "新的提醒";
-        return;
-      }
-      addChat("bot", "我听着呢。您慢慢说。要是需要我帮忙，也可以直接说“设置提醒”或“找家里人”。");
-    }
-
-    document.getElementById("chatSend").addEventListener("click", () => {
-      const input = document.getElementById("chatInput");
-      const text = input.value.trim();
-      if (!text) return;
-      addChat("user", text);
-      input.value = "";
-      botReply(text);
-    });
-
-    document.getElementById("homeSend").addEventListener("click", () => {
-      const input = document.getElementById("homeInput");
-      const text = input.value.trim();
-      if (!text) return;
-      showPage("chat");
-      addChat("user", text);
-      input.value = "";
-      botReply(text);
-    });
-
-    document.getElementById("voiceBtn").addEventListener("mousedown", e => {
-      e.currentTarget.classList.add("listening");
-      e.currentTarget.textContent = "正在听，请慢慢说";
-      setStatus("语音入口演示：真实语音识别后续接入。");
-    });
-    document.getElementById("voiceBtn").addEventListener("mouseup", e => {
-      e.currentTarget.classList.remove("listening");
-      e.currentTarget.textContent = "按住和青团说话";
-      showPage("chat");
-      addChat("user", "我想设置一个吃药提醒。");
-      botReply("提醒我吃药");
-    });
-
-    document.getElementById("repeatBtn").onclick = () => setStatus("已重复上一句播报。");
-    document.getElementById("topicBtn").onclick = () => addChat("bot", "我们可以聊聊今天的天气、家里人，或者您年轻时候喜欢做的事。");
+    document.getElementById("healthSample").onclick = () => {
+      document.getElementById("healthText").value = "2026-07-16 血压 145/92，近期偶尔头晕。正在按医嘱服用降压药。";
+    };
+    document.getElementById("makeSummary").onclick = () => {
+      const text = document.getElementById("healthText").value.trim();
+      const result = document.getElementById("healthResult");
+      if (!text) { setStatus("请先填写或粘贴健康资料内容。"); return; }
+      result.style.display = "block";
+      result.textContent = `复诊摘要：\n1. 已记录资料：${text.slice(0, 80)}${text.length > 80 ? "……" : ""}\n2. 建议向医生说明：最近症状变化、用药情况、检查时间。\n3. 可询问医生：是否需要复查、指标是否需要继续观察、日常注意事项。\n\n提醒：青团只整理资料，不做诊断，不建议改药量。`;
+      setStatus("复诊摘要已生成。");
+    };
 
     document.getElementById("fraudSample").onclick = () => {
       document.getElementById("fraudText").value = "客服说可以退款，但要我提供短信验证码，还让我赶紧转账验证。";
     };
-
     document.getElementById("analyzeFraud").onclick = () => {
       const text = document.getElementById("fraudText").value.trim();
       const result = document.getElementById("fraudResult");
-      if (!text) {
-        setStatus("请先输入要分析的内容。");
-        return;
-      }
+      if (!text) { setStatus("请先输入要分析的内容。"); return; }
       const high = /验证码|转账|银行卡|密码|退款|中奖|远程控制/.test(text);
       result.style.display = "block";
       result.className = "result" + (high ? " high" : "");
-      result.innerHTML = high ? `
-        <strong>风险等级：高</strong><br>
-        发现了索要验证码、诱导转账或冒充客服的风险。<br>
-        建议：不要回复，不要转账，不要提供验证码。请联系家人或官方客服核实。<br>
-        <div class="actions" style="margin-top:12px;">
-          <button class="btn primary" data-page-link="family">联系家人核实</button>
-          <button class="btn">保存记录</button>
-        </div>
-      ` : `
-        <strong>风险等级：需谨慎</strong><br>
-        暂未发现明显高风险词，但仍建议通过官方渠道核实，不要轻易转账或透露个人信息。
-      `;
-      result.querySelectorAll("[data-page-link]").forEach(el => {
-        el.addEventListener("click", () => showPage(el.dataset.pageLink));
-      });
+      result.innerHTML = high ? `<strong>风险等级：高</strong><br>发现了索要验证码、诱导转账或冒充客服的风险。<br>建议：不要回复，不要转账，不要提供验证码。请联系家人或官方客服核实。<div class="actions"><button class="btn primary" data-page-link="family">联系家人核实</button><button class="btn">保存记录</button></div>` : `<strong>风险等级：需谨慎</strong><br>暂未发现明显高风险词，但仍建议通过官方渠道核实，不要轻易转账或透露个人信息。`;
+      result.querySelectorAll("[data-page-link]").forEach(el => el.onclick = () => showPage(el.dataset.pageLink));
       setStatus("反诈骗分析已完成。");
     };
 
@@ -699,84 +638,25 @@
       const contact = document.querySelector("input[name='contact']:checked").value;
       const message = document.getElementById("familyMessage").value.trim();
       const box = document.getElementById("messageConfirm");
-      if (!message) {
-        setStatus("请先填写要发给家人的消息。");
-        return;
-      }
+      if (!message) { setStatus("请先填写要发给家人的消息。"); return; }
       box.style.display = "block";
-      box.innerHTML = `
-        <strong>发送前请确认：</strong><br>
-        接收人：${contact}<br>
-        消息：${message}<br>
-        <div class="actions" style="margin-top:12px;">
-          <button class="btn primary" id="sendFamilyMessage">确认发送</button>
-          <button class="btn" id="cancelFamilyMessage">先不发送</button>
-        </div>
-      `;
-      document.getElementById("sendFamilyMessage").onclick = () => {
-        box.className = "result";
-        box.innerHTML = "消息已模拟发送给" + contact + "。";
-        setStatus("消息已发送。");
-      };
-      document.getElementById("cancelFamilyMessage").onclick = () => {
-        box.style.display = "none";
-        setStatus("已取消发送。");
-      };
+      box.innerHTML = `<strong>发送前请确认：</strong><br>接收人：${contact}<br>消息：${message}<div class="actions"><button class="btn primary" id="sendFamilyMessage">确认发送</button><button class="btn" id="cancelFamilyMessage">先不发送</button></div>`;
+      document.getElementById("sendFamilyMessage").onclick = () => { box.className = "result"; box.textContent = "消息已模拟发送给" + contact + "。"; };
+      document.getElementById("cancelFamilyMessage").onclick = () => { box.style.display = "none"; };
     };
 
     function showHelpConfirm(target) {
       const box = document.getElementById("helpConfirm");
       box.style.display = "block";
-      box.innerHTML = `
-        <strong>请确认：</strong><br>
-        是否现在${target}？如果情况紧急，请优先联系身边真实人员或当地急救服务。<br>
-        <div class="actions" style="margin-top:12px;">
-          <button class="btn danger" id="confirmHelp">确认执行</button>
-          <button class="btn" id="cancelHelp">先不执行</button>
-        </div>
-      `;
-      document.getElementById("confirmHelp").onclick = () => {
-        box.className = "result high";
-        box.innerHTML = "已模拟执行：" + target + "。请保持电话畅通，并尽量让身边人知道您的位置。";
-        setStatus("求助流程已执行。");
-      };
-      document.getElementById("cancelHelp").onclick = () => {
-        box.style.display = "none";
-        setStatus("已取消求助操作。");
-      };
+      box.innerHTML = `<strong>请确认：</strong><br>是否现在${target}？如果情况紧急，请优先联系身边真实人员或当地急救服务。<div class="actions"><button class="btn danger" id="confirmHelp">确认执行</button><button class="btn" id="cancelHelp">先不执行</button></div>`;
+      document.getElementById("confirmHelp").onclick = () => { box.className = "result high"; box.textContent = "已模拟执行：" + target + "。请保持电话畅通，并尽量让身边人知道您的位置。"; };
+      document.getElementById("cancelHelp").onclick = () => { box.style.display = "none"; };
     }
-
     document.getElementById("callEmergency").onclick = () => showHelpConfirm("拨打 120");
     document.getElementById("callFamily").onclick = () => showHelpConfirm("联系女儿王敏");
 
-    document.getElementById("fontBtn").onclick = () => {
-      const root = document.documentElement;
-      const current = Number(root.style.getPropertyValue("--font-scale") || 1);
-      const next = current >= 1.25 ? 1 : 1.25;
-      root.style.setProperty("--font-scale", next);
-      document.getElementById("fontBtn").textContent = next > 1 ? "恢复字体" : "字体加大";
-      setStatus(next > 1 ? "字体已加大。" : "字体已恢复。");
-    };
-
-    document.getElementById("volumeBtn").onclick = () => {
-      const btn = document.getElementById("volumeBtn");
-      btn.textContent = btn.textContent === "音量正常" ? "音量较大" : "音量正常";
-      setStatus("音量设置已切换。");
-    };
-
-    document.getElementById("guideBtn").onclick = () => {
-      showPage("chat");
-      addChat("bot", "办事指导演示：我会一次只讲一步。比如挂号，第一步是打开医院官方小程序或公众号。需要下一步时请说“下一步”。");
-    };
-
-    document.getElementById("healthBtn").onclick = () => {
-      showPage("chat");
-      addChat("bot", "健康资料整理演示：第一版先做上传和摘要占位。正式版会加入 OCR 识别和复诊问题清单，但不会做诊断。");
-    };
-
-    document.getElementById("cancelBtn").onclick = () => setStatus("好的，先不做了。");
-
     renderReminders();
+    renderGuide();
   </script>
 </body>
 </html>
