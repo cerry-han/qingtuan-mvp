@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
   --bg: #f6f1e8;
@@ -465,3 +465,4 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+

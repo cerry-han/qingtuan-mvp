@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 
-type Page = "welcome" | "home" | "chat" | "reminders" | "guide" | "health" | "fraud" | "family" | "help";
+type Page = "welcome" | "home" | "chat" | "reminders" | "guide" | "health" | "fraud" | "familyDashboard" | "family" | "help";
 type ChatMessage = { role: "bot" | "user"; text: string };
 type Reminder = { title: string; time: string; done: boolean };
 
@@ -14,6 +14,7 @@ const pageNames: Record<Page, string> = {
   guide: "办事指导",
   health: "健康资料",
   fraud: "查诈骗风险",
+  familyDashboard: "家属端",
   family: "找家里人",
   help: "紧急求助",
 };
@@ -215,7 +216,7 @@ export default function Home() {
               <span>青团智能体</span>
             </div>
             <nav className="nav">
-              {(["home", "chat", "reminders", "guide", "health", "fraud", "family", "help"] as Page[]).map((item) => (
+              {(["home", "chat", "reminders", "guide", "health", "fraud", "familyDashboard", "family", "help"] as Page[]).map((item) => (
                 <button className={page === item ? "active" : ""} key={item} onClick={() => go(item)}>
                   {pageNames[item]}
                 </button>
@@ -499,6 +500,54 @@ export default function Home() {
           </section>
         )}
 
+
+        {page === "familyDashboard" && (
+          <section className="page active">
+            <PageHeader title="家属端" desc="家属只查看授权范围内的信息，协助提醒和接收必要通知。" onBack={() => go("home")} />
+            <div className="grid three">
+              <div className="stat-card">
+                <span className="muted">当前绑定老人</span>
+                <strong>李阿姨</strong>
+                <span>授权协助中</span>
+              </div>
+              <div className="stat-card">
+                <span className="muted">今日提醒</span>
+                <strong>2 项</strong>
+                <span>1 项已完成，1 项待确认</span>
+              </div>
+              <div className="stat-card">
+                <span className="muted">风险通知</span>
+                <strong>0 条</strong>
+                <span>暂无高风险事件</span>
+              </div>
+            </div>
+            <div className="card">
+              <h2>授权范围</h2>
+              <div className="permission-list">
+                <span>可协助设置提醒</span>
+                <span>可接收紧急求助通知</span>
+                <span>可查看老人主动分享的健康摘要</span>
+                <span>不可查看完整私密对话</span>
+              </div>
+            </div>
+            <div className="card">
+              <h2>家属可做的事</h2>
+              <div className="grid three">
+                <button className="btn feature" onClick={() => go("reminders")}>协助设置提醒</button>
+                <button className="btn feature" onClick={() => go("family")}>发送问候消息</button>
+                <button className="btn feature" onClick={() => setStatus("已查看授权范围。")}>查看授权信息</button>
+              </div>
+            </div>
+            <div className="card">
+              <h2>最近通知</h2>
+              <div className="notice-list">
+                <div><strong>08:00 吃药提醒</strong><span className="muted">老人已完成</span></div>
+                <div><strong>15:00 量血压提醒</strong><span className="muted">等待老人确认</span></div>
+                <div><strong>健康资料分享</strong><span className="muted">暂无新的分享</span></div>
+              </div>
+            </div>
+          </section>
+        )}
         {page === "family" && (
           <section className="page active">
             <PageHeader title="找家里人" desc="发送前会复述联系人和完整消息。" onBack={() => go("home")} />
@@ -606,3 +655,4 @@ function PageHeader({ title, desc, onBack }: { title: string; desc: string; onBa
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -469,6 +469,7 @@
             <button class="btn feature" data-page-link="fraud">查诈骗风险</button>
             <button class="btn feature" data-page-link="health">整理健康资料</button>
             <button class="btn feature" data-page-link="family">找家里人</button>
+            <button class="btn feature" data-page-link="familyDashboard">家属端</button>
           </div>
         </div>
         <div class="grid two">
@@ -536,6 +537,40 @@
           <div class="actions"><button class="btn primary" id="analyzeFraud">开始分析</button><button class="btn" id="fraudSample">填入示例</button></div>
         </div>
         <div id="fraudResult" class="result" style="display:none;"></div>
+      </section>
+
+      <section id="familyDashboard" class="page">
+        <div class="topbar"><div><h1>家属端</h1><p class="muted">家属只查看授权范围内的信息，协助提醒和接收必要通知。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="grid three">
+          <div class="stat-card"><span class="muted">当前绑定老人</span><strong>李阿姨</strong><span>授权协助中</span></div>
+          <div class="stat-card"><span class="muted">今日提醒</span><strong>2 项</strong><span>1 项已完成，1 项待确认</span></div>
+          <div class="stat-card"><span class="muted">风险通知</span><strong>0 条</strong><span>暂无高风险事件</span></div>
+        </div>
+        <div class="card">
+          <h2>授权范围</h2>
+          <div class="permission-list">
+            <span>可协助设置提醒</span>
+            <span>可接收紧急求助通知</span>
+            <span>可查看老人主动分享的健康摘要</span>
+            <span>不可查看完整私密对话</span>
+          </div>
+        </div>
+        <div class="card">
+          <h2>家属可做的事</h2>
+          <div class="grid three">
+            <button class="btn feature" data-page-link="reminders">协助设置提醒</button>
+            <button class="btn feature" data-page-link="family">发送问候消息</button>
+            <button class="btn feature" id="viewPermission">查看授权信息</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>最近通知</h2>
+          <div class="notice-list">
+            <div><strong>08:00 吃药提醒</strong><span class="muted">老人已完成</span></div>
+            <div><strong>15:00 量血压提醒</strong><span class="muted">等待老人确认</span></div>
+            <div><strong>健康资料分享</strong><span class="muted">暂无新的分享</span></div>
+          </div>
+        </div>
       </section>
 
       <section id="family" class="page">
@@ -743,6 +778,8 @@
       setStatus("反诈骗分析已完成。");
     };
 
+    document.getElementById("viewPermission").onclick = () => setStatus("已查看授权范围。");
+
     document.getElementById("prepareMessage").onclick = () => {
       const contact = document.querySelector("input[name='contact']:checked").value;
       const message = document.getElementById("familyMessage").value.trim();
@@ -769,3 +806,5 @@
   </script>
 </body>
 </html>
+
+
