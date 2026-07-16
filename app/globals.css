@@ -1,20 +1,20 @@
 ﻿@import "tailwindcss";
 
 :root {
-  --bg: #f6f1e8;
-  --panel: #fffaf2;
-  --panel-strong: #ffffff;
-  --text: #1f2a28;
-  --muted: #5d6762;
-  --line: #d9d0c2;
-  --green: #1f7a5c;
-  --green-soft: #dff0e7;
-  --blue-soft: #e0edf7;
+  --bg: #f4f7f3;
+  --panel: #ffffff;
+  --panel-strong: #f9fbf8;
+  --text: #17231f;
+  --muted: #5f6d66;
+  --line: #d8e0d8;
+  --green: #14795b;
+  --green-soft: #e2f3ea;
+  --blue-soft: #e8f0f7;
   --amber: #98670f;
-  --amber-soft: #f7ead0;
+  --amber-soft: #fff0d2;
   --red: #a63131;
-  --red-soft: #f5dddd;
-  --shadow: 0 12px 32px rgba(38, 45, 42, 0.12);
+  --red-soft: #f8dddd;
+  --shadow: 0 14px 36px rgba(26, 45, 38, 0.10);
 }
 
 * {
@@ -44,7 +44,7 @@ pre {
 .app-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 248px 1fr;
   font-size: 18px;
 }
 
@@ -53,9 +53,9 @@ pre {
 }
 
 .side {
-  background: #23453d;
+  background: linear-gradient(180deg, #17473d 0%, #123b34 100%);
   color: #f7fbf7;
-  padding: 28px 20px;
+  padding: 26px 18px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -73,7 +73,7 @@ pre {
 .logo {
   width: 44px;
   height: 44px;
-  border-radius: 14px;
+  border-radius: 12px;
   background: #d9f0e4;
   color: #23453d;
   display: grid;
@@ -91,9 +91,11 @@ pre {
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.1);
   color: inherit;
-  padding: 14px 16px;
+  padding: 15px 16px;
   text-align: left;
   cursor: pointer;
+  font-weight: 700;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .nav button.active,
@@ -110,16 +112,18 @@ pre {
 }
 
 .main {
-  padding: 28px;
+  padding: 34px;
   display: grid;
   gap: 20px;
   align-content: start;
+  max-width: 1280px;
+  width: 100%;
 }
 
 .welcome-main {
   min-height: 100vh;
   width: 100vw;
-  padding: 46px;
+  padding: 56px;
   display: grid;
   align-items: center;
 }
@@ -166,10 +170,13 @@ pre {
   padding: 12px 18px;
   cursor: pointer;
   min-height: 52px;
+  font-weight: 700;
+  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
 }
 
 .btn:hover {
   border-color: var(--green);
+  transform: translateY(-1px);
 }
 
 .btn.primary {
@@ -207,8 +214,8 @@ pre {
 .card {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 22px;
   box-shadow: var(--shadow);
 }
 
@@ -224,7 +231,7 @@ pre {
   place-items: center;
   font-size: 1.35rem;
   border: 0;
-  border-radius: 22px;
+  border-radius: 20px;
   background: var(--green);
   color: #fff;
   cursor: pointer;
@@ -241,10 +248,10 @@ input,
 textarea {
   width: 100%;
   border: 2px solid var(--line);
-  border-radius: 14px;
+  border-radius: 12px;
   background: #fff;
   color: var(--text);
-  padding: 14px 16px;
+  padding: 15px 16px;
   min-height: 52px;
 }
 
@@ -254,7 +261,7 @@ textarea {
 }
 
 .feature {
-  min-height: 112px;
+  min-height: 118px;
   display: grid;
   place-items: center;
   text-align: center;
@@ -300,7 +307,7 @@ textarea {
   border-radius: 34px;
   background:
     radial-gradient(circle at 28% 24%, #ffffff 0 16%, transparent 17%),
-    linear-gradient(145deg, #dff0e7, #8fc9ac);
+    linear-gradient(145deg, #e0f6ea, #8ed0ad);
   color: #23453d;
   display: grid;
   place-items: center;
@@ -342,8 +349,8 @@ textarea {
   align-items: center;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 22px;
-  padding: 20px;
+  border-radius: 20px;
+  padding: 24px;
   box-shadow: var(--shadow);
 }
 
@@ -366,8 +373,8 @@ textarea {
 
 .bubble {
   max-width: 82%;
-  padding: 14px 16px;
-  border-radius: 18px;
+  padding: 15px 16px;
+  border-radius: 16px;
   line-height: 1.6;
 }
 
@@ -465,5 +472,6 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
 
 
