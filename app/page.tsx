@@ -182,23 +182,8 @@ export default function Home() {
 
   return (
     <div className={appClass}>
-      <aside className="side" aria-label="主导航">
-        <div className="brand">
-          <div className="logo">青</div>
-          <span>青团智能体</span>
-        </div>
-        <nav className="nav">
-          {(["home", "chat", "reminders", "guide", "health", "fraud", "family", "help"] as Page[]).map((item) => (
-            <button className={page === item ? "active" : ""} key={item} onClick={() => go(item)}>
-              {pageNames[item]}
-            </button>
-          ))}
-        </nav>
-        <p className="side-note">MVP 演示版：先跑通老人端主流程，真实语音、OCR 和消息接口后续接入。</p>
-      </aside>
-
-      <main className="main">
-        {page === "welcome" && (
+      {page === "welcome" ? (
+        <main className="welcome-main">
           <section className="welcome-page">
             <div className="welcome-mark">
               <span>青</span>
@@ -221,7 +206,25 @@ export default function Home() {
               </button>
             </div>
           </section>
-        )}
+        </main>
+      ) : (
+        <>
+          <aside className="side" aria-label="主导航">
+            <div className="brand">
+              <div className="logo">青</div>
+              <span>青团智能体</span>
+            </div>
+            <nav className="nav">
+              {(["home", "chat", "reminders", "guide", "health", "fraud", "family", "help"] as Page[]).map((item) => (
+                <button className={page === item ? "active" : ""} key={item} onClick={() => go(item)}>
+                  {pageNames[item]}
+                </button>
+              ))}
+            </nav>
+            <p className="side-note">MVP 演示版：先跑通老人端主流程，真实语音、OCR 和消息接口后续接入。</p>
+          </aside>
+
+          <main className="main">
 
         {page === "home" && (
           <section className="page active">
@@ -583,7 +586,9 @@ export default function Home() {
         )}
 
         <div className="footer-status">{status}</div>
-      </main>
+          </main>
+        </>
+      )}
     </div>
   );
 }

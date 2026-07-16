@@ -41,6 +41,10 @@
       grid-template-columns: 260px 1fr;
     }
 
+    .app.welcome-mode {
+      grid-template-columns: 1fr;
+    }
+
     .side {
       background: #23453d;
       color: #f7fbf7;
@@ -107,12 +111,20 @@
     .page { display: none; }
     .page.active { display: grid; gap: 20px; }
 
+    .welcome-main {
+      min-height: 100vh;
+      width: 100vw;
+      padding: 46px;
+      display: grid;
+      align-items: center;
+    }
+
     .welcome-page.active {
-      min-height: calc(100vh - 56px);
       display: grid;
       align-content: center;
       gap: 26px;
-      max-width: 920px;
+      width: min(1120px, 100%);
+      margin: 0 auto;
     }
 
     .welcome-mark {
@@ -379,6 +391,7 @@
 
     @media (max-width: 860px) {
       .app { grid-template-columns: 1fr; }
+      .welcome-main { padding: 24px; }
       .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .two, .three { grid-template-columns: 1fr; }
       .topbar { align-items: stretch; flex-direction: column; }
@@ -389,8 +402,8 @@
   </style>
 </head>
 <body>
-  <div class="app">
-    <aside class="side">
+  <div class="app welcome-mode">
+    <aside class="side" id="sideNav" style="display:none;">
       <div class="brand"><div class="logo">青</div><span>青团智能体</span></div>
       <nav class="nav" id="nav">
         <button data-page="home">首页</button>
@@ -405,7 +418,7 @@
       <div class="side-note">MVP 演示版：先跑通主流程，真实语音、OCR 和消息接口后续接入。</div>
     </aside>
 
-    <main class="main">
+    <main class="welcome-main" id="welcomeMain">
       <section id="welcome" class="page welcome-page active">
         <div class="welcome-mark"><span>青</span></div>
         <div class="welcome-copy">
@@ -422,7 +435,9 @@
           <button class="btn block" data-page-link="help">我需要帮助</button>
         </div>
       </section>
+    </main>
 
+    <main class="main" id="appMain" style="display:none;">
       <section id="home" class="page">
         <div class="topbar">
           <div>
@@ -572,6 +587,10 @@
     function setStatus(text) { statusEl.textContent = text; }
 
     function showPage(id) {
+      document.querySelector(".app").classList.toggle("welcome-mode", id === "welcome");
+      document.getElementById("sideNav").style.display = id === "welcome" ? "none" : "flex";
+      document.getElementById("welcomeMain").style.display = id === "welcome" ? "grid" : "none";
+      document.getElementById("appMain").style.display = id === "welcome" ? "none" : "grid";
       pages.forEach(page => page.classList.toggle("active", page.id === id));
       navButtons.forEach(button => button.classList.toggle("active", button.dataset.page === id));
       setStatus("已进入：" + (document.querySelector(`[data-page="${id}"]`)?.textContent || "页面"));

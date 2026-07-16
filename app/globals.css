@@ -116,6 +116,14 @@ pre {
   align-content: start;
 }
 
+.welcome-main {
+  min-height: 100vh;
+  width: 100vw;
+  padding: 46px;
+  display: grid;
+  align-items: center;
+}
+
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -279,11 +287,11 @@ textarea {
 }
 
 .welcome-page {
-  min-height: calc(100vh - 56px);
   display: grid;
   align-content: center;
   gap: 26px;
-  max-width: 920px;
+  width: min(1120px, 100%);
+  margin: 0 auto;
 }
 
 .welcome-mark {
@@ -416,6 +424,10 @@ textarea {
 @media (max-width: 860px) {
   .app-shell {
     grid-template-columns: 1fr;
+  }
+
+  .welcome-main {
+    padding: 24px;
   }
 
   .nav {
