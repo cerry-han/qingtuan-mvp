@@ -200,7 +200,10 @@ export default function Home() {
                 <span>设置提醒、识别诈骗、整理复诊资料、联系家人。</span>
               </div>
               <button className="btn primary block" onClick={() => go("home")}>
-                进入青团
+                老人端进入
+              </button>
+              <button className="btn block" onClick={() => go("familyDashboard")}>
+                家属端入口
               </button>
               <button className="btn block" onClick={() => go("help")}>
                 我需要帮助
@@ -655,4 +658,7 @@ function PageHeader({ title, desc, onBack }: { title: string; desc: string; onBa
     </div>
   );
 }
+
+
+
 

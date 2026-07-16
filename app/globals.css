@@ -337,7 +337,7 @@ textarea {
 
 .welcome-panel {
   display: grid;
-  grid-template-columns: 1fr 220px 220px;
+  grid-template-columns: 1fr 210px 210px 210px;
   gap: 16px;
   align-items: center;
   background: var(--panel);
@@ -465,4 +465,5 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
 
