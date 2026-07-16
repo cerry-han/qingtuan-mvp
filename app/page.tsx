@@ -40,6 +40,30 @@ const defaultFamilyEvents: FamilyEvent[] = [
   { title: "15:00 量血压提醒", detail: "等待老人确认" },
 ];
 
+const demoReminders: Reminder[] = [
+  { title: "吃降压药", time: "08:00", done: true },
+  { title: "量血压", time: "15:00", done: false },
+  { title: "明天上午复诊", time: "09:30", done: false },
+];
+
+const demoHealthText = "2026-07-16 血压 145/92，近期偶尔头晕。正在按医嘱服用降压药。上周做过血常规检查，准备下周复诊。";
+
+const demoHealthSummary = `复诊摘要：
+1. 已记录资料：2026-07-16 血压 145/92，近期偶尔头晕。正在按医嘱服用降压药。上周做过血常规检查，准备下周复诊。
+2. 建议向医生说明：最近头晕频率、血压变化、用药时间。
+3. 可询问医生：是否需要复查、指标是否需要继续观察、日常注意事项。
+
+提醒：青团只整理资料，不做诊断，不建议改药量。`;
+
+const demoFraudText = "客服说可以退款，但要我提供短信验证码，还让我赶紧转账验证。";
+
+const demoFamilyEvents: FamilyEvent[] = [
+  { title: "诈骗风险待核实", detail: "老人准备联系家人一起确认", level: "warning" },
+  { title: "健康摘要已保存", detail: "老人生成了一份复诊摘要" },
+  { title: "09:30 明天上午复诊", detail: "新增提醒，等待老人确认" },
+  { title: "08:00 吃降压药", detail: "老人已确认完成" },
+];
+
 const fraudRules: FraudRule[] = [
   { label: "索要验证码", reason: "验证码等同于临时钥匙，正规人员不会要求您提供。", pattern: /验证码|动态码|短信码/ },
   { label: "催促转账", reason: "要求马上转账、汇款、打钱或付款验证，常见于诈骗话术。", pattern: /转账|汇款|打钱|付款|保证金/ },
@@ -153,6 +177,59 @@ export default function Home() {
       setStatus(next ? "已恢复家属协助授权。" : "已暂停家属协助授权。");
       return next;
     });
+  }
+
+  function loadDemoData() {
+    setLargeFont(false);
+    setLoudVolume(false);
+    setFamilyAccessEnabled(true);
+    setHomeInput("");
+    setChatInput("");
+    setFraudText(demoFraudText);
+    setFraudResult("high");
+    setHealthText(demoHealthText);
+    setHealthSummary(demoHealthSummary);
+    setFamilyMessage("我今天已经量过血压了，晚上在家吃饭。");
+    setSelectedContact("女儿王敏");
+    setMessageConfirm("");
+    setHelpConfirm("");
+    setReminderTitle("");
+    setReminderTime("08:00");
+    setReminderConfirm("");
+    setReminders(demoReminders);
+    setFamilyEvents(demoFamilyEvents);
+    setChat([
+      { role: "bot", text: "您好，我在。想聊聊天，还是让我帮您办点事？" },
+      { role: "user", text: "有人说退款要验证码。" },
+      { role: "bot", text: "这件事可能有风险。先不要转账，不要告诉任何人验证码。我可以帮您查一下风险。" },
+    ]);
+    go("home");
+    setStatus("演示数据已准备好。");
+  }
+
+  function resetDemoData() {
+    localStorage.removeItem(STORAGE_KEY);
+    setLargeFont(false);
+    setLoudVolume(false);
+    setFamilyAccessEnabled(true);
+    setHomeInput("");
+    setChatInput("");
+    setFraudText("");
+    setFraudResult("none");
+    setHealthText("");
+    setHealthSummary("");
+    setFamilyMessage("");
+    setSelectedContact("女儿王敏");
+    setMessageConfirm("");
+    setHelpConfirm("");
+    setReminderTitle("");
+    setReminderTime("08:00");
+    setReminderConfirm("");
+    setReminders(defaultReminders);
+    setFamilyEvents(defaultFamilyEvents);
+    setChat([{ role: "bot", text: "您好，我在。想聊聊天，还是让我帮您办点事？" }]);
+    go("welcome");
+    setStatus("本地演示数据已清空。");
   }
 
   function replyTo(text: string) {
@@ -302,6 +379,10 @@ export default function Home() {
               <button className="btn block" onClick={() => go("help")}>
                 我需要帮助
               </button>
+            </div>
+            <div className="demo-tools">
+              <button className="demo-dot load" onClick={loadDemoData} title="加载演示数据" aria-label="加载演示数据" />
+              <button className="demo-dot reset" onClick={resetDemoData} title="清空本地数据" aria-label="清空本地数据" />
             </div>
           </section>
         </main>

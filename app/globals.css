@@ -404,6 +404,32 @@ textarea {
   line-height: 1.6;
 }
 
+.demo-tools {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  display: flex;
+  gap: 10px;
+  z-index: 5;
+}
+
+.demo-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(35, 69, 61, 0.16);
+}
+
+.demo-dot.load {
+  background: var(--green);
+}
+
+.demo-dot.reset {
+  background: var(--amber);
+}
+
 .chat-box {
   display: grid;
   gap: 12px;
