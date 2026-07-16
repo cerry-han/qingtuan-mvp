@@ -284,6 +284,37 @@ textarea {
   align-items: center;
 }
 
+.stat-card,
+.notice-list > div,
+.permission-list > span {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel-strong);
+}
+
+.stat-card strong {
+  font-size: 1.8rem;
+}
+
+.permission-list,
+.notice-list {
+  display: grid;
+  gap: 12px;
+}
+
+.notice-list > div.warning {
+  background: var(--amber-soft);
+  border-color: var(--amber);
+}
+
+.notice-list > div.urgent {
+  background: var(--red-soft);
+  border-color: var(--red);
+}
+
 .muted {
   color: var(--muted);
 }

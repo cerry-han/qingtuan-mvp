@@ -317,7 +317,10 @@
     }
 
     .reminder-item,
-    .family-card {
+    .family-card,
+    .stat-card,
+    .notice-list > div,
+    .permission-list > span {
       display: grid;
       gap: 10px;
       padding: 16px;
@@ -329,6 +332,26 @@
     .family-card {
       grid-template-columns: 1fr auto;
       align-items: center;
+    }
+
+    .stat-card strong {
+      font-size: 1.8rem;
+    }
+
+    .permission-list,
+    .notice-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .notice-list > div.warning {
+      background: var(--amber-soft);
+      border-color: var(--amber);
+    }
+
+    .notice-list > div.urgent {
+      background: var(--red-soft);
+      border-color: var(--red);
     }
 
     .chat-box {
@@ -447,6 +470,7 @@
         <button data-page="guide">办事指导</button>
         <button data-page="health">健康资料</button>
         <button data-page="fraud">查诈骗风险</button>
+        <button data-page="familyDashboard">家属端</button>
         <button data-page="family">找家里人</button>
         <button data-page="help">紧急求助</button>
       </nav>
@@ -579,8 +603,8 @@
         <div class="topbar"><div><h1>家属端</h1><p class="muted">家属只查看授权范围内的信息，协助提醒和接收必要通知。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
         <div class="grid three">
           <div class="stat-card"><span class="muted">当前绑定老人</span><strong>李阿姨</strong><span>授权协助中</span></div>
-          <div class="stat-card"><span class="muted">今日提醒</span><strong>2 项</strong><span>1 项已完成，1 项待确认</span></div>
-          <div class="stat-card"><span class="muted">风险通知</span><strong>0 条</strong><span>暂无高风险事件</span></div>
+          <div class="stat-card"><span class="muted">今日提醒</span><strong id="reminderStat">2 项</strong><span id="reminderDetail">1 项已完成，1 项待确认</span></div>
+          <div class="stat-card"><span class="muted">风险通知</span><strong id="riskStat">0 条</strong><span id="riskDetail">暂无高风险事件</span></div>
         </div>
         <div class="card">
           <h2>授权范围</h2>
@@ -601,10 +625,9 @@
         </div>
         <div class="card">
           <h2>最近通知</h2>
-          <div class="notice-list">
+          <div class="notice-list" id="familyEvents">
             <div><strong>08:00 吃药提醒</strong><span class="muted">老人已完成</span></div>
             <div><strong>15:00 量血压提醒</strong><span class="muted">等待老人确认</span></div>
-            <div><strong>健康资料分享</strong><span class="muted">暂无新的分享</span></div>
           </div>
         </div>
       </section>
@@ -654,6 +677,10 @@
     let reminders = [
       { title: "吃降压药", time: "08:00", done: false },
       { title: "量血压", time: "15:00", done: false }
+    ];
+    let familyEvents = [
+      { title: "08:00 吃药提醒", detail: "老人已完成", level: "normal" },
+      { title: "15:00 量血压提醒", detail: "等待老人确认", level: "normal" }
     ];
     let fraudResultState = "none";
     const fraudRules = [
@@ -705,9 +732,35 @@
           </ul>
         `;
       }
-      result.querySelectorAll("[data-page-link]").forEach(el => el.onclick = () => showPage(el.dataset.pageLink));
+      result.querySelectorAll("[data-page-link]").forEach(el => el.onclick = () => {
+        addFamilyEvent("诈骗风险待核实", "老人准备联系家人一起确认", "warning");
+        showPage(el.dataset.pageLink);
+      });
       const saveButton = document.getElementById("saveFraudRecord");
-      if (saveButton) saveButton.onclick = () => setStatus("记录已保存。");
+      if (saveButton) saveButton.onclick = () => {
+        addFamilyEvent("诈骗风险提醒", "老人保存了一条高风险核实记录", "warning");
+        setStatus("记录已保存。");
+      };
+    }
+
+    function addFamilyEvent(title, detail, level = "normal") {
+      familyEvents = [{ title, detail, level }, ...familyEvents].slice(0, 8);
+      renderFamilyDashboard();
+      saveLocalState();
+    }
+
+    function renderFamilyDashboard() {
+      const completed = reminders.filter(item => item.done).length;
+      const waiting = Math.max(reminders.length - completed, 0);
+      const warnings = familyEvents.filter(item => item.level === "warning" || item.level === "urgent").length;
+      document.getElementById("reminderStat").textContent = `${reminders.length} 项`;
+      document.getElementById("reminderDetail").textContent = `${completed} 项已完成，${waiting} 项待确认`;
+      document.getElementById("riskStat").textContent = `${warnings} 条`;
+      document.getElementById("riskDetail").textContent = warnings > 0 ? "有需要家属关注的事件" : "暂无高风险事件";
+      const list = document.getElementById("familyEvents");
+      list.innerHTML = familyEvents.length
+        ? familyEvents.map(item => `<div class="${item.level === "urgent" ? "urgent" : item.level === "warning" ? "warning" : ""}"><strong>${item.title}</strong><span class="muted">${item.detail}</span></div>`).join("")
+        : `<div><strong>暂无通知</strong><span class="muted">老人主动分享后会显示在这里</span></div>`;
     }
 
     function loadLocalState() {
@@ -716,6 +769,7 @@
         if (!raw) return;
         const saved = JSON.parse(raw);
         if (Array.isArray(saved.reminders) && saved.reminders.length > 0) reminders = saved.reminders;
+        if (Array.isArray(saved.familyEvents) && saved.familyEvents.length > 0) familyEvents = saved.familyEvents;
         if (saved.largeFont) {
           document.documentElement.style.setProperty("--font-scale", 1.25);
           document.getElementById("fontBtn").textContent = "恢复字体";
@@ -744,6 +798,7 @@
     function saveLocalState() {
       const state = {
         reminders,
+        familyEvents,
         largeFont: Number(document.documentElement.style.getPropertyValue("--font-scale") || 1) > 1,
         loudVolume: document.getElementById("volumeBtn").textContent === "音量较大",
         fraudText: document.getElementById("fraudText").value,
@@ -788,6 +843,7 @@
 
     window.completeReminder = index => {
       reminders[index].done = true;
+      addFamilyEvent(`${reminders[index].time} ${reminders[index].title}`, "老人已确认完成");
       renderReminders();
       saveLocalState();
       setStatus("已记录完成：" + reminders[index].title);
@@ -867,6 +923,7 @@
       box.innerHTML = `<strong>请确认：</strong><br>我将为您创建提醒：每天 ${time}，${title}。${title.includes("药") ? "<br>我只负责提醒，不会建议改药量或停药。" : ""}<div class="actions"><button class="btn primary" id="confirmReminder">确认创建</button><button class="btn" id="cancelReminder">先不创建</button></div>`;
       document.getElementById("confirmReminder").onclick = () => {
         reminders.push({ title, time, done: false });
+        addFamilyEvent(`${time} ${title}`, "新增提醒，等待老人确认");
         renderReminders();
         saveLocalState();
         box.style.display = "none";
@@ -903,6 +960,7 @@
       if (!text) { setStatus("请先填写或粘贴健康资料内容。"); return; }
       result.style.display = "block";
       result.textContent = `复诊摘要：\n1. 已记录资料：${text.slice(0, 80)}${text.length > 80 ? "……" : ""}\n2. 建议向医生说明：最近症状变化、用药情况、检查时间。\n3. 可询问医生：是否需要复查、指标是否需要继续观察、日常注意事项。\n\n提醒：青团只整理资料，不做诊断，不建议改药量。`;
+      addFamilyEvent("健康摘要已保存", "老人生成了一份复诊摘要");
       saveLocalState();
       setStatus("复诊摘要已生成。");
     };
@@ -931,7 +989,11 @@
       saveLocalState();
       box.style.display = "block";
       box.innerHTML = `<strong>发送前请确认：</strong><br>接收人：${contact}<br>消息：${message}<div class="actions"><button class="btn primary" id="sendFamilyMessage">确认发送</button><button class="btn" id="cancelFamilyMessage">先不发送</button></div>`;
-      document.getElementById("sendFamilyMessage").onclick = () => { box.className = "result"; box.textContent = "消息已模拟发送给" + contact + "。"; };
+      document.getElementById("sendFamilyMessage").onclick = () => {
+        addFamilyEvent("老人发送消息", "已发送给" + contact);
+        box.className = "result";
+        box.textContent = "消息已模拟发送给" + contact + "。";
+      };
       document.getElementById("cancelFamilyMessage").onclick = () => { box.style.display = "none"; };
     };
 
@@ -939,7 +1001,11 @@
       const box = document.getElementById("helpConfirm");
       box.style.display = "block";
       box.innerHTML = `<strong>请确认：</strong><br>是否现在${target}？如果情况紧急，请优先联系身边真实人员或当地急救服务。<div class="actions"><button class="btn danger" id="confirmHelp">确认执行</button><button class="btn" id="cancelHelp">先不执行</button></div>`;
-      document.getElementById("confirmHelp").onclick = () => { box.className = "result high"; box.textContent = "已模拟执行：" + target + "。请保持电话畅通，并尽量让身边人知道您的位置。"; };
+      document.getElementById("confirmHelp").onclick = () => {
+        addFamilyEvent("紧急求助", "老人已确认执行：" + target, "urgent");
+        box.className = "result high";
+        box.textContent = "已模拟执行：" + target + "。请保持电话畅通，并尽量让身边人知道您的位置。";
+      };
       document.getElementById("cancelHelp").onclick = () => { box.style.display = "none"; };
     }
     document.getElementById("callEmergency").onclick = () => showHelpConfirm("拨打 120");
@@ -960,6 +1026,7 @@
 
     loadLocalState();
     renderReminders();
+    renderFamilyDashboard();
     renderGuide();
   </script>
 </body>

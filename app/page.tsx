@@ -7,6 +7,7 @@ type ChatMessage = { role: "bot" | "user"; text: string };
 type Reminder = { title: string; time: string; done: boolean };
 type FraudResult = "none" | "high" | "careful";
 type FraudRule = { label: string; reason: string; pattern: RegExp };
+type FamilyEvent = { title: string; detail: string; level?: "normal" | "warning" | "urgent" };
 
 const STORAGE_KEY = "qingtuan-mvp-state";
 
@@ -32,6 +33,11 @@ const guideFlows = {
 const defaultReminders: Reminder[] = [
   { title: "吃降压药", time: "08:00", done: false },
   { title: "量血压", time: "15:00", done: false },
+];
+
+const defaultFamilyEvents: FamilyEvent[] = [
+  { title: "08:00 吃药提醒", detail: "老人已完成" },
+  { title: "15:00 量血压提醒", detail: "等待老人确认" },
 ];
 
 const fraudRules: FraudRule[] = [
@@ -73,9 +79,12 @@ export default function Home() {
     { role: "bot", text: "您好，我在。想聊聊天，还是让我帮您办点事？" },
   ]);
   const [reminders, setReminders] = useState<Reminder[]>(defaultReminders);
+  const [familyEvents, setFamilyEvents] = useState<FamilyEvent[]>(defaultFamilyEvents);
 
   const appClass = useMemo(() => `app-shell${largeFont ? " large-font" : ""}`, [largeFont]);
   const fraudFindings = useMemo(() => getFraudFindings(fraudText), [fraudText]);
+  const completedReminderCount = useMemo(() => reminders.filter((item) => item.done).length, [reminders]);
+  const warningEventCount = useMemo(() => familyEvents.filter((item) => item.level === "warning" || item.level === "urgent").length, [familyEvents]);
 
   useEffect(() => {
     try {
@@ -92,6 +101,9 @@ export default function Home() {
         setSelectedContact(saved.selectedContact || "女儿王敏");
         if (Array.isArray(saved.reminders) && saved.reminders.length > 0) {
           setReminders(saved.reminders);
+        }
+        if (Array.isArray(saved.familyEvents) && saved.familyEvents.length > 0) {
+          setFamilyEvents(saved.familyEvents);
         }
       }
     } catch {
@@ -113,9 +125,10 @@ export default function Home() {
       familyMessage,
       selectedContact,
       reminders,
+      familyEvents,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [familyMessage, fraudResult, fraudText, healthSummary, healthText, largeFont, loudVolume, reminders, selectedContact, storageReady]);
+  }, [familyEvents, familyMessage, fraudResult, fraudText, healthSummary, healthText, largeFont, loudVolume, reminders, selectedContact, storageReady]);
 
   function go(next: Page) {
     setPage(next);
@@ -124,6 +137,10 @@ export default function Home() {
 
   function addChat(role: "bot" | "user", text: string) {
     setChat((items) => [...items, { role, text }]);
+  }
+
+  function addFamilyEvent(title: string, detail: string, level: FamilyEvent["level"] = "normal") {
+    setFamilyEvents((items) => [{ title, detail, level }, ...items].slice(0, 8));
   }
 
   function replyTo(text: string) {
@@ -172,8 +189,10 @@ export default function Home() {
   }
 
   function completeReminder(index: number) {
+    const item = reminders[index];
     setReminders((items) => items.map((item, idx) => (idx === index ? { ...item, done: true } : item)));
-    setStatus(`已记录完成：${reminders[index].title}`);
+    addFamilyEvent(`${item.time} ${item.title}`, "老人已确认完成");
+    setStatus(`已记录完成：${item.title}`);
   }
 
   function delayReminder(index: number) {
@@ -192,6 +211,7 @@ export default function Home() {
 
   function confirmReminder() {
     setReminders((items) => [...items, { title: reminderTitle.trim(), time: reminderTime, done: false }]);
+    addFamilyEvent(`${reminderTime} ${reminderTitle.trim()}`, "新增提醒，等待老人确认");
     setReminderConfirm("");
     setReminderTitle("");
     setStatus("提醒已创建。");
@@ -508,10 +528,22 @@ export default function Home() {
               <div className="result">
                 <pre>{healthSummary}</pre>
                 <div className="actions top-gap">
-                  <button className="btn primary" onClick={() => setStatus("复诊摘要已保存。")}>
+                  <button
+                    className="btn primary"
+                    onClick={() => {
+                      addFamilyEvent("健康摘要已保存", "老人生成了一份复诊摘要");
+                      setStatus("复诊摘要已保存。");
+                    }}
+                  >
                     保存摘要
                   </button>
-                  <button className="btn" onClick={() => go("family")}>
+                  <button
+                    className="btn"
+                    onClick={() => {
+                      addFamilyEvent("健康资料分享", "老人主动分享了复诊摘要");
+                      go("familyDashboard");
+                    }}
+                  >
                     分享给家人
                   </button>
                 </div>
@@ -575,10 +607,22 @@ export default function Home() {
                     </ul>
                     <p className="safe-note">青团只能提示疑似风险，不做绝对判定。</p>
                     <div className="actions top-gap">
-                      <button className="btn primary" onClick={() => go("family")}>
+                      <button
+                        className="btn primary"
+                        onClick={() => {
+                          addFamilyEvent("诈骗风险待核实", "老人准备联系家人一起确认", "warning");
+                          go("family");
+                        }}
+                      >
                         联系家人核实
                       </button>
-                      <button className="btn" onClick={() => setStatus("记录已保存。")}>
+                      <button
+                        className="btn"
+                        onClick={() => {
+                          addFamilyEvent("诈骗风险提醒", "老人保存了一条高风险核实记录", "warning");
+                          setStatus("记录已保存。");
+                        }}
+                      >
                         保存记录
                       </button>
                     </div>
@@ -610,13 +654,13 @@ export default function Home() {
               </div>
               <div className="stat-card">
                 <span className="muted">今日提醒</span>
-                <strong>2 项</strong>
-                <span>1 项已完成，1 项待确认</span>
+                <strong>{reminders.length} 项</strong>
+                <span>{completedReminderCount} 项已完成，{Math.max(reminders.length - completedReminderCount, 0)} 项待确认</span>
               </div>
               <div className="stat-card">
                 <span className="muted">风险通知</span>
-                <strong>0 条</strong>
-                <span>暂无高风险事件</span>
+                <strong>{warningEventCount} 条</strong>
+                <span>{warningEventCount > 0 ? "有需要家属关注的事件" : "暂无高风险事件"}</span>
               </div>
             </div>
             <div className="card">
@@ -639,9 +683,16 @@ export default function Home() {
             <div className="card">
               <h2>最近通知</h2>
               <div className="notice-list">
-                <div><strong>08:00 吃药提醒</strong><span className="muted">老人已完成</span></div>
-                <div><strong>15:00 量血压提醒</strong><span className="muted">等待老人确认</span></div>
-                <div><strong>健康资料分享</strong><span className="muted">暂无新的分享</span></div>
+                {familyEvents.length > 0 ? (
+                  familyEvents.map((item, index) => (
+                    <div className={item.level === "urgent" ? "urgent" : item.level === "warning" ? "warning" : ""} key={`${item.title}-${index}`}>
+                      <strong>{item.title}</strong>
+                      <span className="muted">{item.detail}</span>
+                    </div>
+                  ))
+                ) : (
+                  <div><strong>暂无通知</strong><span className="muted">老人主动分享后会显示在这里</span></div>
+                )}
               </div>
             </div>
           </section>
@@ -679,6 +730,7 @@ export default function Home() {
                       className="btn primary"
                       onClick={() => {
                         setMessageConfirm(`消息已模拟发送给${selectedContact}。`);
+                        addFamilyEvent("老人发送消息", `已发送给${selectedContact}`);
                         setStatus("消息已发送。");
                       }}
                     >
@@ -717,6 +769,7 @@ export default function Home() {
                       className="btn danger"
                       onClick={() => {
                         setHelpConfirm("已模拟执行求助操作。请保持电话畅通，并尽量让身边人知道您的位置。");
+                        addFamilyEvent("紧急求助", "老人已确认执行求助流程", "urgent");
                         setStatus("求助流程已执行。");
                       }}
                     >
