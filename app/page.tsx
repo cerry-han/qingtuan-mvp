@@ -6,6 +6,7 @@ type Page = "welcome" | "home" | "chat" | "reminders" | "guide" | "health" | "fr
 type ChatMessage = { role: "bot" | "user"; text: string };
 type Reminder = { title: string; time: string; done: boolean };
 type FraudResult = "none" | "high" | "careful";
+type FraudRule = { label: string; reason: string; pattern: RegExp };
 
 const STORAGE_KEY = "qingtuan-mvp-state";
 
@@ -32,6 +33,20 @@ const defaultReminders: Reminder[] = [
   { title: "吃降压药", time: "08:00", done: false },
   { title: "量血压", time: "15:00", done: false },
 ];
+
+const fraudRules: FraudRule[] = [
+  { label: "索要验证码", reason: "验证码等同于临时钥匙，正规人员不会要求您提供。", pattern: /验证码|动态码|短信码/ },
+  { label: "催促转账", reason: "要求马上转账、汇款、打钱或付款验证，常见于诈骗话术。", pattern: /转账|汇款|打钱|付款|保证金/ },
+  { label: "冒充客服或公检法", reason: "自称客服、公安、法院等身份时，需要通过官方渠道重新核实。", pattern: /客服|公安|警察|法院|检察院|公检法|银监/ },
+  { label: "退款或中奖诱导", reason: "以退款、退费、理赔、中奖为理由索要信息或钱款，要先暂停。", pattern: /中奖|退款|退费|理赔|返钱/ },
+  { label: "远程控制", reason: "要求共享屏幕、远程协助或下载软件，可能会看到您的账户信息。", pattern: /远程控制|共享屏幕|下载软件|远程协助/ },
+  { label: "高收益投资", reason: "稳赚、保本、高收益和内部消息等承诺，风险很高。", pattern: /投资|高收益|稳赚|保本|理财群|内部消息/ },
+  { label: "索要敏感信息", reason: "银行卡、密码、身份证号、账号等信息不能告诉陌生人。", pattern: /银行卡|密码|身份证|账号/ },
+];
+
+function getFraudFindings(text: string) {
+  return fraudRules.filter((rule) => rule.pattern.test(text));
+}
 
 export default function Home() {
   const [page, setPage] = useState<Page>("welcome");
@@ -60,6 +75,7 @@ export default function Home() {
   const [reminders, setReminders] = useState<Reminder[]>(defaultReminders);
 
   const appClass = useMemo(() => `app-shell${largeFont ? " large-font" : ""}`, [largeFont]);
+  const fraudFindings = useMemo(() => getFraudFindings(fraudText), [fraudText]);
 
   useEffect(() => {
     try {
@@ -186,7 +202,7 @@ export default function Home() {
       setStatus("请先输入要分析的内容。");
       return;
     }
-    setFraudResult(/验证码|转账|银行卡|密码|退款|中奖|远程控制/.test(fraudText) ? "high" : "careful");
+    setFraudResult(getFraudFindings(fraudText).length > 0 ? "high" : "careful");
     setStatus("反诈骗分析已完成。");
   }
 
@@ -509,12 +525,25 @@ export default function Home() {
             <PageHeader title="查诈骗风险" desc="先暂停操作，不转账，不给验证码，再核实。" onBack={() => go("home")} />
             <div className="card">
               <h2>输入可疑内容</h2>
-              <textarea value={fraudText} onChange={(event) => setFraudText(event.target.value)} placeholder="把短信、聊天内容或电话里听到的话写在这里。" />
+              <textarea
+                value={fraudText}
+                onChange={(event) => {
+                  setFraudText(event.target.value);
+                  setFraudResult("none");
+                }}
+                placeholder="把短信、聊天内容或电话里听到的话写在这里。"
+              />
               <div className="actions top-gap">
                 <button className="btn primary" onClick={analyzeFraud}>
                   开始分析
                 </button>
-                <button className="btn" onClick={() => setFraudText("客服说可以退款，但要我提供短信验证码，还让我赶紧转账验证。")}>
+                <button
+                  className="btn"
+                  onClick={() => {
+                    setFraudText("客服说可以退款，但要我提供短信验证码，还让我赶紧转账验证。");
+                    setFraudResult("none");
+                  }}
+                >
                   填入示例
                 </button>
               </div>
@@ -524,10 +553,27 @@ export default function Home() {
                 {fraudResult === "high" ? (
                   <>
                     <strong>风险等级：高</strong>
-                    <br />
-                    发现了索要验证码、诱导转账或冒充客服的风险。
-                    <br />
-                    建议：不要回复，不要转账，不要提供验证码。请联系家人或官方客服核实。
+                    <div className="risk-tags">
+                      {fraudFindings.map((item) => (
+                        <span className="risk-tag" key={item.label}>
+                          {item.label}
+                        </span>
+                      ))}
+                    </div>
+                    <strong>为什么要小心：</strong>
+                    <ul className="risk-list">
+                      {fraudFindings.map((item) => (
+                        <li key={item.reason}>{item.reason}</li>
+                      ))}
+                    </ul>
+                    <strong>建议下一步：</strong>
+                    <ul className="risk-list">
+                      <li>先停止回复，不要转账。</li>
+                      <li>不要提供验证码、密码、银行卡或身份证信息。</li>
+                      <li>通过官方电话、官方 App 或线下网点重新核实。</li>
+                      <li>联系家人一起确认。</li>
+                    </ul>
+                    <p className="safe-note">青团只能提示疑似风险，不做绝对判定。</p>
                     <div className="actions top-gap">
                       <button className="btn primary" onClick={() => go("family")}>
                         联系家人核实
@@ -540,8 +586,11 @@ export default function Home() {
                 ) : (
                   <>
                     <strong>风险等级：需谨慎</strong>
-                    <br />
-                    暂未发现明显高风险词，但仍建议通过官方渠道核实，不要轻易转账或透露个人信息。
+                    <p>暂未发现明显高风险词，但仍建议通过官方渠道核实，不要轻易转账或透露个人信息。</p>
+                    <ul className="risk-list">
+                      <li>如果对方要求转账、验证码或远程控制，请立刻停止。</li>
+                      <li>不确定时，先联系家人一起看。</li>
+                    </ul>
                   </>
                 )}
               </div>

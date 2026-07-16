@@ -413,6 +413,35 @@ textarea {
   border: 2px solid var(--red);
 }
 
+.risk-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.risk-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid rgba(178, 67, 58, 0.35);
+  color: var(--red);
+  font-weight: 700;
+}
+
+.risk-list {
+  margin: 8px 0 14px;
+  padding-left: 1.25em;
+}
+
+.safe-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
 .confirm {
   background: var(--amber-soft);
   border: 2px solid var(--amber);

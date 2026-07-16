@@ -368,6 +368,35 @@
       border: 2px solid var(--red);
     }
 
+    .risk-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .risk-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(178, 67, 58, 0.35);
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .risk-list {
+      margin: 8px 0 14px;
+      padding-left: 1.25em;
+    }
+
+    .safe-note {
+      margin: 10px 0 0;
+      color: var(--muted);
+    }
+
     .confirm {
       background: var(--amber-soft);
       border: 2px solid var(--amber);
@@ -627,8 +656,59 @@
       { title: "量血压", time: "15:00", done: false }
     ];
     let fraudResultState = "none";
+    const fraudRules = [
+      { label: "索要验证码", reason: "验证码等同于临时钥匙，正规人员不会要求您提供。", pattern: /验证码|动态码|短信码/ },
+      { label: "催促转账", reason: "要求马上转账、汇款、打钱或付款验证，常见于诈骗话术。", pattern: /转账|汇款|打钱|付款|保证金/ },
+      { label: "冒充客服或公检法", reason: "自称客服、公安、法院等身份时，需要通过官方渠道重新核实。", pattern: /客服|公安|警察|法院|检察院|公检法|银监/ },
+      { label: "退款或中奖诱导", reason: "以退款、退费、理赔、中奖为理由索要信息或钱款，要先暂停。", pattern: /中奖|退款|退费|理赔|返钱/ },
+      { label: "远程控制", reason: "要求共享屏幕、远程协助或下载软件，可能会看到您的账户信息。", pattern: /远程控制|共享屏幕|下载软件|远程协助/ },
+      { label: "高收益投资", reason: "稳赚、保本、高收益和内部消息等承诺，风险很高。", pattern: /投资|高收益|稳赚|保本|理财群|内部消息/ },
+      { label: "索要敏感信息", reason: "银行卡、密码、身份证号、账号等信息不能告诉陌生人。", pattern: /银行卡|密码|身份证|账号/ }
+    ];
 
     function setStatus(text) { statusEl.textContent = text; }
+
+    function getFraudFindings(text) {
+      return fraudRules.filter(rule => rule.pattern.test(text));
+    }
+
+    function renderFraudResult(text) {
+      const result = document.getElementById("fraudResult");
+      const findings = getFraudFindings(text);
+      const high = findings.length > 0;
+      fraudResultState = high ? "high" : "careful";
+      result.style.display = "block";
+      result.className = "result" + (high ? " high" : "");
+      if (high) {
+        result.innerHTML = `
+          <strong>风险等级：高</strong>
+          <div class="risk-tags">${findings.map(item => `<span class="risk-tag">${item.label}</span>`).join("")}</div>
+          <strong>为什么要小心：</strong>
+          <ul class="risk-list">${findings.map(item => `<li>${item.reason}</li>`).join("")}</ul>
+          <strong>建议下一步：</strong>
+          <ul class="risk-list">
+            <li>先停止回复，不要转账。</li>
+            <li>不要提供验证码、密码、银行卡或身份证信息。</li>
+            <li>通过官方电话、官方 App 或线下网点重新核实。</li>
+            <li>联系家人一起确认。</li>
+          </ul>
+          <p class="safe-note">青团只能提示疑似风险，不做绝对判定。</p>
+          <div class="actions top-gap"><button class="btn primary" data-page-link="family">联系家人核实</button><button class="btn" id="saveFraudRecord">保存记录</button></div>
+        `;
+      } else {
+        result.innerHTML = `
+          <strong>风险等级：需谨慎</strong>
+          <p>暂未发现明显高风险词，但仍建议通过官方渠道核实，不要轻易转账或透露个人信息。</p>
+          <ul class="risk-list">
+            <li>如果对方要求转账、验证码或远程控制，请立刻停止。</li>
+            <li>不确定时，先联系家人一起看。</li>
+          </ul>
+        `;
+      }
+      result.querySelectorAll("[data-page-link]").forEach(el => el.onclick = () => showPage(el.dataset.pageLink));
+      const saveButton = document.getElementById("saveFraudRecord");
+      if (saveButton) saveButton.onclick = () => setStatus("记录已保存。");
+    }
 
     function loadLocalState() {
       try {
@@ -648,6 +728,9 @@
         const contactInput = document.querySelector(`input[name="contact"][value="${contact}"]`);
         if (contactInput) contactInput.checked = true;
         fraudResultState = saved.fraudResult || "none";
+        if (fraudResultState !== "none" && document.getElementById("fraudText").value.trim()) {
+          renderFraudResult(document.getElementById("fraudText").value.trim());
+        }
         if (saved.healthSummary) {
           const result = document.getElementById("healthResult");
           result.style.display = "block";
@@ -826,18 +909,14 @@
 
     document.getElementById("fraudSample").onclick = () => {
       document.getElementById("fraudText").value = "客服说可以退款，但要我提供短信验证码，还让我赶紧转账验证。";
+      fraudResultState = "none";
+      document.getElementById("fraudResult").style.display = "none";
       saveLocalState();
     };
     document.getElementById("analyzeFraud").onclick = () => {
       const text = document.getElementById("fraudText").value.trim();
-      const result = document.getElementById("fraudResult");
       if (!text) { setStatus("请先输入要分析的内容。"); return; }
-      const high = /验证码|转账|银行卡|密码|退款|中奖|远程控制/.test(text);
-      fraudResultState = high ? "high" : "careful";
-      result.style.display = "block";
-      result.className = "result" + (high ? " high" : "");
-      result.innerHTML = high ? `<strong>风险等级：高</strong><br>发现了索要验证码、诱导转账或冒充客服的风险。<br>建议：不要回复，不要转账，不要提供验证码。请联系家人或官方客服核实。<div class="actions"><button class="btn primary" data-page-link="family">联系家人核实</button><button class="btn">保存记录</button></div>` : `<strong>风险等级：需谨慎</strong><br>暂未发现明显高风险词，但仍建议通过官方渠道核实，不要轻易转账或透露个人信息。`;
-      result.querySelectorAll("[data-page-link]").forEach(el => el.onclick = () => showPage(el.dataset.pageLink));
+      renderFraudResult(text);
       saveLocalState();
       setStatus("反诈骗分析已完成。");
     };
@@ -867,7 +946,13 @@
     document.getElementById("callFamily").onclick = () => showHelpConfirm("联系女儿王敏");
 
     ["fraudText", "healthText", "familyMessage"].forEach(id => {
-      document.getElementById(id).addEventListener("input", saveLocalState);
+      document.getElementById(id).addEventListener("input", () => {
+        if (id === "fraudText") {
+          fraudResultState = "none";
+          document.getElementById("fraudResult").style.display = "none";
+        }
+        saveLocalState();
+      });
     });
     document.querySelectorAll("input[name='contact']").forEach(input => {
       input.addEventListener("change", saveLocalState);
