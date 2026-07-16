@@ -278,6 +278,77 @@ textarea {
   gap: 20px;
 }
 
+.welcome-page {
+  min-height: calc(100vh - 56px);
+  display: grid;
+  align-content: center;
+  gap: 26px;
+  max-width: 920px;
+}
+
+.welcome-mark {
+  width: 118px;
+  height: 118px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 28% 24%, #ffffff 0 16%, transparent 17%),
+    linear-gradient(145deg, #dff0e7, #8fc9ac);
+  color: #23453d;
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow);
+}
+
+.welcome-mark span {
+  font-size: 3.3rem;
+  font-weight: 700;
+}
+
+.welcome-copy {
+  display: grid;
+  gap: 12px;
+}
+
+.welcome-copy h1 {
+  font-size: 3.2rem;
+  margin: 0;
+}
+
+.welcome-copy p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+
+.eyebrow {
+  color: var(--green) !important;
+  font-weight: 700;
+}
+
+.welcome-panel {
+  display: grid;
+  grid-template-columns: 1fr 220px 220px;
+  gap: 16px;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.welcome-panel div {
+  display: grid;
+  gap: 8px;
+}
+
+.welcome-panel span {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .chat-box {
   display: grid;
   gap: 12px;
@@ -371,6 +442,14 @@ textarea {
 
   .text-row,
   .family-card {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-copy h1 {
+    font-size: 2.3rem;
+  }
+
+  .welcome-panel {
     grid-template-columns: 1fr;
   }
 }

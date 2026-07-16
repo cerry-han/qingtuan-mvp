@@ -107,6 +107,77 @@
     .page { display: none; }
     .page.active { display: grid; gap: 20px; }
 
+    .welcome-page.active {
+      min-height: calc(100vh - 56px);
+      display: grid;
+      align-content: center;
+      gap: 26px;
+      max-width: 920px;
+    }
+
+    .welcome-mark {
+      width: 118px;
+      height: 118px;
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 28% 24%, #ffffff 0 16%, transparent 17%),
+        linear-gradient(145deg, #dff0e7, #8fc9ac);
+      color: #23453d;
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .welcome-mark span {
+      font-size: 3.3rem;
+      font-weight: 700;
+    }
+
+    .welcome-copy {
+      display: grid;
+      gap: 12px;
+    }
+
+    .welcome-copy h1 {
+      font-size: 3.2rem;
+      margin: 0;
+    }
+
+    .welcome-copy p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.2rem;
+      line-height: 1.8;
+    }
+
+    .eyebrow {
+      color: var(--green) !important;
+      font-weight: 700;
+    }
+
+    .welcome-panel {
+      display: grid;
+      grid-template-columns: 1fr 220px 220px;
+      gap: 16px;
+      align-items: center;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .welcome-panel div {
+      display: grid;
+      gap: 8px;
+    }
+
+    .welcome-panel span {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -312,6 +383,8 @@
       .two, .three { grid-template-columns: 1fr; }
       .topbar { align-items: stretch; flex-direction: column; }
       .text-row, .family-card { grid-template-columns: 1fr; }
+      .welcome-copy h1 { font-size: 2.3rem; }
+      .welcome-panel { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -320,7 +393,7 @@
     <aside class="side">
       <div class="brand"><div class="logo">青</div><span>青团智能体</span></div>
       <nav class="nav" id="nav">
-        <button class="active" data-page="home">首页</button>
+        <button data-page="home">首页</button>
         <button data-page="chat">对话陪伴</button>
         <button data-page="reminders">提醒管理</button>
         <button data-page="guide">办事指导</button>
@@ -333,7 +406,24 @@
     </aside>
 
     <main class="main">
-      <section id="home" class="page active">
+      <section id="welcome" class="page welcome-page active">
+        <div class="welcome-mark"><span>青</span></div>
+        <div class="welcome-copy">
+          <p class="eyebrow">青团智能体 MVP</p>
+          <h1>您好，我是青团。</h1>
+          <p>一个面向老年人的陪伴与生活服务助手。说得慢一点，按钮大一点，重要事情先确认。</p>
+        </div>
+        <div class="welcome-panel">
+          <div>
+            <strong>今天可以帮您：</strong>
+            <span>设置提醒、识别诈骗、整理复诊资料、联系家人。</span>
+          </div>
+          <button class="btn primary block" data-page-link="home">进入青团</button>
+          <button class="btn block" data-page-link="help">我需要帮助</button>
+        </div>
+      </section>
+
+      <section id="home" class="page">
         <div class="topbar">
           <div>
             <h1>您好，李阿姨。</h1>

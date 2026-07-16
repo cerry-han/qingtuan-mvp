@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from "react";
 
-type Page = "home" | "chat" | "reminders" | "guide" | "health" | "fraud" | "family" | "help";
+type Page = "welcome" | "home" | "chat" | "reminders" | "guide" | "health" | "fraud" | "family" | "help";
 type ChatMessage = { role: "bot" | "user"; text: string };
 type Reminder = { title: string; time: string; done: boolean };
 
 const pageNames: Record<Page, string> = {
+  welcome: "欢迎页",
   home: "首页",
   chat: "对话陪伴",
   reminders: "提醒管理",
@@ -24,7 +25,7 @@ const guideFlows = {
 };
 
 export default function Home() {
-  const [page, setPage] = useState<Page>("home");
+  const [page, setPage] = useState<Page>("welcome");
   const [status, setStatus] = useState("已准备好。");
   const [largeFont, setLargeFont] = useState(false);
   const [loudVolume, setLoudVolume] = useState(false);
@@ -197,6 +198,31 @@ export default function Home() {
       </aside>
 
       <main className="main">
+        {page === "welcome" && (
+          <section className="welcome-page">
+            <div className="welcome-mark">
+              <span>青</span>
+            </div>
+            <div className="welcome-copy">
+              <p className="eyebrow">青团智能体 MVP</p>
+              <h1>您好，我是青团。</h1>
+              <p>一个面向老年人的陪伴与生活服务助手。说得慢一点，按钮大一点，重要事情先确认。</p>
+            </div>
+            <div className="welcome-panel">
+              <div>
+                <strong>今天可以帮您：</strong>
+                <span>设置提醒、识别诈骗、整理复诊资料、联系家人。</span>
+              </div>
+              <button className="btn primary block" onClick={() => go("home")}>
+                进入青团
+              </button>
+              <button className="btn block" onClick={() => go("help")}>
+                我需要帮助
+              </button>
+            </div>
+          </section>
+        )}
+
         {page === "home" && (
           <section className="page active">
             <div className="topbar">
