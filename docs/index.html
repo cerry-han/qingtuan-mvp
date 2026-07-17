@@ -314,6 +314,11 @@
       box-shadow: var(--shadow);
     }
 
+    .voice.listening {
+      background: #1f6f58;
+      box-shadow: 0 0 0 5px rgba(31, 111, 88, 0.16), var(--shadow);
+    }
+
     .text-row {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -548,7 +553,7 @@
             <button class="btn" id="volumeBtn">音量正常</button>
           </div>
         </div>
-        <button class="voice" id="voiceBtn">按住和青团说话</button>
+        <button class="voice" id="voiceBtn">点一下和青团说话</button>
         <div class="card">
           <div class="text-row">
             <input id="homeInput" placeholder="也可以打字：今天想问什么？">
@@ -1033,9 +1038,53 @@
       replyTo(text);
     }
 
+    function startVoiceInput() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const button = document.getElementById("voiceBtn");
+      if (!SpeechRecognition) {
+        setStatus("当前浏览器暂不支持语音输入。请用 Chrome 或 Edge 试试。");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = "zh-CN";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      button.classList.add("listening");
+      button.textContent = "正在听，请慢慢说";
+      setStatus("正在听，请慢慢说。");
+
+      recognition.onresult = event => {
+        const text = event.results?.[0]?.[0]?.transcript?.trim();
+        button.classList.remove("listening");
+        button.textContent = "点一下和青团说话";
+        if (!text) {
+          setStatus("没有听清楚，可以再试一次。");
+          return;
+        }
+        showPage("chat");
+        addChat("user", text);
+        replyTo(text);
+        setStatus("已识别：" + text);
+      };
+
+      recognition.onerror = () => {
+        button.classList.remove("listening");
+        button.textContent = "点一下和青团说话";
+        setStatus("语音输入没有成功，可以检查麦克风权限，或先用文字输入。");
+      };
+
+      recognition.onend = () => {
+        button.classList.remove("listening");
+        button.textContent = "点一下和青团说话";
+      };
+
+      recognition.start();
+    }
+
     document.getElementById("homeSend").onclick = () => sendInput("homeInput");
     document.getElementById("chatSend").onclick = () => sendInput("chatInput");
-    document.getElementById("voiceBtn").onclick = () => { showPage("chat"); addChat("user", "我想设置一个吃药提醒。"); replyTo("提醒我吃药"); };
+    document.getElementById("voiceBtn").onclick = startVoiceInput;
     document.getElementById("repeatBtn").onclick = () => setStatus("已重复上一句播报。");
     document.getElementById("topicBtn").onclick = () => addChat("bot", "我们可以聊聊今天的天气、家里人，或者您年轻时候喜欢做的事。");
     document.getElementById("cancelBtn").onclick = () => setStatus("好的，先不做了。");

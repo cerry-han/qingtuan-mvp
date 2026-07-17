@@ -8,6 +8,7 @@ type Reminder = { title: string; time: string; done: boolean };
 type FraudResult = "none" | "high" | "careful";
 type FraudRule = { label: string; reason: string; pattern: RegExp };
 type FamilyEvent = { title: string; detail: string; level?: "normal" | "warning" | "urgent" };
+type VoiceState = "idle" | "listening";
 
 const STORAGE_KEY = "qingtuan-mvp-state";
 
@@ -87,6 +88,7 @@ export default function Home() {
   const [familyAccessEnabled, setFamilyAccessEnabled] = useState(true);
   const [homeInput, setHomeInput] = useState("");
   const [chatInput, setChatInput] = useState("");
+  const [voiceState, setVoiceState] = useState<VoiceState>("idle");
   const [fraudText, setFraudText] = useState("");
   const [fraudResult, setFraudResult] = useState<FraudResult>("none");
   const [guideType, setGuideType] = useState<keyof typeof guideFlows>("hospital");
@@ -277,6 +279,46 @@ export default function Home() {
     replyTo(text);
   }
 
+  function startVoiceInput() {
+    if (typeof window === "undefined") return;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setStatus("当前浏览器暂不支持语音输入。请用 Chrome 或 Edge 试试。");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "zh-CN";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    setVoiceState("listening");
+    setStatus("正在听，请慢慢说。");
+
+    recognition.onresult = (event: any) => {
+      const text = event.results?.[0]?.[0]?.transcript?.trim();
+      setVoiceState("idle");
+      if (!text) {
+        setStatus("没有听清楚，可以再试一次。");
+        return;
+      }
+      go("chat");
+      addChat("user", text);
+      replyTo(text);
+      setStatus(`已识别：${text}`);
+    };
+
+    recognition.onerror = () => {
+      setVoiceState("idle");
+      setStatus("语音输入没有成功，可以检查麦克风权限，或先用文字输入。");
+    };
+
+    recognition.onend = () => {
+      setVoiceState("idle");
+    };
+
+    recognition.start();
+  }
+
   function completeReminder(index: number) {
     const item = reminders[index];
     setReminders((items) => items.map((item, idx) => (idx === index ? { ...item, done: true } : item)));
@@ -435,14 +477,10 @@ export default function Home() {
             </div>
 
             <button
-              className="voice"
-              onClick={() => {
-                go("chat");
-                addChat("user", "我想设置一个吃药提醒。");
-                replyTo("提醒我吃药");
-              }}
+              className={`voice ${voiceState === "listening" ? "listening" : ""}`}
+              onClick={startVoiceInput}
             >
-              按住和青团说话
+              {voiceState === "listening" ? "正在听，请慢慢说" : "点一下和青团说话"}
             </button>
 
             <div className="card">

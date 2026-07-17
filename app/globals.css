@@ -238,6 +238,11 @@ pre {
   box-shadow: var(--shadow);
 }
 
+.voice.listening {
+  background: #1f6f58;
+  box-shadow: 0 0 0 5px rgba(31, 111, 88, 0.16), var(--shadow);
+}
+
 .text-row {
   display: grid;
   grid-template-columns: 1fr auto;
