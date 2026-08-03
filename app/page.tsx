@@ -403,8 +403,7 @@ export default function Home() {
               <img src="/brand/qingtuan-logo.png" alt="青团智能体 logo" />
             </div>
             <div className="welcome-copy">
-              <p className="eyebrow">青团智能体 MVP</p>
-              <h1>您好，我是青团。</h1>
+              <h1>您好，<span>我是青团智能体</span></h1>
               <p>一个面向老年人的陪伴与生活服务助手。说得慢一点，按钮大一点，重要事情先确认。</p>
             </div>
             <div className="welcome-panel">
@@ -412,13 +411,13 @@ export default function Home() {
                 <strong>今天可以帮您：</strong>
                 <span>设置提醒、识别诈骗、整理复诊资料、联系家人。</span>
               </div>
-              <button className="btn primary block" onClick={() => go("home")}>
+              <button className="btn block welcome-entry senior" onClick={() => go("home")}>
                 老人端进入
               </button>
-              <button className="btn block" onClick={() => go("familyDashboard")}>
+              <button className="btn block welcome-entry family" onClick={() => go("familyDashboard")}>
                 家属端入口
               </button>
-              <button className="btn block" onClick={() => go("help")}>
+              <button className="btn block welcome-entry help" onClick={() => go("help")}>
                 我需要帮助
               </button>
             </div>
@@ -442,7 +441,7 @@ export default function Home() {
                 </button>
               ))}
             </nav>
-            <p className="side-note">MVP 演示版：先跑通老人端主流程，真实语音、OCR 和消息接口后续接入。</p>
+            <p className="side-note">陪伴、提醒、办事与家属协同，让重要的事情更安心。</p>
           </aside>
 
           <main className="main">

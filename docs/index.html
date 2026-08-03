@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>青团智能体 MVP</title>
+  <title>青团智能体</title>
   <link rel="icon" href="assets/qingtuan-logo.png">
   <style>
     :root {
@@ -124,7 +124,8 @@
 
     .welcome-main {
       min-height: 100vh;
-      width: 100vw;
+      width: 100%;
+      min-width: 0;
       padding: 56px;
       display: grid;
       align-items: center;
@@ -160,12 +161,21 @@
 
     .welcome-copy {
       display: grid;
-      gap: 12px;
+      gap: 18px;
     }
 
     .welcome-copy h1 {
-      font-size: 3.2rem;
+      font-family: "STXingkai", "华文行楷", "KaiTi", "楷体", serif;
+      font-size: clamp(3.4rem, 6vw, 5.4rem);
+      line-height: 1.12;
+      font-weight: 700;
+      color: #513b27;
+      text-shadow: 0 3px 0 rgba(255, 255, 255, 0.72), 0 10px 24px rgba(139, 82, 24, 0.12);
       margin: 0;
+    }
+
+    .welcome-copy h1 span {
+      color: #b85d16;
     }
 
     .welcome-copy p {
@@ -174,11 +184,6 @@
       color: var(--muted);
       font-size: 1.2rem;
       line-height: 1.8;
-    }
-
-    .eyebrow {
-      color: #b66217 !important;
-      font-weight: 700;
     }
 
     .welcome-panel {
@@ -202,6 +207,35 @@
     .welcome-panel span {
       color: var(--muted);
       line-height: 1.6;
+    }
+
+    .welcome-entry {
+      min-height: 76px;
+      border-width: 2px;
+      box-shadow: 0 10px 22px rgba(81, 59, 39, 0.12);
+    }
+
+    .welcome-entry.senior {
+      color: #ffffff;
+      background: #c96a20;
+      border-color: #c96a20;
+    }
+
+    .welcome-entry.family {
+      color: #ffffff;
+      background: #74854b;
+      border-color: #74854b;
+    }
+
+    .welcome-entry.help {
+      color: #6b4a27;
+      background: rgba(255, 251, 242, 0.92);
+      border-color: #d9a25f;
+    }
+
+    .welcome-entry:hover {
+      border-color: #8f4e1c;
+      filter: brightness(1.04);
     }
 
     .demo-tools {
@@ -504,7 +538,7 @@
       .two, .three { grid-template-columns: 1fr; }
       .topbar { align-items: stretch; flex-direction: column; }
       .text-row, .family-card { grid-template-columns: 1fr; }
-      .welcome-copy h1 { font-size: 2.3rem; }
+      .welcome-copy h1 { font-size: 3rem; }
       .welcome-panel { grid-template-columns: 1fr; }
     }
   </style>
@@ -524,15 +558,14 @@
         <button data-page="family">找家里人</button>
         <button data-page="help">紧急求助</button>
       </nav>
-      <div class="side-note">MVP 演示版：先跑通主流程，真实语音、OCR 和消息接口后续接入。</div>
+      <div class="side-note">陪伴、提醒、办事与家属协同，让重要的事情更安心。</div>
     </aside>
 
     <main class="welcome-main" id="welcomeMain">
       <section id="welcome" class="page welcome-page active">
         <div class="welcome-mark"><img src="assets/qingtuan-logo.png" alt="青团智能体 logo"></div>
         <div class="welcome-copy">
-          <p class="eyebrow">青团智能体 MVP</p>
-          <h1>您好，我是青团。</h1>
+          <h1>您好，<span>我是青团智能体</span></h1>
           <p>一个面向老年人的陪伴与生活服务助手。说得慢一点，按钮大一点，重要事情先确认。</p>
         </div>
         <div class="welcome-panel">
@@ -540,9 +573,9 @@
             <strong>今天可以帮您：</strong>
             <span>设置提醒、识别诈骗、整理复诊资料、联系家人。</span>
           </div>
-          <button class="btn primary block" data-page-link="home">老人端进入</button>
-          <button class="btn block" data-page-link="familyDashboard">家属端入口</button>
-          <button class="btn block" data-page-link="help">我需要帮助</button>
+          <button class="btn block welcome-entry senior" data-page-link="home">老人端进入</button>
+          <button class="btn block welcome-entry family" data-page-link="familyDashboard">家属端入口</button>
+          <button class="btn block welcome-entry help" data-page-link="help">我需要帮助</button>
         </div>
         <div class="demo-tools">
           <button class="demo-dot load" id="loadDemoData" title="加载演示数据" aria-label="加载演示数据"></button>

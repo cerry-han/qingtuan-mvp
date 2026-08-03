@@ -128,7 +128,8 @@ pre {
 
 .welcome-main {
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
+  min-width: 0;
   padding: 56px;
   display: grid;
   align-items: center;
@@ -374,12 +375,21 @@ textarea {
 
 .welcome-copy {
   display: grid;
-  gap: 12px;
+  gap: 18px;
 }
 
 .welcome-copy h1 {
-  font-size: 3.2rem;
+  font-family: "STXingkai", "华文行楷", "KaiTi", "楷体", serif;
+  font-size: clamp(3.4rem, 6vw, 5.4rem);
+  line-height: 1.12;
+  font-weight: 700;
+  color: #513b27;
+  text-shadow: 0 3px 0 rgba(255, 255, 255, 0.72), 0 10px 24px rgba(139, 82, 24, 0.12);
   margin: 0;
+}
+
+.welcome-copy h1 span {
+  color: #b85d16;
 }
 
 .welcome-copy p {
@@ -388,11 +398,6 @@ textarea {
   color: var(--muted);
   font-size: 1.2rem;
   line-height: 1.8;
-}
-
-.eyebrow {
-  color: #b66217 !important;
-  font-weight: 700;
 }
 
 .welcome-panel {
@@ -416,6 +421,35 @@ textarea {
 .welcome-panel span {
   color: var(--muted);
   line-height: 1.6;
+}
+
+.welcome-entry {
+  min-height: 76px;
+  border-width: 2px;
+  box-shadow: 0 10px 22px rgba(81, 59, 39, 0.12);
+}
+
+.welcome-entry.senior {
+  color: #ffffff;
+  background: #c96a20;
+  border-color: #c96a20;
+}
+
+.welcome-entry.family {
+  color: #ffffff;
+  background: #74854b;
+  border-color: #74854b;
+}
+
+.welcome-entry.help {
+  color: #6b4a27;
+  background: rgba(255, 251, 242, 0.92);
+  border-color: #d9a25f;
+}
+
+.welcome-entry:hover {
+  border-color: #8f4e1c;
+  filter: brightness(1.04);
 }
 
 .demo-tools {
@@ -574,7 +608,7 @@ textarea {
   }
 
   .welcome-copy h1 {
-    font-size: 2.3rem;
+    font-size: 3rem;
   }
 
   .welcome-panel {
