@@ -400,7 +400,7 @@ export default function Home() {
         <main className="welcome-main">
           <section className="welcome-page">
             <div className="welcome-mark">
-              <span>青</span>
+              <img src="/brand/qingtuan-logo.png" alt="青团智能体 logo" />
             </div>
             <div className="welcome-copy">
               <p className="eyebrow">青团智能体 MVP</p>
@@ -432,7 +432,7 @@ export default function Home() {
         <>
           <aside className="side" aria-label="主导航">
             <div className="brand">
-              <div className="logo">青</div>
+              <div className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></div>
               <span>青团智能体</span>
             </div>
             <nav className="nav">

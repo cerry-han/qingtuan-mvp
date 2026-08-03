@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   title: "青团智能体 MVP",
   description: "面向老年人的陪伴与生活服务智能体最小可运行原型。",
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/brand/qingtuan-logo.png",
+    shortcut: "/brand/qingtuan-logo.png",
   },
 };
 
