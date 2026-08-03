@@ -404,7 +404,6 @@ export default function Home() {
             </div>
             <div className="welcome-copy">
               <h1>您好，<span>我是青团智能体</span></h1>
-              <p>一个面向老年人的陪伴与生活服务助手。说得慢一点，按钮大一点，重要事情先确认。</p>
             </div>
             <div className="welcome-panel">
               <div>
