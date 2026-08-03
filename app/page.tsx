@@ -403,21 +403,35 @@ export default function Home() {
               <img src="/brand/qingtuan-logo.png" alt="青团智能体 logo" />
             </div>
             <div className="welcome-copy">
-              <h1>您好，<span>我是青团智能体</span></h1>
+              <h1>
+                <span className="welcome-hello">您好，</span>
+                <span className="welcome-name">我是青团智能体</span>
+              </h1>
             </div>
             <div className="welcome-panel">
-              <div>
-                <strong>今天可以帮您：</strong>
-                <span>设置提醒、识别诈骗、整理复诊资料、联系家人。</span>
+              <div className="welcome-capabilities">
+                <strong>今天可以帮您</strong>
+                <div className="capability-list" aria-label="青团智能体的主要功能">
+                  <span>生活提醒</span>
+                  <span>防诈识别</span>
+                  <span>复诊整理</span>
+                  <span>联系家人</span>
+                </div>
               </div>
               <button className="btn block welcome-entry senior" onClick={() => go("home")}>
-                老人端进入
+                <span className="entry-index">01</span>
+                <span className="entry-label"><strong>老人端进入</strong><small>开始陪伴与生活助手</small></span>
+                <span className="entry-arrow" aria-hidden="true">›</span>
               </button>
               <button className="btn block welcome-entry family" onClick={() => go("familyDashboard")}>
-                家属端入口
+                <span className="entry-index">02</span>
+                <span className="entry-label"><strong>家属端入口</strong><small>查看动态与协同照护</small></span>
+                <span className="entry-arrow" aria-hidden="true">›</span>
               </button>
               <button className="btn block welcome-entry help" onClick={() => go("help")}>
-                我需要帮助
+                <span className="entry-index">03</span>
+                <span className="entry-label"><strong>我需要帮助</strong><small>快速联系家人与急救</small></span>
+                <span className="entry-arrow" aria-hidden="true">›</span>
               </button>
             </div>
             <div className="demo-tools">
