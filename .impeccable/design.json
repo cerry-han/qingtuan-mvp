@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-13T16:00:00+08:00",
+  "title": "Design System: 青团智能体",
+  "extensions": {
+    "colorMeta": {
+      "primary-green": {
+        "role": "primary",
+        "displayName": "安心青绿",
+        "canonical": "#176F55",
+        "tonalRamp": ["#08251C", "#0D3A2D", "#0F513E", "#176F55", "#459077", "#79B29E", "#B5D7CA", "#E2F0E9"]
+      },
+      "brand-orange": {
+        "role": "secondary",
+        "displayName": "青团橙",
+        "canonical": "#BC641F",
+        "tonalRamp": ["#351A08", "#592C0C", "#7E4215", "#BC641F", "#D88748", "#E7AD7F", "#F5D3B8", "#FFF2E6"]
+      },
+      "neutral-bg": {
+        "role": "neutral",
+        "displayName": "柔和背景",
+        "canonical": "#F5F6F1",
+        "tonalRamp": ["#20231E", "#3A3E37", "#596057", "#7B8378", "#A1A89D", "#C3C8BF", "#E1E4DD", "#F5F6F1"]
+      }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "页面标题", "purpose": "问候与当前任务。" },
+      "body": { "displayName": "适老正文", "purpose": "默认 20px 的说明与任务内容。" },
+      "label": { "displayName": "操作标签", "purpose": "按钮、导航和表单标签。" }
+    },
+    "shadows": [
+      { "name": "surface-low", "value": "0 5px 8px rgba(26, 45, 38, 0.07)", "purpose": "少量独立表面。" },
+      { "name": "voice-press", "value": "0 6px 0 #0F513E", "purpose": "老人端语音主操作的按压层。" }
+    ],
+    "motion": [
+      { "name": "state-standard", "value": "180ms ease-out", "purpose": "悬停、焦点和状态切换反馈。" }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "540px" },
+      { "name": "tablet", "value": "860px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "主要确认和发送操作。",
+      "html": "<button class=\"ds-btn-primary\">发送</button>",
+      "css": ".ds-btn-primary{min-height:52px;padding:12px 18px;border:2px solid #176F55;border-radius:12px;background:#176F55;color:#fff;font:700 20px/1.4 'Microsoft YaHei',sans-serif;transition:transform .18s ease-out}.ds-btn-primary:hover{transform:translateY(-1px)}.ds-btn-primary:focus-visible{outline:4px solid #F0A13C;outline-offset:3px}.ds-btn-primary:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Voice Action",
+      "kind": "button",
+      "description": "老人端首页第一操作。",
+      "html": "<button class=\"ds-voice\"><strong>和青团说话</strong><span>点一下开始，我会认真听</span></button>",
+      "css": ".ds-voice{width:100%;min-height:132px;display:grid;place-items:center;align-content:center;gap:8px;border:0;border-radius:16px;background:#176F55;color:#fff;box-shadow:0 6px 0 #0F513E;font-family:'Microsoft YaHei',sans-serif}.ds-voice strong{font-size:31px}.ds-voice span{font-size:18px;font-weight:650}.ds-voice:focus-visible{outline:4px solid #F0A13C;outline-offset:3px}.ds-voice:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "语音不可用时的清晰文字降级入口。",
+      "html": "<label class=\"ds-field\">也可以打字告诉我<input placeholder=\"例如：下午提醒我量血压\"></label>",
+      "css": ".ds-field{display:grid;gap:9px;color:#15231E;font:700 20px/1.4 'Microsoft YaHei',sans-serif}.ds-field input{min-height:52px;padding:15px 16px;border:2px solid #D6DDD6;border-radius:12px;background:#fff;color:#15231E;font:400 20px/1.5 'Microsoft YaHei',sans-serif}.ds-field input:focus-visible{outline:4px solid #F0A13C;outline-offset:3px}"
+    },
+    {
+      "name": "Elder Task Navigation",
+      "kind": "nav",
+      "description": "六个固定的老人端任务入口。",
+      "html": "<nav class=\"ds-nav\"><button class=\"active\">和青团说话</button><button>今日提醒</button><button>问问怎么办</button></nav>",
+      "css": ".ds-nav{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #D6DDD6}.ds-nav button{min-height:58px;padding:12px 8px 10px;border:0;border-bottom:4px solid transparent;background:transparent;color:#55645D;font:700 18px/1.4 'Microsoft YaHei',sans-serif}.ds-nav button.active{color:#0F513E;border-bottom-color:#BC641F}.ds-nav button:focus-visible{outline:4px solid #F0A13C;outline-offset:-4px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "家里的清晰指引",
+    "overview": "界面像一张家人认真整理过的生活清单：重点先出现，文字清楚，操作位置固定。绿色承担可信操作，橙色保留品牌温度，红色只用于真实的紧急求助。",
+    "keyCharacteristics": ["默认 20px 正文", "六个固定任务入口", "平面分组优先", "三档字体", "高对比度焦点"],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "橙色只承担品牌与定位提示，绝不和绿色争夺主要操作。", "section": "colors" },
+      { "name": "The Read It Once Rule", "body": "不使用小型全大写标签，不依赖细字重或低对比度建立层级。", "section": "typography" },
+      { "name": "The Flat By Default Rule", "body": "如果一个区域无需浮在内容之上，就使用留白或分隔线，不使用卡片。", "section": "elevation" }
+    ],
+    "dos": ["保证默认正文不低于 20px、主要点击区域不低于 52px。", "让六项核心入口与首页、音量、求助保持固定位置和一致文案。"],
+    "donts": ["使用卡片层层嵌套、复杂侧边栏、九宫格入口堆叠。", "使用低对比度文字或仅依赖颜色表达状态。"]
+  }
+}

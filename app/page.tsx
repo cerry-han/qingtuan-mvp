@@ -9,21 +9,53 @@ type FraudResult = "none" | "high" | "careful";
 type FraudRule = { label: string; reason: string; pattern: RegExp };
 type FamilyEvent = { title: string; detail: string; level?: "normal" | "warning" | "urgent" };
 type VoiceState = "idle" | "listening";
+type FontLevel = 0 | 1 | 2;
+type SpeechResultEvent = {
+  results?: ArrayLike<ArrayLike<{ transcript?: string }>>;
+};
+type SpeechRecognitionInstance = {
+  lang: string;
+  interimResults: boolean;
+  maxAlternatives: number;
+  onresult: ((event: SpeechResultEvent) => void) | null;
+  onerror: (() => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+};
+type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance;
+
+declare global {
+  interface Window {
+    SpeechRecognition?: SpeechRecognitionConstructor;
+    webkitSpeechRecognition?: SpeechRecognitionConstructor;
+  }
+}
 
 const STORAGE_KEY = "qingtuan-mvp-state";
 
 const pageNames: Record<Page, string> = {
   welcome: "欢迎页",
   home: "首页",
-  chat: "对话陪伴",
-  reminders: "提醒管理",
-  guide: "办事指导",
-  health: "健康资料",
-  fraud: "查诈骗风险",
+  chat: "和青团说话",
+  reminders: "今日提醒",
+  guide: "问问怎么办",
+  health: "看健康资料",
+  fraud: "帮我辨真假",
   familyDashboard: "家属端",
-  family: "找家里人",
+  family: "联系家人",
   help: "紧急求助",
 };
+
+const elderNavItems: Array<{ page: Page; label: string }> = [
+  { page: "chat", label: "和青团说话" },
+  { page: "reminders", label: "今日提醒" },
+  { page: "guide", label: "问问怎么办" },
+  { page: "health", label: "看健康资料" },
+  { page: "fraud", label: "帮我辨真假" },
+  { page: "family", label: "联系家人" },
+];
+
+const fontLevelLabels = ["标准字体", "大字模式", "超大字体"] as const;
 
 const guideFlows = {
   hospital: ["确认要去的医院或科室", "打开医院官方小程序或公众号", "选择挂号/预约挂号", "选择日期、医生和时间段", "确认信息，不要把验证码告诉别人"],
@@ -83,7 +115,7 @@ export default function Home() {
   const [page, setPage] = useState<Page>("welcome");
   const [storageReady, setStorageReady] = useState(false);
   const [status, setStatus] = useState("已准备好。");
-  const [largeFont, setLargeFont] = useState(false);
+  const [fontLevel, setFontLevel] = useState<FontLevel>(0);
   const [loudVolume, setLoudVolume] = useState(false);
   const [familyAccessEnabled, setFamilyAccessEnabled] = useState(true);
   const [homeInput, setHomeInput] = useState("");
@@ -108,7 +140,10 @@ export default function Home() {
   const [reminders, setReminders] = useState<Reminder[]>(defaultReminders);
   const [familyEvents, setFamilyEvents] = useState<FamilyEvent[]>(defaultFamilyEvents);
 
-  const appClass = useMemo(() => `app-shell${largeFont ? " large-font" : ""}`, [largeFont]);
+  const appClass = useMemo(
+    () => `app-shell font-level-${fontLevel} ${page === "familyDashboard" ? "family-mode" : "elder-mode"}`,
+    [fontLevel, page],
+  );
   const fraudFindings = useMemo(() => getFraudFindings(fraudText), [fraudText]);
   const completedReminderCount = useMemo(() => reminders.filter((item) => item.done).length, [reminders]);
   const warningEventCount = useMemo(() => familyEvents.filter((item) => item.level === "warning" || item.level === "urgent").length, [familyEvents]);
@@ -118,7 +153,10 @@ export default function Home() {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const saved = JSON.parse(raw);
-        setLargeFont(Boolean(saved.largeFont));
+        const savedFontLevel = Number(saved.fontLevel);
+        // The persisted prototype state is intentionally restored once after hydration.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setFontLevel(savedFontLevel === 1 || savedFontLevel === 2 ? savedFontLevel : saved.largeFont ? 1 : 0);
         setLoudVolume(Boolean(saved.loudVolume));
         setFamilyAccessEnabled(saved.familyAccessEnabled !== false);
         setFraudText(saved.fraudText || "");
@@ -144,7 +182,7 @@ export default function Home() {
   useEffect(() => {
     if (!storageReady) return;
     const state = {
-      largeFont,
+      fontLevel,
       loudVolume,
       familyAccessEnabled,
       fraudText,
@@ -157,7 +195,7 @@ export default function Home() {
       familyEvents,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [familyAccessEnabled, familyEvents, familyMessage, fraudResult, fraudText, healthSummary, healthText, largeFont, loudVolume, reminders, selectedContact, storageReady]);
+  }, [familyAccessEnabled, familyEvents, familyMessage, fontLevel, fraudResult, fraudText, healthSummary, healthText, loudVolume, reminders, selectedContact, storageReady]);
 
   function go(next: Page) {
     setPage(next);
@@ -182,7 +220,7 @@ export default function Home() {
   }
 
   function loadDemoData() {
-    setLargeFont(false);
+    setFontLevel(0);
     setLoudVolume(false);
     setFamilyAccessEnabled(true);
     setHomeInput("");
@@ -211,7 +249,7 @@ export default function Home() {
 
   function resetDemoData() {
     localStorage.removeItem(STORAGE_KEY);
-    setLargeFont(false);
+    setFontLevel(0);
     setLoudVolume(false);
     setFamilyAccessEnabled(true);
     setHomeInput("");
@@ -281,7 +319,7 @@ export default function Home() {
 
   function startVoiceInput() {
     if (typeof window === "undefined") return;
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       setStatus("当前浏览器暂不支持语音输入。请用 Chrome 或 Edge 试试。");
       return;
@@ -294,7 +332,7 @@ export default function Home() {
     setVoiceState("listening");
     setStatus("正在听，请慢慢说。");
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechResultEvent) => {
       const text = event.results?.[0]?.[0]?.transcript?.trim();
       setVoiceState("idle");
       if (!text) {
@@ -442,105 +480,131 @@ export default function Home() {
         </main>
       ) : (
         <>
-          <aside className="side" aria-label="主导航">
-            <div className="brand">
-              <div className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></div>
-              <span>青团智能体</span>
-            </div>
-            <nav className="nav">
-              {(["home", "chat", "reminders", "guide", "health", "fraud", "familyDashboard", "family", "help"] as Page[]).map((item) => (
-                <button className={page === item ? "active" : ""} key={item} onClick={() => go(item)}>
-                  {pageNames[item]}
+          {page === "familyDashboard" ? (
+            <aside className="side" aria-label="主导航">
+              <div className="brand">
+                <div className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></div>
+                <span>青团智能体</span>
+              </div>
+              <nav className="nav">
+                {(["home", "chat", "reminders", "guide", "health", "fraud", "familyDashboard", "family", "help"] as Page[]).map((item) => (
+                  <button className={page === item ? "active" : ""} key={item} onClick={() => go(item)}>
+                    {pageNames[item]}
+                  </button>
+                ))}
+              </nav>
+              <p className="side-note">陪伴、提醒、办事与家属协同，让重要的事情更安心。</p>
+            </aside>
+          ) : (
+            <header className="elder-header">
+              <div className="elder-header-row">
+                <button className="elder-brand" onClick={() => go("home")} aria-label="回到老人端首页">
+                  <span className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></span>
+                  <span>青团智能体</span>
                 </button>
-              ))}
-            </nav>
-            <p className="side-note">陪伴、提醒、办事与家属协同，让重要的事情更安心。</p>
-          </aside>
+                <div className="elder-utilities" aria-label="常用设置">
+                  <button className={page === "home" ? "utility active" : "utility"} onClick={() => go("home")}>回到首页</button>
+                  <button
+                    className="utility"
+                    onClick={() => {
+                      setLoudVolume(!loudVolume);
+                      setStatus(!loudVolume ? "音量已调大。" : "音量已恢复正常。");
+                    }}
+                  >
+                    {loudVolume ? "音量较大" : "音量正常"}
+                  </button>
+                  <button className="utility help" onClick={() => go("help")}>紧急求助</button>
+                </div>
+              </div>
+              <nav className="elder-nav" aria-label="老人端主要功能">
+                {elderNavItems.map((item) => (
+                  <button className={page === item.page ? "active" : ""} key={item.page} onClick={() => go(item.page)}>
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+            </header>
+          )}
 
-          <main className="main">
+          <main className={page === "familyDashboard" ? "main family-main" : "main elder-main"}>
 
         {page === "home" && (
-          <section className="page active">
+          <section className="page active home-page">
             <div className="topbar">
               <div className="hello">
                 <h1>您好，李阿姨。</h1>
-                <p>今天想让我帮您做什么？</p>
+                <p>今天需要我帮您做什么？</p>
               </div>
               <div className="quick-settings">
                 <button
                   className="btn"
                   onClick={() => {
-                    setLargeFont(!largeFont);
-                    setStatus(!largeFont ? "字体已加大。" : "字体已恢复。");
+                    const nextLevel = ((fontLevel + 1) % 3) as FontLevel;
+                    setFontLevel(nextLevel);
+                    setStatus(`已切换为${fontLevelLabels[nextLevel]}。`);
                   }}
                 >
-                  {largeFont ? "恢复字体" : "字体加大"}
-                </button>
-                <button
-                  className="btn"
-                  onClick={() => {
-                    setLoudVolume(!loudVolume);
-                    setStatus("音量设置已切换。");
-                  }}
-                >
-                  {loudVolume ? "音量较大" : "音量正常"}
+                  {fontLevelLabels[fontLevel]}
                 </button>
               </div>
             </div>
 
-            <button
-              className={`voice ${voiceState === "listening" ? "listening" : ""}`}
-              onClick={startVoiceInput}
-            >
-              {voiceState === "listening" ? "正在听，请慢慢说" : "点一下和青团说话"}
-            </button>
-
-            <div className="card">
-              <div className="text-row">
-                <input value={homeInput} onChange={(event) => setHomeInput(event.target.value)} placeholder="也可以打字：今天想问什么？" />
-                <button className="btn primary" onClick={sendHomeText}>
-                  发送
-                </button>
-              </div>
-            </div>
-
-            <div className="card">
-              <h2>今日提醒</h2>
-              <div className="grid two">{renderReminders()}</div>
-            </div>
-
-            <div className="card">
-              <h2>常用功能</h2>
-              <div className="grid three">
-                <button className="btn feature" onClick={() => go("chat")}>
-                  陪我说说话
-                </button>
-                <button className="btn feature" onClick={() => go("reminders")}>
-                  设置提醒
-                </button>
-                <button className="btn feature" onClick={() => go("guide")}>
-                  办事指导
-                </button>
-                <button className="btn feature" onClick={() => go("fraud")}>
-                  查诈骗风险
-                </button>
-                <button className="btn feature" onClick={() => go("health")}>
-                  整理健康资料
-                </button>
-                <button className="btn feature" onClick={() => go("family")}>
-                  找家里人
-                </button>
-              </div>
-            </div>
-
-            <div className="grid two">
-              <button className="btn danger block" onClick={() => go("help")}>
-                我需要帮助
+            <section className="talk-area" aria-labelledby="talk-title">
+              <button
+                className={`voice ${voiceState === "listening" ? "listening" : ""}`}
+                onClick={startVoiceInput}
+                aria-pressed={voiceState === "listening"}
+              >
+                <strong id="talk-title">{voiceState === "listening" ? "正在听，请慢慢说" : "和青团说话"}</strong>
+                <span>{voiceState === "listening" ? "说完后请稍等一下" : "点一下开始，我会认真听"}</span>
               </button>
-              <button className="btn block" onClick={() => setStatus("好的，先不做了。")}>
-                先不做了
-              </button>
-            </div>
+              <div className="home-text-entry">
+                <label htmlFor="home-question">也可以打字告诉我</label>
+                <div className="text-row">
+                  <input id="home-question" value={homeInput} onChange={(event) => setHomeInput(event.target.value)} placeholder="例如：下午提醒我量血压" />
+                  <button className="btn primary" onClick={sendHomeText}>
+                    发送
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <section className="home-section reminder-section" aria-labelledby="today-reminders">
+              <div className="section-heading">
+                <h2 id="today-reminders">今日提醒</h2>
+                <button className="text-link" onClick={() => go("reminders")}>管理全部提醒</button>
+              </div>
+              <div className="reminder-list">{renderReminders()}</div>
+            </section>
+
+            <section className="home-section" aria-labelledby="more-help">
+              <div className="section-heading">
+                <div>
+                  <h2 id="more-help">还可以帮您</h2>
+                  <p>选择一件要做的事，我会一步一步陪您完成。</p>
+                </div>
+              </div>
+              <div className="home-action-list">
+                <button className="home-feature" onClick={() => go("chat")}>
+                  <strong>陪我说说话</strong><span>聊聊今天，或者说说心里话</span>
+                </button>
+                <button className="home-feature" onClick={() => go("reminders")}>
+                  <strong>设置一个提醒</strong><span>吃药、复诊和生活安排</span>
+                </button>
+                <button className="home-feature" onClick={() => go("guide")}>
+                  <strong>问问怎么办</strong><span>挂号、公交和扫码等事情</span>
+                </button>
+                <button className="home-feature" onClick={() => go("fraud")}>
+                  <strong>帮我辨真假</strong><span>可疑短信、电话和转账要求</span>
+                </button>
+                <button className="home-feature" onClick={() => go("health")}>
+                  <strong>看健康资料</strong><span>整理检查记录和复诊问题</span>
+                </button>
+                <button className="home-feature" onClick={() => go("family")}>
+                  <strong>联系家人</strong><span>给女儿或儿子发送消息</span>
+                </button>
+              </div>
+            </section>
           </section>
         )}
 
@@ -945,7 +1009,7 @@ export default function Home() {
           </section>
         )}
 
-        <div className="footer-status">{status}</div>
+        <div className="footer-status" role="status" aria-live="polite">{status}</div>
           </main>
         </>
       )}
