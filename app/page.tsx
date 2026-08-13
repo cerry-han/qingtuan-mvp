@@ -140,10 +140,10 @@ export default function Home() {
   const [reminders, setReminders] = useState<Reminder[]>(defaultReminders);
   const [familyEvents, setFamilyEvents] = useState<FamilyEvent[]>(defaultFamilyEvents);
 
-  const appClass = useMemo(
-    () => `app-shell font-level-${fontLevel} ${page === "familyDashboard" ? "family-mode" : "elder-mode"}`,
-    [fontLevel, page],
-  );
+  const appClass = useMemo(() => {
+    const mode = page === "welcome" ? "welcome-mode" : page === "familyDashboard" ? "family-mode" : "elder-mode";
+    return `app-shell font-level-${fontLevel} ${mode}`;
+  }, [fontLevel, page]);
   const fraudFindings = useMemo(() => getFraudFindings(fraudText), [fraudText]);
   const completedReminderCount = useMemo(() => reminders.filter((item) => item.done).length, [reminders]);
   const warningEventCount = useMemo(() => familyEvents.filter((item) => item.level === "warning" || item.level === "urgent").length, [familyEvents]);
@@ -496,56 +496,56 @@ export default function Home() {
               <p className="side-note">陪伴、提醒、办事与家属协同，让重要的事情更安心。</p>
             </aside>
           ) : (
-            <header className="elder-header">
-              <div className="elder-header-row">
-                <button className="elder-brand" onClick={() => go("home")} aria-label="回到老人端首页">
-                  <span className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></span>
-                  <span>青团智能体</span>
-                </button>
-                <div className="elder-utilities" aria-label="常用设置">
-                  <button className={page === "home" ? "utility active" : "utility"} onClick={() => go("home")}>回到首页</button>
-                  <button
-                    className="utility"
-                    onClick={() => {
-                      setLoudVolume(!loudVolume);
-                      setStatus(!loudVolume ? "音量已调大。" : "音量已恢复正常。");
-                    }}
-                  >
-                    {loudVolume ? "音量较大" : "音量正常"}
-                  </button>
-                  <button className="utility help" onClick={() => go("help")}>紧急求助</button>
-                </div>
-              </div>
+            <aside className="elder-sidebar" aria-label="老人端导航">
+              <button className="elder-brand" onClick={() => go("home")} aria-label="回到老人端首页">
+                <span className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></span>
+                <span><strong>青团智能体</strong><small>您的生活助手</small></span>
+              </button>
+
               <nav className="elder-nav" aria-label="老人端主要功能">
+                <button className={page === "home" ? "active" : ""} onClick={() => go("home")}>
+                  首页
+                </button>
                 {elderNavItems.map((item) => (
                   <button className={page === item.page ? "active" : ""} key={item.page} onClick={() => go(item.page)}>
                     {item.label}
                   </button>
                 ))}
               </nav>
-            </header>
-          )}
 
-          <main className={page === "familyDashboard" ? "main family-main" : "main elder-main"}>
-
-        {page === "home" && (
-          <section className="page active home-page">
-            <div className="topbar">
-              <div className="hello">
-                <h1>您好，李阿姨。</h1>
-                <p>今天需要我帮您做什么？</p>
-              </div>
-              <div className="quick-settings">
+              <div className="elder-utilities" aria-label="显示与声音设置">
                 <button
-                  className="btn"
+                  className="utility"
                   onClick={() => {
                     const nextLevel = ((fontLevel + 1) % 3) as FontLevel;
                     setFontLevel(nextLevel);
                     setStatus(`已切换为${fontLevelLabels[nextLevel]}。`);
                   }}
                 >
-                  {fontLevelLabels[fontLevel]}
+                  字体：{fontLevelLabels[fontLevel]}
                 </button>
+                <button
+                  className="utility"
+                  onClick={() => {
+                    setLoudVolume(!loudVolume);
+                    setStatus(!loudVolume ? "音量已调大。" : "音量已恢复正常。");
+                  }}
+                >
+                  声音：{loudVolume ? "较大" : "正常"}
+                </button>
+                <button className="utility help" onClick={() => go("help")}>紧急求助</button>
+              </div>
+            </aside>
+          )}
+
+          <main className={page === "familyDashboard" ? "main family-main" : "main elder-main"}>
+
+        {page === "home" && (
+          <section className="page active home-page">
+            <div className="topbar home-topbar">
+              <div className="hello">
+                <h1>您好，李阿姨。</h1>
+                <p>今天需要我帮您做什么？</p>
               </div>
             </div>
 
@@ -610,7 +610,7 @@ export default function Home() {
 
         {page === "chat" && (
           <section className="page active">
-            <PageHeader title="对话陪伴" desc="青团会简短回答，并在高风险场景提醒确认。" onBack={() => go("home")} />
+            <PageHeader title="对话陪伴" desc="青团会简短回答，并在高风险场景提醒确认。" />
             <div className="card chat-box">
               {chat.map((item, index) => (
                 <div className={`bubble ${item.role}`} key={`${item.role}-${index}`}>
@@ -642,7 +642,7 @@ export default function Home() {
 
         {page === "reminders" && (
           <section className="page active">
-            <PageHeader title="提醒管理" desc="吃药、复诊、量血压，都要先复述确认。" onBack={() => go("home")} />
+            <PageHeader title="提醒管理" desc="吃药、复诊、量血压，都要先复述确认。" />
             <div className="card">
               <h2>新建提醒</h2>
               <div className="grid two">
@@ -679,7 +679,7 @@ export default function Home() {
 
         {page === "guide" && (
           <section className="page active">
-            <PageHeader title="办事分步指导" desc="一次只讲一步，老人可以重复、上一步、下一步或退出。" onBack={() => go("home")} />
+            <PageHeader title="办事分步指导" desc="一次只讲一步，老人可以重复、上一步、下一步或退出。" />
             <div className="card">
               <h2>选择要办的事</h2>
               <div className="grid three">
@@ -718,7 +718,7 @@ export default function Home() {
 
         {page === "health" && (
           <section className="page active">
-            <PageHeader title="健康资料整理" desc="整理检查报告、处方和测量记录，只做复诊准备，不做诊断。" onBack={() => go("home")} />
+            <PageHeader title="健康资料整理" desc="整理检查报告、处方和测量记录，只做复诊准备，不做诊断。" />
             <div className="card">
               <h2>录入资料</h2>
               <textarea value={healthText} onChange={(event) => setHealthText(event.target.value)} placeholder="可以先粘贴检查报告文字、处方内容或血压血糖记录。图片 OCR 后续接入。" />
@@ -761,7 +761,7 @@ export default function Home() {
 
         {page === "fraud" && (
           <section className="page active">
-            <PageHeader title="查诈骗风险" desc="先暂停操作，不转账，不给验证码，再核实。" onBack={() => go("home")} />
+            <PageHeader title="查诈骗风险" desc="先暂停操作，不转账，不给验证码，再核实。" />
             <div className="card">
               <h2>输入可疑内容</h2>
               <textarea
@@ -852,7 +852,7 @@ export default function Home() {
 
         {page === "familyDashboard" && (
           <section className="page active">
-            <PageHeader title="家属端" desc="家属只查看授权范围内的信息，协助提醒和接收必要通知。" onBack={() => go("home")} />
+            <PageHeader title="家属端" desc="家属只查看授权范围内的信息，协助提醒和接收必要通知。" />
             <div className="grid three">
               <div className="stat-card">
                 <span className="muted">当前绑定老人</span>
@@ -923,7 +923,7 @@ export default function Home() {
         )}
         {page === "family" && (
           <section className="page active">
-            <PageHeader title="找家里人" desc="发送前会复述联系人和完整消息。" onBack={() => go("home")} />
+            <PageHeader title="找家里人" desc="发送前会复述联系人和完整消息。" />
             <div className="card">
               <h2>选择联系人</h2>
               <div className="grid">
@@ -972,7 +972,7 @@ export default function Home() {
 
         {page === "help" && (
           <section className="page active">
-            <PageHeader title="紧急求助" desc="如果胸口痛、摔倒、明显不舒服，请尽快联系身边人或急救服务。" onBack={() => go("home")} />
+            <PageHeader title="紧急求助" desc="如果胸口痛、摔倒、明显不舒服，请尽快联系身边人或急救服务。" />
             <div className="card">
               <h2>请选择求助方式</h2>
               <div className="grid two">
@@ -1017,16 +1017,13 @@ export default function Home() {
   );
 }
 
-function PageHeader({ title, desc, onBack }: { title: string; desc: string; onBack: () => void }) {
+function PageHeader({ title, desc }: { title: string; desc: string }) {
   return (
     <div className="topbar">
       <div className="hello">
         <h1>{title}</h1>
         <p>{desc}</p>
       </div>
-      <button className="btn" onClick={onBack}>
-        返回首页
-      </button>
     </div>
   );
 }

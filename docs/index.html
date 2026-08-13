@@ -50,7 +50,7 @@
     }
 
     .app.elder-mode {
-      display: block;
+      grid-template-columns: 292px minmax(0, 1fr);
     }
 
     .side {
@@ -209,8 +209,7 @@
       align-items: center;
       background: rgba(255, 252, 245, 0.9);
       backdrop-filter: blur(9px);
-      border: 1px solid rgba(193, 145, 84, 0.34);
-      border-left: 6px solid #d47b27;
+      border: 2px solid rgba(193, 145, 84, 0.42);
       border-radius: 8px;
       padding: 22px;
       box-shadow: 0 18px 44px rgba(80, 55, 28, 0.14);
@@ -614,100 +613,87 @@
 
     button:active { transform: translateY(1px); }
 
-    .elder-header {
+    .elder-sidebar {
       position: sticky;
       top: 0;
-      z-index: 20;
-      background: rgba(250, 251, 247, 0.98);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .elder-header-row,
-    .elder-nav {
-      width: min(1120px, 100%);
-      margin: 0 auto;
-    }
-
-    .elder-header-row {
-      min-height: 76px;
-      padding: 10px 32px;
+      height: 100dvh;
+      padding: 24px 18px 20px;
+      background: var(--panel);
+      border-right: 1px solid var(--line);
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
+      flex-direction: column;
+      gap: 22px;
+      overflow-y: auto;
     }
 
     .elder-brand {
+      width: 100%;
+      min-height: 64px;
       border: 0;
       background: transparent;
       color: var(--text);
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 0;
+      padding: 6px;
+      text-align: left;
       font-weight: 800;
       cursor: pointer;
     }
 
+    .elder-brand > span:last-child { display: grid; gap: 2px; }
+    .elder-brand strong { font-size: 1.08rem; }
+    .elder-brand small { color: var(--muted); font-size: 0.76rem; font-weight: 600; }
+
+    .elder-nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .elder-nav button {
+      width: 100%;
+      min-height: 58px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text);
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 750;
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    }
+
+    .elder-nav button:hover { background: var(--panel-strong); }
+    .elder-nav button.active { color: var(--green-dark); background: var(--green-soft); }
+
     .elder-utilities {
-      display: flex;
-      align-items: center;
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: grid;
       gap: 8px;
     }
 
     .utility {
-      min-height: 48px;
+      min-height: 52px;
       border: 1px solid var(--line);
       border-radius: 12px;
-      padding: 9px 14px;
-      background: #fff;
+      padding: 10px 14px;
+      background: var(--panel-strong);
       color: var(--text);
+      text-align: left;
       font-weight: 750;
       cursor: pointer;
     }
 
-    .utility.active {
-      border-color: var(--green);
-      color: var(--green-dark);
-      background: var(--green-soft);
-    }
-
-    .utility.help {
-      border-color: var(--red);
-      background: var(--red);
-      color: #fff;
-    }
-
-    .elder-nav {
-      min-height: 58px;
-      padding: 0 32px;
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      align-items: end;
-    }
-
-    .elder-nav button {
-      min-height: 58px;
-      border: 0;
-      border-bottom: 4px solid transparent;
-      background: transparent;
-      color: var(--muted);
-      padding: 12px 8px 10px;
-      font-weight: 750;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .elder-nav button:hover,
-    .elder-nav button.active {
-      color: var(--green-dark);
-      border-bottom-color: var(--orange);
-    }
+    .utility:hover { border-color: var(--green); }
+    .utility.help { border-color: var(--red); background: var(--red); color: #fff; }
 
     .main.elder-main {
       max-width: 1120px;
       margin: 0 auto;
-      padding: 36px 32px 48px;
+      padding: 48px 44px 56px;
     }
 
     #home.page.active { gap: 32px; }
@@ -802,6 +788,7 @@
 
     @media (max-width: 860px) {
       .app.family-mode { grid-template-columns: 1fr; }
+      .app.elder-mode { grid-template-columns: 236px minmax(0, 1fr); }
       .welcome-main { padding: 24px; }
       .family-mode .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .two, .three { grid-template-columns: 1fr; }
@@ -810,14 +797,7 @@
       .welcome-copy h1 { font-size: 3rem; }
       .welcome-copy::after { width: 150px; }
       .welcome-panel { grid-template-columns: 1fr; }
-      .elder-header-row { padding: 10px 18px; gap: 12px; }
-      .elder-brand > span:last-child { display: none; }
-      .elder-utilities { flex: 1; justify-content: flex-end; }
-      .utility { min-height: 46px; padding: 8px 10px; font-size: 0.88rem; }
-      .elder-nav { display: flex; overflow-x: auto; padding: 0 18px; scrollbar-width: none; }
-      .elder-nav::-webkit-scrollbar { display: none; }
-      .elder-nav button { flex: 0 0 auto; min-width: 128px; }
-      .main.elder-main { padding: 26px 20px 40px; }
+      .main.elder-main { padding: 32px 24px 44px; }
       #home.page.active { gap: 26px; }
       .voice { min-height: 116px; }
       .reminder-list .reminder-item { grid-template-columns: 1fr auto; }
@@ -827,12 +807,11 @@
     }
 
     @media (max-width: 540px) {
-      .elder-header-row { min-height: 66px; }
-      .logo { width: 42px; height: 42px; }
-      .utility { font-size: 0.78rem; }
-      .utility.active { display: none; }
-      .elder-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; padding: 0 8px; }
-      .elder-nav button { min-width: 0; min-height: 54px; padding-inline: 4px; white-space: normal; font-size: 0.82rem; }
+      .app.elder-mode { display: block; }
+      .elder-sidebar { position: static; width: 100%; height: auto; padding: 14px 12px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .elder-brand, .elder-utilities { display: none; }
+      .elder-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .elder-nav button { min-height: 52px; padding: 8px 10px; }
       .main.elder-main { padding: 22px 16px 36px; }
       h1 { font-size: 1.65rem; }
       .topbar { gap: 14px; }
@@ -872,18 +851,13 @@
       <div class="side-note">陪伴、提醒、办事与家属协同，让重要的事情更安心。</div>
     </aside>
 
-    <header class="elder-header" id="elderHeader" style="display:none;">
-      <div class="elder-header-row">
-        <button class="elder-brand" data-page-link="home" aria-label="回到老人端首页">
-          <span class="logo"><img src="assets/qingtuan-logo.png" alt=""></span><span>青团智能体</span>
-        </button>
-        <div class="elder-utilities" aria-label="常用设置">
-          <button class="utility active" data-page-link="home">回到首页</button>
-          <button class="utility" id="volumeBtn">音量正常</button>
-          <button class="utility help" data-page-link="help">紧急求助</button>
-        </div>
-      </div>
+    <aside class="elder-sidebar" id="elderSidebar" style="display:none;" aria-label="老人端导航">
+      <button class="elder-brand" data-page-link="home" aria-label="回到老人端首页">
+        <span class="logo"><img src="assets/qingtuan-logo.png" alt=""></span>
+        <span><strong>青团智能体</strong><small>您的生活助手</small></span>
+      </button>
       <nav class="elder-nav" aria-label="老人端主要功能">
+        <button data-elder-page="home">首页</button>
         <button data-elder-page="chat">和青团说话</button>
         <button data-elder-page="reminders">今日提醒</button>
         <button data-elder-page="guide">问问怎么办</button>
@@ -891,7 +865,12 @@
         <button data-elder-page="fraud">帮我辨真假</button>
         <button data-elder-page="family">联系家人</button>
       </nav>
-    </header>
+      <div class="elder-utilities" aria-label="显示与声音设置">
+        <button class="utility" id="fontBtn">字体：标准字体</button>
+        <button class="utility" id="volumeBtn">声音：正常</button>
+        <button class="utility help" data-page-link="help">紧急求助</button>
+      </div>
+    </aside>
 
     <main class="welcome-main" id="welcomeMain">
       <section id="welcome" class="page welcome-page active">
@@ -919,13 +898,10 @@
 
     <main class="main" id="appMain" style="display:none;">
       <section id="home" class="page">
-        <div class="topbar">
+        <div class="topbar home-topbar">
           <div>
             <h1>您好，李阿姨。</h1>
             <p class="muted">今天需要我帮您做什么？</p>
-          </div>
-          <div class="actions">
-            <button class="btn" id="fontBtn">标准字体</button>
           </div>
         </div>
         <section class="talk-area" aria-labelledby="talkTitle">
@@ -959,14 +935,14 @@
       </section>
 
       <section id="chat" class="page">
-        <div class="topbar"><div><h1>对话陪伴</h1><p class="muted">青团会简短回答，并在高风险场景提醒确认。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="topbar"><div><h1>对话陪伴</h1><p class="muted">青团会简短回答，并在高风险场景提醒确认。</p></div></div>
         <div class="card chat-box" id="chatBox"><div class="bubble bot">您好，我在。想聊聊天，还是让我帮您办点事？</div></div>
         <div class="card"><div class="text-row"><input id="chatInput" placeholder="输入想说的话，例如：我今天有点闷"><button class="btn primary" id="chatSend">发送</button></div></div>
         <div class="actions"><button class="btn" id="repeatBtn">重复一遍</button><button class="btn" id="topicBtn">换个话题</button><button class="btn" data-page-link="family">联系家人</button></div>
       </section>
 
       <section id="reminders" class="page">
-        <div class="topbar"><div><h1>提醒管理</h1><p class="muted">吃药、复诊、量血压，都要先复述确认。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="topbar"><div><h1>提醒管理</h1><p class="muted">吃药、复诊、量血压，都要先复述确认。</p></div></div>
         <div class="card">
           <h2>新建提醒</h2>
           <div class="grid two"><input id="reminderTitle" placeholder="提醒内容，例如：吃降压药"><input id="reminderTime" type="time" value="08:00"></div>
@@ -977,7 +953,7 @@
       </section>
 
       <section id="guide" class="page">
-        <div class="topbar"><div><h1>办事分步指导</h1><p class="muted">一次只讲一步，可以重复、上一步、下一步或退出。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="topbar"><div><h1>办事分步指导</h1><p class="muted">一次只讲一步，可以重复、上一步、下一步或退出。</p></div></div>
         <div class="card">
           <h2>选择要办的事</h2>
           <div class="grid three">
@@ -1000,7 +976,7 @@
       </section>
 
       <section id="health" class="page">
-        <div class="topbar"><div><h1>健康资料整理</h1><p class="muted">整理检查报告、处方和测量记录，只做复诊准备，不做诊断。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="topbar"><div><h1>健康资料整理</h1><p class="muted">整理检查报告、处方和测量记录，只做复诊准备，不做诊断。</p></div></div>
         <div class="card">
           <h2>录入资料</h2>
           <textarea id="healthText" placeholder="可以先粘贴检查报告文字、处方内容或血压血糖记录。图片 OCR 后续接入。"></textarea>
@@ -1010,7 +986,7 @@
       </section>
 
       <section id="fraud" class="page">
-        <div class="topbar"><div><h1>查诈骗风险</h1><p class="muted">先暂停操作，不转账，不给验证码，再核实。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="topbar"><div><h1>查诈骗风险</h1><p class="muted">先暂停操作，不转账，不给验证码，再核实。</p></div></div>
         <div class="card">
           <h2>输入可疑内容</h2>
           <textarea id="fraudText" placeholder="把短信、聊天内容或电话里听到的话写在这里。"></textarea>
@@ -1020,7 +996,7 @@
       </section>
 
       <section id="familyDashboard" class="page">
-        <div class="topbar"><div><h1>家属端</h1><p class="muted">家属只查看授权范围内的信息，协助提醒和接收必要通知。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="topbar"><div><h1>家属端</h1><p class="muted">家属只查看授权范围内的信息，协助提醒和接收必要通知。</p></div></div>
         <div class="grid three">
           <div class="stat-card"><span class="muted">当前绑定老人</span><strong>李阿姨</strong><span id="accessStatus">授权协助中</span></div>
           <div class="stat-card"><span class="muted">今日提醒</span><strong id="reminderStat">2 项</strong><span id="reminderDetail">1 项已完成，1 项待确认</span></div>
@@ -1058,7 +1034,7 @@
       </section>
 
       <section id="family" class="page">
-        <div class="topbar"><div><h1>找家里人</h1><p class="muted">发送前会复述联系人和完整消息。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="topbar"><div><h1>找家里人</h1><p class="muted">发送前会复述联系人和完整消息。</p></div></div>
         <div class="card">
           <h2>选择联系人</h2>
           <div class="grid">
@@ -1075,7 +1051,7 @@
       </section>
 
       <section id="help" class="page">
-        <div class="topbar"><div><h1>紧急求助</h1><p class="muted">如果胸口痛、摔倒、明显不舒服，请尽快联系身边人或急救服务。</p></div><button class="btn" data-page-link="home">返回首页</button></div>
+        <div class="topbar"><div><h1>紧急求助</h1><p class="muted">如果胸口痛、摔倒、明显不舒服，请尽快联系身边人或急救服务。</p></div></div>
         <div class="card">
           <h2>请选择求助方式</h2>
           <div class="grid two"><button class="btn danger block" id="callEmergency">拨打 120</button><button class="btn primary block" id="callFamily">联系女儿王敏</button></div>
@@ -1238,8 +1214,8 @@
         familyAccessEnabled = saved.familyAccessEnabled !== false;
         fontLevel = saved.fontLevel === 1 || saved.fontLevel === 2 ? saved.fontLevel : saved.largeFont ? 1 : 0;
         document.documentElement.style.setProperty("--font-scale", fontScales[fontLevel]);
-        document.getElementById("fontBtn").textContent = fontLevelLabels[fontLevel];
-        if (saved.loudVolume) document.getElementById("volumeBtn").textContent = "音量较大";
+        document.getElementById("fontBtn").textContent = "字体：" + fontLevelLabels[fontLevel];
+        if (saved.loudVolume) document.getElementById("volumeBtn").textContent = "声音：较大";
         document.getElementById("fraudText").value = saved.fraudText || "";
         document.getElementById("healthText").value = saved.healthText || "";
         document.getElementById("familyMessage").value = saved.familyMessage || "";
@@ -1266,7 +1242,7 @@
         familyEvents,
         familyAccessEnabled,
         fontLevel,
-        loudVolume: document.getElementById("volumeBtn").textContent === "音量较大",
+        loudVolume: document.getElementById("volumeBtn").textContent === "声音：较大",
         fraudText: document.getElementById("fraudText").value,
         fraudResult: fraudResultState,
         healthText: document.getElementById("healthText").value,
@@ -1290,8 +1266,8 @@
       fraudResultState = "high";
       fontLevel = 0;
       document.documentElement.style.setProperty("--font-scale", 1);
-      document.getElementById("fontBtn").textContent = fontLevelLabels[fontLevel];
-      document.getElementById("volumeBtn").textContent = "音量正常";
+      document.getElementById("fontBtn").textContent = "字体：" + fontLevelLabels[fontLevel];
+      document.getElementById("volumeBtn").textContent = "声音：正常";
       document.getElementById("homeInput").value = "";
       document.getElementById("chatInput").value = "";
       document.getElementById("fraudText").value = demoFraudText;
@@ -1315,8 +1291,8 @@
       fraudResultState = "none";
       fontLevel = 0;
       document.documentElement.style.setProperty("--font-scale", 1);
-      document.getElementById("fontBtn").textContent = fontLevelLabels[fontLevel];
-      document.getElementById("volumeBtn").textContent = "音量正常";
+      document.getElementById("fontBtn").textContent = "字体：" + fontLevelLabels[fontLevel];
+      document.getElementById("volumeBtn").textContent = "声音：正常";
       document.getElementById("homeInput").value = "";
       document.getElementById("chatInput").value = "";
       document.getElementById("reminderTitle").value = "";
@@ -1344,7 +1320,7 @@
       app.classList.toggle("family-mode", isFamily);
       app.classList.toggle("elder-mode", !isWelcome && !isFamily);
       document.getElementById("sideNav").style.display = isFamily ? "flex" : "none";
-      document.getElementById("elderHeader").style.display = !isWelcome && !isFamily ? "block" : "none";
+      document.getElementById("elderSidebar").style.display = !isWelcome && !isFamily ? "flex" : "none";
       document.getElementById("welcomeMain").style.display = id === "welcome" ? "grid" : "none";
       document.getElementById("appMain").style.display = id === "welcome" ? "none" : "grid";
       document.getElementById("appMain").classList.toggle("elder-main", !isWelcome && !isFamily);
@@ -1480,13 +1456,13 @@
     document.getElementById("fontBtn").onclick = () => {
       fontLevel = (fontLevel + 1) % 3;
       document.documentElement.style.setProperty("--font-scale", fontScales[fontLevel]);
-      document.getElementById("fontBtn").textContent = fontLevelLabels[fontLevel];
+      document.getElementById("fontBtn").textContent = "字体：" + fontLevelLabels[fontLevel];
       saveLocalState();
       setStatus("已切换为" + fontLevelLabels[fontLevel] + "。");
     };
     document.getElementById("volumeBtn").onclick = () => {
       const btn = document.getElementById("volumeBtn");
-      btn.textContent = btn.textContent === "音量正常" ? "音量较大" : "音量正常";
+      btn.textContent = btn.textContent === "声音：正常" ? "声音：较大" : "声音：正常";
       saveLocalState();
       setStatus("音量设置已切换。");
     };
