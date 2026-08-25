@@ -45,7 +45,7 @@ const pageNames: Record<Page, string> = {
   help: "紧急求助",
 };
 
-type IconName = "home" | "chat" | "bell" | "help" | "health" | "shield" | "family" | "type" | "volume" | "alert" | "hospital" | "calendar" | "message" | "replay" | "mic" | "send" | "check" | "clock" | "leaf" | "privacy" | "chevron";
+type IconName = "home" | "chat" | "bell" | "help" | "health" | "shield" | "family" | "type" | "volume" | "alert" | "hospital" | "bus" | "qr" | "calendar" | "message" | "replay" | "mic" | "send" | "check" | "clock" | "leaf" | "privacy" | "chevron" | "arrowRight";
 
 const iconPaths: Record<IconName, string[]> = {
   home: ["M3 11.5 12 4l9 7.5", "M5.5 10v10h13V10", "M9 20v-6h6v6"],
@@ -59,6 +59,8 @@ const iconPaths: Record<IconName, string[]> = {
   volume: ["M11 5 6 9H2v6h4l5 4V5", "M15.5 8.5a5 5 0 0 1 0 7", "M18.5 5.5a9 9 0 0 1 0 13"],
   alert: ["M10.3 3.7 2.4 18a2 2 0 0 0 1.8 3h15.6a2 2 0 0 0 1.8-3L13.7 3.7a2 2 0 0 0-3.4 0", "M12 9v4", "M12 17h.01"],
   hospital: ["M3 21h18", "M5 21V8h14v13", "M9 8V3h6v5", "M12 4.5v2", "M9.5 14h5", "M12 11.5v5"],
+  bus: ["M6 17h12", "M6 3h12a2 2 0 0 1 2 2v12H4V5a2 2 0 0 1 2-2", "M4 10h16", "M7 21v-4", "M17 21v-4", "M8 14h.01", "M16 14h.01"],
+  qr: ["M3 3h7v7H3z", "M14 3h7v7h-7z", "M3 14h7v7H3z", "M14 14h3v3h-3z", "M18 18h3v3h-3z", "M18 14h3", "M14 20h2"],
   calendar: ["M4 5h16v16H4z", "M8 3v4", "M16 3v4", "M4 10h16", "M8 14h.01", "M12 14h.01", "M16 14h.01", "M8 18h.01", "M12 18h.01"],
   message: ["M4 5h16v12H8l-4 3V5", "M8 10h8", "M8 14h5"],
   replay: ["M3 12a9 9 0 1 0 3-6.7", "M3 4v6h6"],
@@ -69,6 +71,7 @@ const iconPaths: Record<IconName, string[]> = {
   leaf: ["M20 4c-7 0-12 3-12 9 0 3 2 5 5 5 6 0 7-7 7-14Z", "M4 21c3-6 7-9 13-12"],
   privacy: ["M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10", "m9 12 2 2 4-4"],
   chevron: ["m9 18 6-6-6-6"],
+  arrowRight: ["M5 12h14", "m13 6 6 6-6 6"],
 };
 
 function UiIcon({ name, className = "" }: { name: IconName; className?: string }) {
@@ -671,41 +674,73 @@ export default function Home() {
         )}
 
         {page === "guide" && (
-          <section className="page active">
-            <PageHeader title="办事分步指导" desc="一次只讲一步，老人可以重复、上一步、下一步或退出。" />
-            <div className="card">
-              <h2>选择要办的事</h2>
-              <div className="grid three">
-                <button className={`btn feature ${guideType === "hospital" ? "primary" : ""}`} onClick={() => { setGuideType("hospital"); setGuideStep(0); }}>
-                  手机挂号
+          <section className="page active guide-page">
+            <header className="guide-header">
+              <h1>办事分步指导</h1>
+              <p>跟着青团，一步一步办。</p>
+            </header>
+
+            <div className="guide-workspace">
+              <div className="guide-task-tabs" role="group" aria-label="选择要办的事">
+                {([
+                  ["hospital", "手机挂号", "hospital"],
+                  ["bus", "查公交路线", "bus"],
+                  ["qr", "扫二维码", "qr"],
+                ] as const).map(([type, label, icon]) => (
+                  <button
+                    className={guideType === type ? "active" : ""}
+                    key={type}
+                    onClick={() => { setGuideType(type); setGuideStep(0); setStatus(`已选择：${label}`); }}
+                    aria-pressed={guideType === type}
+                  >
+                    <span className="guide-tab-icon"><UiIcon name={icon} /></span>
+                    <strong>{label}</strong>
+                    {guideType === type && <span className="guide-tab-check"><UiIcon name="check" /></span>}
+                  </button>
+                ))}
+              </div>
+
+              <div className="guide-progress" aria-label={`第 ${guideStep + 1} 步，共 ${guideFlows[guideType].length} 步`}>
+                <strong>{guideStep + 1} / {guideFlows[guideType].length}</strong>
+                <span><i style={{ width: `${((guideStep + 1) / guideFlows[guideType].length) * 100}%` }} /></span>
+              </div>
+
+              <div className="guide-current">
+                <div className="guide-step-copy">
+                  <h2>{guideFlows[guideType][guideStep]}</h2>
+                  {guideType === "hospital" && guideStep === 0 && (
+                    <div className="guide-choices" aria-label="常用医院选项">
+                      <button onClick={() => setStatus("已选择：市人民医院")}><span><UiIcon name="hospital" /></span>市人民医院</button>
+                      <button onClick={() => setStatus("已选择：社区卫生服务中心")}><span><UiIcon name="home" /></span>社区卫生服务中心</button>
+                      <button className="uncertain" onClick={() => setStatus("没关系，可以先问问家人或社区工作人员。")}><span><UiIcon name="help" /></span>我还不确定</button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="guide-visual" aria-hidden="true">
+                  <span className="guide-sun" />
+                  <UiIcon name={guideType === "hospital" ? "hospital" : guideType === "bus" ? "bus" : "qr"} />
+                  <span className="guide-visual-route"><i /><UiIcon name="arrowRight" /></span>
+                </div>
+              </div>
+
+              <div className="guide-actions">
+                <button className="guide-repeat" onClick={() => setStatus(`再听一遍：${guideFlows[guideType][guideStep]}`)}><UiIcon name="replay" />再听一遍</button>
+                {guideStep > 0 && <button className="guide-back" onClick={() => setGuideStep(Math.max(0, guideStep - 1))}>上一步</button>}
+                <button
+                  className="guide-next"
+                  disabled={guideStep === guideFlows[guideType].length - 1}
+                  onClick={() => setGuideStep(Math.min(guideFlows[guideType].length - 1, guideStep + 1))}
+                >
+                  {guideStep === guideFlows[guideType].length - 1 ? "已经完成" : "下一步"}<UiIcon name={guideStep === guideFlows[guideType].length - 1 ? "check" : "arrowRight"} />
                 </button>
-                <button className={`btn feature ${guideType === "bus" ? "primary" : ""}`} onClick={() => { setGuideType("bus"); setGuideStep(0); }}>
-                  查公交路线
-                </button>
-                <button className={`btn feature ${guideType === "qr" ? "primary" : ""}`} onClick={() => { setGuideType("qr"); setGuideStep(0); }}>
-                  扫二维码
+                <button className="guide-exit" onClick={() => go("chat")}>退出</button>
+                <button className={`guide-voice ${voiceState === "listening" ? "listening" : ""}`} onClick={startVoiceInput} aria-pressed={voiceState === "listening"}>
+                  <UiIcon name="mic" />{voiceState === "listening" ? "正在听" : "按住说话"}
                 </button>
               </div>
             </div>
-            <div className="card">
-              <h2>当前步骤</h2>
-              <div className="step-number">第 {guideStep + 1} 步 / 共 {guideFlows[guideType].length} 步</div>
-              <p className="step-text">{guideFlows[guideType][guideStep]}</p>
-              <div className="actions">
-                <button className="btn" onClick={() => setStatus(`重复：${guideFlows[guideType][guideStep]}`)}>
-                  重复这一句
-                </button>
-                <button className="btn" disabled={guideStep === 0} onClick={() => setGuideStep(Math.max(0, guideStep - 1))}>
-                  上一步
-                </button>
-                <button className="btn primary" disabled={guideStep === guideFlows[guideType].length - 1} onClick={() => setGuideStep(Math.min(guideFlows[guideType].length - 1, guideStep + 1))}>
-                  下一步
-                </button>
-                <button className="btn" onClick={() => go("chat")}>
-                  退出指导
-                </button>
-              </div>
-            </div>
+            <div className="footer-status guide-status" role="status" aria-live="polite"><UiIcon name="check" />{status}</div>
           </section>
         )}
 
@@ -1103,7 +1138,7 @@ export default function Home() {
           </section>
         )}
 
-        <div className={`footer-status ${page === "health" ? "health-status" : page === "chat" ? "chat-hidden" : ""}`} role="status" aria-live="polite">{status}</div>
+        {page !== "guide" && <div className={`footer-status ${page === "health" ? "health-status" : page === "chat" ? "chat-hidden" : ""}`} role="status" aria-live="polite">{status}</div>}
           </main>
         </>
       )}
