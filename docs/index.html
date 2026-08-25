@@ -1387,6 +1387,230 @@
       .fraud-safety-heading { padding: 18px; }
       .fraud-safety-list { padding-inline: 18px; }
     }
+
+    /* Guided tasks: one calm instruction and one clear next action. */
+    .guide-page { min-height: 100dvh; gap: 0; padding-bottom: 24px; }
+    .guide-header {
+      min-height: 230px;
+      margin: 0 -36px 0 -42px;
+      padding: 54px 42px 34px;
+      background: #fbfcfa url("assets/soft-window-header.png") right top / auto 230px no-repeat;
+    }
+    .guide-header h1 {
+      max-width: 650px;
+      margin: 0;
+      color: #214c3c;
+      font-size: 2.55rem;
+      line-height: 1.18;
+      font-weight: 730;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+    .guide-header p { margin: 14px 0 0; color: #4f6259; font-size: 1.12rem; }
+    .guide-workspace {
+      margin-top: -18px;
+      padding: 22px 24px 20px;
+      border: 1px solid #dfe5df;
+      border-radius: 16px;
+      background: rgba(255, 255, 253, 0.97);
+      box-shadow: 0 5px 8px rgba(47, 76, 63, 0.07);
+    }
+    .guide-task-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .guide-task-tabs > button {
+      position: relative;
+      min-width: 0;
+      min-height: 82px;
+      display: grid;
+      grid-template-columns: 48px 1fr 30px;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border: 1px solid #dce3dc;
+      border-radius: 12px;
+      background: #fff;
+      color: #263b32;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+    .guide-task-tabs > button:hover { border-color: #7da08c; background: #f8faf7; transform: translateY(-1px); }
+    .guide-task-tabs > button.active { border-color: #4b8268; background: #f3f7f2; }
+    .guide-task-tabs strong { overflow: hidden; font-size: 1.04rem; font-weight: 720; text-overflow: ellipsis; white-space: nowrap; }
+    .guide-tab-icon {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: #edf4ed;
+      color: #397358;
+    }
+    .guide-tab-icon .ui-icon { width: 30px; height: 30px; }
+    .guide-tab-check {
+      width: 28px;
+      height: 28px;
+      display: none;
+      place-items: center;
+      border-radius: 50%;
+      background: #4f886b;
+      color: #fff;
+    }
+    .guide-task-tabs > button.active .guide-tab-check { display: grid; }
+    .guide-tab-check .ui-icon { width: 18px; height: 18px; }
+    .guide-progress {
+      display: grid;
+      grid-template-columns: 64px minmax(0, 520px);
+      align-items: center;
+      gap: 20px;
+      margin: 34px 28px 0;
+    }
+    .guide-progress strong { color: #285d47; font-size: 1.02rem; font-weight: 750; white-space: nowrap; }
+    .guide-progress > span {
+      height: 8px;
+      overflow: hidden;
+      border: 1px solid #e2d8bc;
+      border-radius: 999px;
+      background: #faf8ef;
+    }
+    .guide-progress i {
+      display: block;
+      width: 20%;
+      height: 100%;
+      border-radius: inherit;
+      background: #5c8c73;
+      transition: width 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .guide-current {
+      min-height: 330px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+      gap: 28px;
+      align-items: center;
+      padding: 32px 28px 30px;
+    }
+    .guide-step-copy { min-width: 0; }
+    .guide-step-copy h2 {
+      max-width: 720px;
+      margin: 0;
+      color: #214c3c;
+      font-size: 1.72rem;
+      line-height: 1.35;
+      font-weight: 740;
+      text-wrap: balance;
+    }
+    .guide-choices {
+      max-width: 660px;
+      display: grid;
+      grid-template-columns: minmax(180px, 0.75fr) minmax(285px, 1.25fr);
+      gap: 12px;
+      margin-top: 26px;
+    }
+    .guide-choices button {
+      min-width: 0;
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px;
+      border: 1px solid #dce3dc;
+      border-radius: 12px;
+      background: #fff;
+      color: #263b32;
+      font-weight: 680;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+    .guide-choices button:hover { border-color: #78a08a; background: #f6f9f5; transform: translateY(-1px); }
+    .guide-choices button:last-child { grid-column: 1 / -1; }
+    .guide-choices button > span {
+      width: 40px;
+      height: 40px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #4e8669;
+      color: #fff;
+    }
+    .guide-choices button > span .ui-icon { width: 23px; height: 23px; }
+    .guide-choices button.uncertain > span { background: #f7e7b8; color: #345d4b; }
+    .guide-visual { position: relative; min-height: 230px; display: grid; place-items: center; color: #6f937d; }
+    .guide-visual > .ui-icon { position: relative; z-index: 1; width: 148px; height: 148px; stroke-width: 1.05; }
+    .guide-sun {
+      position: absolute;
+      top: 18px;
+      right: 18%;
+      width: 94px;
+      height: 94px;
+      border-radius: 50%;
+      background: rgba(248, 226, 166, 0.42);
+    }
+    .guide-visual-route { position: absolute; right: 5%; bottom: 10px; width: 58%; display: flex; align-items: center; color: #577d67; }
+    .guide-visual-route i { height: 1px; flex: 1; background: #b7c8ba; }
+    .guide-visual-route .ui-icon { width: 32px; height: 32px; }
+    .guide-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 0 0;
+      border-top: 1px solid #e3e7e2;
+    }
+    .guide-actions button {
+      min-height: 58px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      color: #263b32;
+      font-weight: 720;
+      cursor: pointer;
+      transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+    }
+    .guide-actions button:hover:not(:disabled) { transform: translateY(-1px); }
+    .guide-actions .ui-icon { width: 24px; height: 24px; }
+    .guide-repeat, .guide-back { border: 1px solid #dce3dc; background: #fff; }
+    .guide-next { min-width: 190px; flex: 1 1 220px; max-width: 260px; border: 1px solid #5e8f76; background: #67967d; color: #fff !important; font-size: 1.04rem; }
+    .guide-next:hover:not(:disabled) { background: #57876e; }
+    .guide-next:disabled { border-color: #d9e1da; background: #e9eeea; color: #50645a !important; cursor: default; }
+    .guide-exit { border: 0; background: transparent; }
+    .guide-exit:hover { background: #f1f4f0; }
+    .guide-voice { border: 0; background: #e9f0e9; color: #2f654d !important; }
+    .guide-voice.listening { background: #f7e7b8; color: #59491f !important; }
+    .guide-status { display: flex; align-items: center; gap: 10px; margin-top: 20px; border: 0; border-radius: 12px; color: #4a6056; }
+    .guide-status .ui-icon { width: 22px; height: 22px; color: #4f876a; }
+
+    @media (max-width: 1400px) {
+      .guide-choices { grid-template-columns: 1fr; }
+      .guide-choices button:last-child { grid-column: auto; }
+    }
+    @media (max-width: 1080px) {
+      .guide-header { margin-left: -28px; margin-right: -28px; padding-inline: 28px; }
+      .guide-current { grid-template-columns: 1fr minmax(210px, 0.55fr); }
+      .guide-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      .guide-header { min-height: 190px; margin-inline: 0; padding: 42px 0 24px; background-size: auto 190px; }
+      .guide-header h1 { font-size: 2rem; }
+      .guide-workspace { margin-top: -8px; padding: 16px; }
+      .guide-task-tabs { grid-template-columns: 1fr; gap: 10px; }
+      .guide-task-tabs > button { min-height: 66px; }
+      .guide-current { grid-template-columns: 1fr; padding-inline: 12px; }
+      .guide-visual { min-height: 150px; }
+      .guide-visual > .ui-icon { width: 110px; height: 110px; }
+    }
+    @media (max-width: 540px) {
+      .guide-header { background-image: none; }
+      .guide-progress { margin-inline: 4px; }
+      .guide-current { padding-inline: 4px; }
+      .guide-step-copy h2 { font-size: 1.45rem; }
+      .guide-choices, .guide-actions { grid-template-columns: 1fr; }
+      .guide-choices button:last-child { grid-column: auto; }
+    }
   </style>
 </head>
 <body>
@@ -1403,6 +1627,8 @@
     <symbol id="icon-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4V5M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
     <symbol id="icon-alert" viewBox="0 0 24 24"><path d="M10.3 3.7 2.4 18a2 2 0 0 0 1.8 3h15.6a2 2 0 0 0 1.8-3L13.7 3.7a2 2 0 0 0-3.4 0M12 9v4M12 17h.01"/></symbol>
     <symbol id="icon-hospital" viewBox="0 0 24 24"><path d="M3 21h18M5 21V8h14v13M9 8V3h6v5M12 4.5v2M9.5 14h5M12 11.5v5"/></symbol>
+    <symbol id="icon-bus" viewBox="0 0 24 24"><path d="M6 17h12M6 3h12a2 2 0 0 1 2 2v12H4V5a2 2 0 0 1 2-2M4 10h16M7 21v-4M17 21v-4M8 14h.01M16 14h.01"/></symbol>
+    <symbol id="icon-qr" viewBox="0 0 24 24"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 20h2"/></symbol>
     <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M4 5h16v16H4zM8 3v4M16 3v4M4 10h16M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></symbol>
     <symbol id="icon-message" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3V5M8 10h8M8 14h5"/></symbol>
     <symbol id="icon-replay" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v6h6"/></symbol>
@@ -1412,6 +1638,7 @@
     <symbol id="icon-clock" viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20M12 6v6l4 2"/></symbol>
     <symbol id="icon-leaf" viewBox="0 0 24 24"><path d="M20 4c-7 0-12 3-12 9 0 3 2 5 5 5 6 0 7-7 7-14ZM4 21c3-6 7-9 13-12"/></symbol>
     <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="icon-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
   </svg>
   <div class="app welcome-mode">
     <aside class="side" id="sideNav" style="display:none;">
@@ -1531,27 +1758,42 @@
         </div>
       </section>
 
-      <section id="guide" class="page">
-        <div class="topbar"><div><h1>办事分步指导</h1><p class="muted">一次只讲一步，可以重复、上一步、下一步或退出。</p></div></div>
-        <div class="card">
-          <h2>选择要办的事</h2>
-          <div class="grid three">
-            <button class="btn feature primary" data-guide="hospital">手机挂号</button>
-            <button class="btn feature" data-guide="bus">查公交路线</button>
-            <button class="btn feature" data-guide="qr">扫二维码</button>
+      <section id="guide" class="page guide-page">
+        <header class="guide-header">
+          <h1>办事分步指导</h1>
+          <p>跟着青团，一步一步办。</p>
+        </header>
+        <div class="guide-workspace">
+          <div class="guide-task-tabs" role="group" aria-label="选择要办的事">
+            <button class="active" data-guide="hospital" aria-pressed="true"><span class="guide-tab-icon"><svg class="ui-icon"><use href="#icon-hospital"></use></svg></span><strong>手机挂号</strong><span class="guide-tab-check"><svg class="ui-icon"><use href="#icon-check"></use></svg></span></button>
+            <button data-guide="bus" aria-pressed="false"><span class="guide-tab-icon"><svg class="ui-icon"><use href="#icon-bus"></use></svg></span><strong>查公交路线</strong><span class="guide-tab-check"><svg class="ui-icon"><use href="#icon-check"></use></svg></span></button>
+            <button data-guide="qr" aria-pressed="false"><span class="guide-tab-icon"><svg class="ui-icon"><use href="#icon-qr"></use></svg></span><strong>扫二维码</strong><span class="guide-tab-check"><svg class="ui-icon"><use href="#icon-check"></use></svg></span></button>
+          </div>
+          <div class="guide-progress" id="guideProgress" aria-label="第 1 步，共 5 步"><strong id="stepNumber">1 / 5</strong><span><i id="stepProgress"></i></span></div>
+          <div class="guide-current">
+            <div class="guide-step-copy">
+              <h2 id="stepText"></h2>
+              <div class="guide-choices" id="guideChoices" aria-label="常用医院选项">
+                <button data-hospital="市人民医院"><span><svg class="ui-icon"><use href="#icon-hospital"></use></svg></span>市人民医院</button>
+                <button data-hospital="社区卫生服务中心"><span><svg class="ui-icon"><use href="#icon-home"></use></svg></span>社区卫生服务中心</button>
+                <button class="uncertain" data-hospital="我还不确定"><span><svg class="ui-icon"><use href="#icon-help"></use></svg></span>我还不确定</button>
+              </div>
+            </div>
+            <div class="guide-visual" aria-hidden="true">
+              <span class="guide-sun"></span>
+              <svg class="ui-icon"><use id="guideVisualIcon" href="#icon-hospital"></use></svg>
+              <span class="guide-visual-route"><i></i><svg class="ui-icon"><use href="#icon-arrow-right"></use></svg></span>
+            </div>
+          </div>
+          <div class="guide-actions">
+            <button class="guide-repeat" id="repeatStep"><svg class="ui-icon"><use href="#icon-replay"></use></svg>再听一遍</button>
+            <button class="guide-back" id="prevStep" style="display:none;">上一步</button>
+            <button class="guide-next" id="nextStep">下一步<svg class="ui-icon"><use href="#icon-arrow-right"></use></svg></button>
+            <button class="guide-exit" data-page-link="chat">退出</button>
+            <button class="guide-voice" id="guideVoice"><svg class="ui-icon"><use href="#icon-mic"></use></svg>按住说话</button>
           </div>
         </div>
-        <div class="card">
-          <h2>当前步骤</h2>
-          <div class="step-number" id="stepNumber"></div>
-          <p class="step-text" id="stepText"></p>
-          <div class="actions">
-            <button class="btn" id="repeatStep">重复这一句</button>
-            <button class="btn" id="prevStep">上一步</button>
-            <button class="btn primary" id="nextStep">下一步</button>
-            <button class="btn" data-page-link="chat">退出指导</button>
-          </div>
-        </div>
+        <div class="footer-status guide-status" id="guideStatus" role="status" aria-live="polite"><svg class="ui-icon"><use href="#icon-check"></use></svg><span>已进入：问问怎么办</span></div>
       </section>
 
       <section id="health" class="page health-page">
@@ -1781,7 +2023,11 @@
       { label: "索要敏感信息", reason: "银行卡、密码、身份证号、账号等信息不能告诉陌生人。", pattern: /银行卡|密码|身份证|账号/ }
     ];
 
-    function setStatus(text) { statusEl.textContent = text; }
+    function setStatus(text) {
+      statusEl.textContent = text;
+      const guideStatus = document.querySelector("#guideStatus span");
+      if (guideStatus) guideStatus.textContent = text;
+    }
 
     function getFraudFindings(text) {
       return fraudRules.filter(rule => rule.pattern.test(text));
@@ -1992,7 +2238,8 @@
       document.getElementById("welcomeMain").style.display = id === "welcome" ? "grid" : "none";
       document.getElementById("appMain").style.display = id === "welcome" ? "none" : "grid";
       document.getElementById("appMain").classList.toggle("elder-main", !isWelcome && !isFamily);
-      document.getElementById("status").classList.toggle("chat-hidden", id === "chat");
+      document.getElementById("status").classList.toggle("chat-hidden", id === "chat" || id === "guide");
+      document.getElementById("status").setAttribute("aria-hidden", id === "guide" ? "true" : "false");
       pages.forEach(page => page.classList.toggle("active", page.id === id));
       navButtons.forEach(button => button.classList.toggle("active", button.dataset.page === id));
       elderNavButtons.forEach(button => button.classList.toggle("active", button.dataset.elderPage === id));
@@ -2178,21 +2425,37 @@
 
     function renderGuide() {
       const steps = guideFlows[guideType];
-      document.getElementById("stepNumber").textContent = `第 ${guideStep + 1} 步 / 共 ${steps.length} 步`;
+      document.getElementById("stepNumber").textContent = `${guideStep + 1} / ${steps.length}`;
       document.getElementById("stepText").textContent = steps[guideStep];
+      document.getElementById("stepProgress").style.width = `${((guideStep + 1) / steps.length) * 100}%`;
+      document.getElementById("guideProgress").setAttribute("aria-label", `第 ${guideStep + 1} 步，共 ${steps.length} 步`);
+      document.getElementById("guideChoices").style.display = guideType === "hospital" && guideStep === 0 ? "grid" : "none";
+      document.getElementById("prevStep").style.display = guideStep > 0 ? "inline-flex" : "none";
+      const next = document.getElementById("nextStep");
+      const done = guideStep === steps.length - 1;
+      next.disabled = done;
+      next.innerHTML = done ? `已经完成${icon("check")}` : `下一步${icon("arrow-right")}`;
+      document.getElementById("guideVisualIcon").setAttribute("href", `#icon-${guideType}`);
     }
     document.querySelectorAll("[data-guide]").forEach(btn => {
       btn.onclick = () => {
         guideType = btn.dataset.guide;
         guideStep = 0;
-        document.querySelectorAll("[data-guide]").forEach(item => item.classList.remove("primary"));
-        btn.classList.add("primary");
+        document.querySelectorAll("[data-guide]").forEach(item => {
+          item.classList.toggle("active", item === btn);
+          item.setAttribute("aria-pressed", item === btn ? "true" : "false");
+        });
         renderGuide();
+        setStatus("已选择：" + btn.querySelector("strong").textContent);
       };
     });
-    document.getElementById("repeatStep").onclick = () => setStatus("重复：" + guideFlows[guideType][guideStep]);
+    document.querySelectorAll("[data-hospital]").forEach(btn => {
+      btn.onclick = () => setStatus(btn.dataset.hospital === "我还不确定" ? "没关系，可以先问问家人或社区工作人员。" : "已选择：" + btn.dataset.hospital);
+    });
+    document.getElementById("repeatStep").onclick = () => setStatus("再听一遍：" + guideFlows[guideType][guideStep]);
     document.getElementById("prevStep").onclick = () => { guideStep = Math.max(0, guideStep - 1); renderGuide(); };
     document.getElementById("nextStep").onclick = () => { guideStep = Math.min(guideFlows[guideType].length - 1, guideStep + 1); renderGuide(); };
+    document.getElementById("guideVoice").onclick = () => setStatus("正在听，请慢慢说。");
 
     document.getElementById("healthSample").onclick = () => {
       document.getElementById("healthText").value = "2026-07-16 血压 145/92，近期偶尔头晕。正在按医嘱服用降压药。";
