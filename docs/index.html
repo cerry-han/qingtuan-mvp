@@ -1162,9 +1162,99 @@
         animation-iteration-count: 1 !important;
       }
     }
+    /* Chat visual fidelity pass */
+    .icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .ui-icon { width: 24px; height: 24px; display: block; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .app.elder-mode { grid-template-columns: 304px minmax(0, 1fr); background: #fbfcfa; }
+    .elder-sidebar { background: #f7f9f6; }
+    .elder-nav button { font-weight: 640; }
+    .elder-nav button.active { background: #e4e9df; }
+    .nav-symbol .ui-icon { width: 27px; height: 27px; }
+    .utility > .ui-icon { width: 23px; height: 23px; }
+    .utility.help > .ui-icon { width: 25px; height: 25px; }
+    .main.elder-main { max-width: 1600px; padding: 0 36px 0 42px; }
+    .chat-page.active { grid-template-columns: minmax(600px, 1fr) minmax(360px, 420px); gap: 0; min-height: 100dvh; }
+    .chat-primary { padding: 0 38px 26px 0; }
+    .chat-welcome { min-height: 245px; margin: 0 -38px 0 0; padding: 62px 38px 28px 24px; background: #fff url("assets/soft-window-header.png") right top / auto 245px no-repeat; }
+    .chat-welcome h1 { margin-top: 9px; font-size: 3.15rem; line-height: 1.1; font-weight: 750; }
+    .chat-welcome > p:last-child { font-size: 1.26rem; }
+    .conversation-area { min-height: 410px; padding: 6px 20px 24px 24px; gap: 20px; }
+    .assistant-avatar { width: 52px; height: 52px; }
+    .conversation-area .bot { padding: 18px 24px; border: 1px solid #dfe6df; background: rgba(242,246,242,.92); font-size: 1.02rem; }
+    .quick-actions { width: min(720px, calc(100% - 65px)); margin-left: 65px; gap: 12px; }
+    .quick-actions button { min-height: 82px; grid-template-columns: 54px 1fr 28px; border: 1px solid #e1e7e1; background: rgba(255,255,253,.94); box-shadow: none; font-size: 1rem; }
+    .quick-icon { width: 50px; height: 50px; background: transparent; color: #3f7b61; }
+    .quick-icon .ui-icon { width: 42px; height: 42px; stroke-width: 1.55; }
+    .quick-chevron { width: 26px; height: 26px; color: #7d8982; }
+    .chat-composer { padding: 18px; border: 1px solid #ecece6; background: rgba(255,254,250,.97); box-shadow: 0 4px 8px rgba(56,80,68,.08); }
+    .composer-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 1px solid #e3e6e1; background: #fffefa; }
+    .composer-secondary .ui-icon { width: 23px; height: 23px; }
+    .chat-composer .voice { background: #6f9b83; border: 0; }
+    .chat-composer .voice .ui-icon { width: 30px; height: 30px; color: #fff; }
+    .send-round { display: grid; place-items: center; }
+    .send-round .ui-icon { width: 25px; height: 25px; }
+    .chat-context { min-height: 100dvh; padding: 60px 0 30px 38px; background: url("assets/soft-tea-corner.png") right bottom / 100% auto no-repeat; }
+    .context-heading > .ui-icon { width: 25px; height: 25px; color: #82a68f; }
+    .context-heading h2 { font-size: 1.48rem; }
+    .context-date { margin-left: 35px; }
+    .context-reminders button { min-height: 88px; grid-template-columns: 66px minmax(0,1fr) auto; grid-template-rows: 1fr; gap: 12px; padding: 16px 17px; border: 1px solid rgba(218,227,219,.85); }
+    .context-reminders time { grid-row: 1; font-size: 1rem; }
+    .context-reminders span { font-size: .98rem; }
+    .context-reminders small { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+    .context-reminders small .ui-icon { width: 20px; height: 20px; }
+    .family-preview { margin-top: 4px; padding-top: 32px; }
+    .family-person { grid-template-columns: 76px 1fr auto; }
+    .family-avatar { width: 76px; height: 76px; overflow: hidden; background: #edf3ed; }
+    .family-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .family-person button { min-height: 50px; padding-inline: 16px; background: rgba(255,255,255,.72); }
+    .privacy-copy { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; }
+    .privacy-copy .ui-icon { width: 22px; height: 22px; }
+    .footer-status.chat-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    @media (max-width: 1260px) {
+      .app.elder-mode { grid-template-columns: 258px minmax(0,1fr); }
+      .main.elder-main { padding-left: 28px; padding-right: 28px; }
+      .chat-page.active { grid-template-columns: 1fr; }
+      .chat-primary { padding-right: 0; }
+      .chat-welcome { margin-right: 0; }
+      .chat-context { min-height: auto; padding: 28px 0 0; background-size: 340px auto; }
+    }
+    @media (max-width: 760px) {
+      .chat-welcome { min-height: 190px; padding: 42px 0 24px; background-size: auto 190px; }
+      .chat-welcome h1 { font-size: 2.05rem; }
+      .conversation-area { padding-left: 0; padding-right: 0; }
+      .quick-actions { width: calc(100% - 52px); margin-left: 52px; }
+      .chat-context { background-image: none; }
+    }
+    @media (max-width: 540px) {
+      .main.elder-main { padding: 0 16px 24px; }
+      .chat-welcome { background-image: none; }
+      .quick-actions { width: 100%; margin-left: 0; }
+    }
   </style>
 </head>
 <body>
+  <svg class="icon-sprite" aria-hidden="true">
+    <symbol id="icon-home" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M9 20v-6h6v6"/></symbol>
+    <symbol id="icon-chat" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3V5M8 9h8M8 13h5"/></symbol>
+    <symbol id="icon-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+    <symbol id="icon-help" viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20M9.6 9a2.6 2.6 0 1 1 4.3 2c-1.3 1-1.9 1.5-1.9 3M12 18h.01"/></symbol>
+    <symbol id="icon-health" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8M3.8 12h4l2-4 4 8 2-4h4.4"/></symbol>
+    <symbol id="icon-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10m-3-10 2 2 4-4"/></symbol>
+    <symbol id="icon-family" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="icon-type" viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></symbol>
+    <symbol id="icon-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4V5M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+    <symbol id="icon-alert" viewBox="0 0 24 24"><path d="M10.3 3.7 2.4 18a2 2 0 0 0 1.8 3h15.6a2 2 0 0 0 1.8-3L13.7 3.7a2 2 0 0 0-3.4 0M12 9v4M12 17h.01"/></symbol>
+    <symbol id="icon-hospital" viewBox="0 0 24 24"><path d="M3 21h18M5 21V8h14v13M9 8V3h6v5M12 4.5v2M9.5 14h5M12 11.5v5"/></symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M4 5h16v16H4zM8 3v4M16 3v4M4 10h16M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></symbol>
+    <symbol id="icon-message" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3V5M8 10h8M8 14h5"/></symbol>
+    <symbol id="icon-replay" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v6h6"/></symbol>
+    <symbol id="icon-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></symbol>
+    <symbol id="icon-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1M9 11l3 3L22 4"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20M12 6v6l4 2"/></symbol>
+    <symbol id="icon-leaf" viewBox="0 0 24 24"><path d="M20 4c-7 0-12 3-12 9 0 3 2 5 5 5 6 0 7-7 7-14ZM4 21c3-6 7-9 13-12"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  </svg>
   <div class="app welcome-mode">
     <aside class="side" id="sideNav" style="display:none;">
       <div class="brand"><div class="logo"><img src="assets/qingtuan-logo.png" alt=""></div><span>青团智能体</span></div>
@@ -1187,17 +1277,18 @@
         <span><strong>青团智能体</strong><small><i aria-hidden="true"></i>青团在这里</small></span>
       </button>
       <nav class="elder-nav" aria-label="老人端主要功能">
-        <button data-elder-page="chat"><span class="nav-symbol">▤</span><span>和青团说话</span></button>
-        <button data-elder-page="reminders"><span class="nav-symbol">◷</span><span>今日提醒</span></button>
-        <button data-elder-page="guide"><span class="nav-symbol">?</span><span>问问怎么办</span></button>
-        <button data-elder-page="health"><span class="nav-symbol">♡</span><span>看健康资料</span></button>
-        <button data-elder-page="fraud"><span class="nav-symbol">◇</span><span>帮我辨真假</span></button>
-        <button data-elder-page="family"><span class="nav-symbol">♧</span><span>联系家人</span></button>
+        <button data-elder-page="welcome"><span class="nav-symbol"><svg class="ui-icon"><use href="#icon-home"></use></svg></span><span>首页</span></button>
+        <button data-elder-page="chat"><span class="nav-symbol"><svg class="ui-icon"><use href="#icon-chat"></use></svg></span><span>和青团说话</span></button>
+        <button data-elder-page="reminders"><span class="nav-symbol"><svg class="ui-icon"><use href="#icon-bell"></use></svg></span><span>今日提醒</span></button>
+        <button data-elder-page="guide"><span class="nav-symbol"><svg class="ui-icon"><use href="#icon-help"></use></svg></span><span>问问怎么办</span></button>
+        <button data-elder-page="health"><span class="nav-symbol"><svg class="ui-icon"><use href="#icon-health"></use></svg></span><span>健康资料</span></button>
+        <button data-elder-page="fraud"><span class="nav-symbol"><svg class="ui-icon"><use href="#icon-shield"></use></svg></span><span>帮我辨真假</span></button>
+        <button data-elder-page="family"><span class="nav-symbol"><svg class="ui-icon"><use href="#icon-family"></use></svg></span><span>联系家人</span></button>
       </nav>
       <div class="elder-utilities" aria-label="显示与声音设置">
-        <button class="utility" id="fontBtn"><span>文</span><span>字体大小</span><small>中</small></button>
-        <button class="utility" id="volumeBtn"><span>♪</span><span>声音设置</span><small>正常</small></button>
-        <button class="utility help" data-page-link="help"><span>!</span><span>紧急求助</span></button>
+        <button class="utility" id="fontBtn"><svg class="ui-icon"><use href="#icon-type"></use></svg><span>字体大小</span><small>中</small></button>
+        <button class="utility" id="volumeBtn"><svg class="ui-icon"><use href="#icon-volume"></use></svg><span>声音设置</span><small>正常</small></button>
+        <button class="utility help" data-page-link="help"><svg class="ui-icon"><use href="#icon-alert"></use></svg><span>紧急求助</span></button>
       </div>
     </aside>
 
@@ -1236,34 +1327,34 @@
           <div class="conversation-area" id="chatBox">
             <div class="assistant-row"><span class="assistant-avatar"><img src="assets/qingtuan-logo.png" alt=""></span><div class="bubble bot">您好，我在。您可以直接说，也可以点下面常用的事情。</div></div>
             <div class="quick-actions" aria-label="常用事情">
-              <button data-page-link="guide"><span class="quick-icon">＋</span><span>问问怎么去医院</span><b>›</b></button>
-              <button data-page-link="reminders"><span class="quick-icon">◷</span><span>看看今天的提醒</span><b>›</b></button>
-              <button data-page-link="fraud"><span class="quick-icon">▤</span><span>帮我看看这条消息</span><b>›</b></button>
+              <button data-page-link="guide"><span class="quick-icon"><svg class="ui-icon"><use href="#icon-hospital"></use></svg></span><span>问问怎么去医院</span><svg class="ui-icon quick-chevron"><use href="#icon-chevron"></use></svg></button>
+              <button data-page-link="reminders"><span class="quick-icon"><svg class="ui-icon"><use href="#icon-calendar"></use></svg></span><span>看看今天的提醒</span><svg class="ui-icon quick-chevron"><use href="#icon-chevron"></use></svg></button>
+              <button data-page-link="fraud"><span class="quick-icon"><svg class="ui-icon"><use href="#icon-message"></use></svg></span><span>帮我看看这条消息</span><svg class="ui-icon quick-chevron"><use href="#icon-chevron"></use></svg></button>
             </div>
           </div>
           <div class="chat-composer">
             <label class="chat-input-wrap"><span class="sr-only">输入想说的话</span><input id="chatInput" placeholder="输入想说的话"></label>
             <div class="composer-actions">
-              <button class="composer-secondary" id="repeatBtn">↶ <span>重复上一句</span></button>
-              <button class="voice" id="voiceBtn"><span>●</span><strong>按住说话</strong></button>
-              <button class="composer-secondary" data-page-link="family">♧ <span>联系家人</span></button>
-              <button class="send-round" id="chatSend" aria-label="发送消息">➤</button>
+              <button class="composer-secondary" id="repeatBtn"><svg class="ui-icon"><use href="#icon-replay"></use></svg><span>重复上一句</span></button>
+              <button class="voice" id="voiceBtn"><svg class="ui-icon"><use href="#icon-mic"></use></svg><strong>按住说话</strong></button>
+              <button class="composer-secondary" data-page-link="family"><svg class="ui-icon"><use href="#icon-family"></use></svg><span>联系家人</span></button>
+              <button class="send-round" id="chatSend" aria-label="发送消息"><svg class="ui-icon"><use href="#icon-send"></use></svg></button>
             </div>
           </div>
         </div>
         <aside class="chat-context" aria-label="今天的提醒与家人">
           <section class="context-section today-section">
-            <div class="context-heading"><span>⌁</span><h2>今天</h2></div>
+            <div class="context-heading"><svg class="ui-icon"><use href="#icon-leaf"></use></svg><h2>今天</h2></div>
             <p class="context-date" id="todayLabel"></p>
             <div class="context-reminders">
-              <button class="done" data-page-link="reminders"><time>08:00</time><span>吃降压药</span><small>✓ 已完成</small></button>
-              <button class="pending" data-page-link="reminders"><time>15:00</time><span>量血压</span><small>◷ 待完成</small></button>
+              <button class="done" data-page-link="reminders"><time>08:00</time><span>吃降压药</span><small><svg class="ui-icon"><use href="#icon-check"></use></svg>已完成</small></button>
+              <button class="pending" data-page-link="reminders"><time>15:00</time><span>量血压</span><small><svg class="ui-icon"><use href="#icon-clock"></use></svg>待完成</small></button>
             </div>
           </section>
           <section class="context-section family-preview">
-            <div class="context-heading"><span>♧</span><h2>家人</h2></div>
-            <div class="family-person"><span class="family-avatar">敏</span><span><small>女儿</small><strong>王敏</strong></span><button data-page-link="family">联系她</button></div>
-            <p class="privacy-copy">◇ 只有您主动分享的内容会发送给家人</p>
+            <div class="context-heading"><svg class="ui-icon"><use href="#icon-family"></use></svg><h2>家人</h2></div>
+            <div class="family-person"><span class="family-avatar"><img src="assets/family-avatar.png" alt="王敏"></span><span><small>女儿</small><strong>王敏</strong></span><button data-page-link="family">联系她</button></div>
+            <p class="privacy-copy"><svg class="ui-icon"><use href="#icon-shield"></use></svg>只有您主动分享的内容会发送给家人</p>
           </section>
         </aside>
       </section>
@@ -1589,15 +1680,19 @@
         : `<div><strong>暂无通知</strong><span class="muted">老人主动分享后会显示在这里</span></div>`;
     }
 
+    function icon(name) {
+      return `<svg class="ui-icon" aria-hidden="true"><use href="#icon-${name}"></use></svg>`;
+    }
+
     function renderFontControl() {
       const labels = ["中", "大", "特大"];
-      document.getElementById("fontBtn").innerHTML = `<span>文</span><span>字体大小</span><small>${labels[fontLevel]}</small>`;
+      document.getElementById("fontBtn").innerHTML = `${icon("type")}<span>字体大小</span><small>${labels[fontLevel]}</small>`;
     }
 
     function renderVolumeControl(loud) {
       const button = document.getElementById("volumeBtn");
       button.dataset.loud = String(loud);
-      button.innerHTML = `<span>♪</span><span>声音设置</span><small>${loud ? "较大" : "正常"}</small>`;
+      button.innerHTML = `${icon("volume")}<span>声音设置</span><small>${loud ? "较大" : "正常"}</small>`;
     }
 
     function loadLocalState() {
@@ -1718,6 +1813,7 @@
       document.getElementById("welcomeMain").style.display = id === "welcome" ? "grid" : "none";
       document.getElementById("appMain").style.display = id === "welcome" ? "none" : "grid";
       document.getElementById("appMain").classList.toggle("elder-main", !isWelcome && !isFamily);
+      document.getElementById("status").classList.toggle("chat-hidden", id === "chat");
       pages.forEach(page => page.classList.toggle("active", page.id === id));
       navButtons.forEach(button => button.classList.toggle("active", button.dataset.page === id));
       elderNavButtons.forEach(button => button.classList.toggle("active", button.dataset.elderPage === id));
@@ -1817,13 +1913,13 @@
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
       button.classList.add("listening");
-      button.innerHTML = "<span>●</span><strong>正在听，请慢慢说</strong>";
+      button.innerHTML = `${icon("mic")}<strong>正在听，请慢慢说</strong>`;
       setStatus("正在听，请慢慢说。");
 
       recognition.onresult = event => {
         const text = event.results?.[0]?.[0]?.transcript?.trim();
         button.classList.remove("listening");
-        button.innerHTML = "<span>●</span><strong>按住说话</strong>";
+        button.innerHTML = `${icon("mic")}<strong>按住说话</strong>`;
         if (!text) {
           setStatus("没有听清楚，可以再试一次。");
           return;
@@ -1836,13 +1932,13 @@
 
       recognition.onerror = () => {
         button.classList.remove("listening");
-        button.innerHTML = "<span>●</span><strong>按住说话</strong>";
+        button.innerHTML = `${icon("mic")}<strong>按住说话</strong>`;
         setStatus("语音输入没有成功，可以检查麦克风权限，或先用文字输入。");
       };
 
       recognition.onend = () => {
         button.classList.remove("listening");
-        button.innerHTML = "<span>●</span><strong>按住说话</strong>";
+        button.innerHTML = `${icon("mic")}<strong>按住说话</strong>`;
       };
 
       recognition.start();

@@ -45,13 +45,44 @@ const pageNames: Record<Page, string> = {
   help: "紧急求助",
 };
 
-const elderNavItems: Array<{ page: Page; label: string; icon: string }> = [
-  { page: "chat", label: "和青团说话", icon: "▤" },
-  { page: "reminders", label: "今日提醒", icon: "◷" },
-  { page: "guide", label: "问问怎么办", icon: "?" },
-  { page: "health", label: "看健康资料", icon: "♡" },
-  { page: "fraud", label: "帮我辨真假", icon: "◇" },
-  { page: "family", label: "联系家人", icon: "♧" },
+type IconName = "home" | "chat" | "bell" | "help" | "health" | "shield" | "family" | "type" | "volume" | "alert" | "hospital" | "calendar" | "message" | "replay" | "mic" | "send" | "check" | "clock" | "leaf" | "privacy" | "chevron";
+
+const iconPaths: Record<IconName, string[]> = {
+  home: ["M3 11.5 12 4l9 7.5", "M5.5 10v10h13V10", "M9 20v-6h6v6"],
+  chat: ["M4 5h16v12H8l-4 3V5", "M8 9h8", "M8 13h5"],
+  bell: ["M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9", "M10 21h4"],
+  help: ["M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20", "M9.6 9a2.6 2.6 0 1 1 4.3 2c-1.3 1-1.9 1.5-1.9 3", "M12 18h.01"],
+  health: ["M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8", "M3.8 12h4l2-4 4 8 2-4h4.4"],
+  shield: ["M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10", "m9 12 2 2 4-4"],
+  family: ["M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", "M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8", "M22 21v-2a4 4 0 0 0-3-3.87", "M16 3.13a4 4 0 0 1 0 7.75"],
+  type: ["M4 7V4h16v3", "M9 20h6", "M12 4v16"],
+  volume: ["M11 5 6 9H2v6h4l5 4V5", "M15.5 8.5a5 5 0 0 1 0 7", "M18.5 5.5a9 9 0 0 1 0 13"],
+  alert: ["M10.3 3.7 2.4 18a2 2 0 0 0 1.8 3h15.6a2 2 0 0 0 1.8-3L13.7 3.7a2 2 0 0 0-3.4 0", "M12 9v4", "M12 17h.01"],
+  hospital: ["M3 21h18", "M5 21V8h14v13", "M9 8V3h6v5", "M12 4.5v2", "M9.5 14h5", "M12 11.5v5"],
+  calendar: ["M4 5h16v16H4z", "M8 3v4", "M16 3v4", "M4 10h16", "M8 14h.01", "M12 14h.01", "M16 14h.01", "M8 18h.01", "M12 18h.01"],
+  message: ["M4 5h16v12H8l-4 3V5", "M8 10h8", "M8 14h5"],
+  replay: ["M3 12a9 9 0 1 0 3-6.7", "M3 4v6h6"],
+  mic: ["M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3", "M5 10v2a7 7 0 0 0 14 0v-2", "M12 19v3", "M8 22h8"],
+  send: ["m22 2-7 20-4-9-9-4 20-7Z", "M22 2 11 13"],
+  check: ["M22 11.1V12a10 10 0 1 1-5.9-9.1", "m9 11 3 3L22 4"],
+  clock: ["M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20", "M12 6v6l4 2"],
+  leaf: ["M20 4c-7 0-12 3-12 9 0 3 2 5 5 5 6 0 7-7 7-14Z", "M4 21c3-6 7-9 13-12"],
+  privacy: ["M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10", "m9 12 2 2 4-4"],
+  chevron: ["m9 18 6-6-6-6"],
+};
+
+function UiIcon({ name, className = "" }: { name: IconName; className?: string }) {
+  return <svg className={`ui-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{iconPaths[name].map((path) => <path d={path} key={path} />)}</svg>;
+}
+
+const elderNavItems: Array<{ page: Page; label: string; icon: IconName }> = [
+  { page: "welcome", label: "首页", icon: "home" },
+  { page: "chat", label: "和青团说话", icon: "chat" },
+  { page: "reminders", label: "今日提醒", icon: "bell" },
+  { page: "guide", label: "问问怎么办", icon: "help" },
+  { page: "health", label: "健康资料", icon: "health" },
+  { page: "fraud", label: "帮我辨真假", icon: "shield" },
+  { page: "family", label: "联系家人", icon: "family" },
 ];
 
 const fontLevelLabels = ["标准字体", "大字模式", "超大字体"] as const;
@@ -494,7 +525,7 @@ export default function Home() {
               <nav className="elder-nav" aria-label="老人端主要功能">
                 {elderNavItems.map((item) => (
                   <button className={page === item.page ? "active" : ""} key={item.page} onClick={() => go(item.page)}>
-                    <span className="nav-symbol" aria-hidden="true">{item.icon}</span>
+                    <span className="nav-symbol"><UiIcon name={item.icon} /></span>
                     <span>{item.label}</span>
                   </button>
                 ))}
@@ -509,7 +540,7 @@ export default function Home() {
                     setStatus(`已切换为${fontLevelLabels[nextLevel]}。`);
                   }}
                 >
-                  <span aria-hidden="true">文</span><span>字体大小</span><small>{fontLevel === 0 ? "中" : fontLevel === 1 ? "大" : "特大"}</small>
+                  <UiIcon name="type" /><span>字体大小</span><small>{fontLevel === 0 ? "中" : fontLevel === 1 ? "大" : "特大"}</small>
                 </button>
                 <button
                   className="utility"
@@ -518,9 +549,9 @@ export default function Home() {
                     setStatus(!loudVolume ? "音量已调大。" : "音量已恢复正常。");
                   }}
                 >
-                  <span aria-hidden="true">♪</span><span>声音设置</span><small>{loudVolume ? "较大" : "正常"}</small>
+                  <UiIcon name="volume" /><span>声音设置</span><small>{loudVolume ? "较大" : "正常"}</small>
                 </button>
-                <button className="utility help" onClick={() => go("help")}><span aria-hidden="true">!</span><span>紧急求助</span></button>
+                <button className="utility help" onClick={() => go("help")}><UiIcon name="alert" /><span>紧急求助</span></button>
               </div>
             </aside>
           )}
@@ -547,9 +578,9 @@ export default function Home() {
                 ))}
 
                 <div className="quick-actions" aria-label="常用事情">
-                  <button onClick={() => go("guide")}><span className="quick-icon" aria-hidden="true">＋</span><span>问问怎么去医院</span><b aria-hidden="true">›</b></button>
-                  <button onClick={() => go("reminders")}><span className="quick-icon" aria-hidden="true">◷</span><span>看看今天的提醒</span><b aria-hidden="true">›</b></button>
-                  <button onClick={() => go("fraud")}><span className="quick-icon" aria-hidden="true">▤</span><span>帮我看看这条消息</span><b aria-hidden="true">›</b></button>
+                  <button onClick={() => go("guide")}><span className="quick-icon"><UiIcon name="hospital" /></span><span>问问怎么去医院</span><UiIcon name="chevron" className="quick-chevron" /></button>
+                  <button onClick={() => go("reminders")}><span className="quick-icon"><UiIcon name="calendar" /></span><span>看看今天的提醒</span><UiIcon name="chevron" className="quick-chevron" /></button>
+                  <button onClick={() => go("fraud")}><span className="quick-icon"><UiIcon name="message" /></span><span>帮我看看这条消息</span><UiIcon name="chevron" className="quick-chevron" /></button>
                 </div>
               </div>
 
@@ -559,37 +590,37 @@ export default function Home() {
                   <input value={chatInput} onChange={(event) => setChatInput(event.target.value)} onKeyDown={(event) => event.key === "Enter" && sendChatText()} placeholder="输入想说的话" />
                 </label>
                 <div className="composer-actions">
-                  <button className="composer-secondary" onClick={() => setStatus("已重复上一句播报。")}>↶ <span>重复上一句</span></button>
+                  <button className="composer-secondary" onClick={() => setStatus("已重复上一句播报。") }><UiIcon name="replay" /><span>重复上一句</span></button>
                   <button className={`voice ${voiceState === "listening" ? "listening" : ""}`} onClick={startVoiceInput} aria-pressed={voiceState === "listening"}>
-                    <span aria-hidden="true">●</span><strong>{voiceState === "listening" ? "正在听，请慢慢说" : "按住说话"}</strong>
+                    <UiIcon name="mic" /><strong>{voiceState === "listening" ? "正在听，请慢慢说" : "按住说话"}</strong>
                   </button>
-                  <button className="composer-secondary" onClick={() => go("family")}>♧ <span>联系家人</span></button>
-                  <button className="send-round" onClick={sendChatText} aria-label="发送消息">➤</button>
+                  <button className="composer-secondary" onClick={() => go("family")}><UiIcon name="family" /><span>联系家人</span></button>
+                  <button className="send-round" onClick={sendChatText} aria-label="发送消息"><UiIcon name="send" /></button>
                 </div>
               </div>
             </div>
 
             <aside className="chat-context" aria-label="今天的提醒与家人">
               <section className="context-section today-section">
-                <div className="context-heading"><span aria-hidden="true">⌁</span><h2>今天</h2></div>
+                <div className="context-heading"><UiIcon name="leaf" /><h2>今天</h2></div>
                 <p className="context-date">{new Intl.DateTimeFormat("zh-CN", { month: "long", day: "numeric", weekday: "long" }).format(new Date())}</p>
                 <div className="context-reminders">
                   {reminders.slice(0, 2).map((item) => (
                     <button key={`${item.time}-${item.title}`} onClick={() => go("reminders")} className={item.done ? "done" : "pending"}>
-                      <time>{item.time}</time><span>{item.title}</span><small>{item.done ? "✓ 已完成" : "◷ 待完成"}</small>
+                      <time>{item.time}</time><span>{item.title}</span><small>{item.done ? <><UiIcon name="check" />已完成</> : <><UiIcon name="clock" />待完成</>}</small>
                     </button>
                   ))}
                 </div>
               </section>
 
               <section className="context-section family-preview">
-                <div className="context-heading"><span aria-hidden="true">♧</span><h2>家人</h2></div>
+                <div className="context-heading"><UiIcon name="family" /><h2>家人</h2></div>
                 <div className="family-person">
-                  <span className="family-avatar" aria-hidden="true">敏</span>
+                  <span className="family-avatar"><img src="/brand/family-avatar.png" alt="王敏" /></span>
                   <span><small>女儿</small><strong>王敏</strong></span>
                   <button onClick={() => go("family")}>联系她</button>
                 </div>
-                <p className="privacy-copy">◇ 只有您主动分享的内容会发送给家人</p>
+                <p className="privacy-copy"><UiIcon name="privacy" />只有您主动分享的内容会发送给家人</p>
               </section>
             </aside>
           </section>
@@ -1043,7 +1074,7 @@ export default function Home() {
           </section>
         )}
 
-        <div className={`footer-status ${page === "health" ? "health-status" : ""}`} role="status" aria-live="polite">{status}</div>
+        <div className={`footer-status ${page === "health" ? "health-status" : page === "chat" ? "chat-hidden" : ""}`} role="status" aria-live="polite">{status}</div>
           </main>
         </>
       )}
