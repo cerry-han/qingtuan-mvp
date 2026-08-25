@@ -679,22 +679,94 @@ export default function Home() {
         )}
 
         {page === "health" && (
-          <section className="page active">
-            <PageHeader title="健康资料整理" desc="整理检查报告、处方和测量记录，只做复诊准备，不做诊断。" />
-            <div className="card">
-              <h2>录入资料</h2>
-              <textarea value={healthText} onChange={(event) => setHealthText(event.target.value)} placeholder="可以先粘贴检查报告文字、处方内容或血压血糖记录。图片 OCR 后续接入。" />
-              <div className="actions top-gap">
-                <button className="btn primary" onClick={generateHealthSummary}>
-                  生成复诊摘要
-                </button>
-                <button className="btn" onClick={() => setHealthText("2026-07-16 血压 145/92，近期偶尔头晕。正在按医嘱服用降压药。")}>
-                  填入示例
-                </button>
+          <section className="page active health-page">
+            <header className="health-header">
+              <div className="health-title-row">
+                <span className="health-record-mark" aria-hidden="true"><i /><i /><i /></span>
+                <h1>健康资料整理</h1>
+                <span className="health-local-badge"><b aria-hidden="true">◇</b> 仅在本地整理</span>
               </div>
+              <p>整理检查报告、处方和测量记录，为复诊做好准备。</p>
+            </header>
+
+            <div className="health-breadcrumb" aria-label="当前位置">
+              <span aria-hidden="true">⌂</span>
+              <span>健康资料</span>
+              <b aria-hidden="true">/</b>
+              <span>录入</span>
             </div>
+
+            <ol className="health-steps" aria-label="复诊摘要生成步骤">
+              <li className={!healthSummary ? "active" : "done"}><span>1</span><strong>录入资料</strong></li>
+              <li className={healthSummary ? "done" : ""}><span>2</span><strong>核对信息</strong></li>
+              <li className={healthSummary ? "active" : ""}><span>3</span><strong>生成摘要</strong></li>
+            </ol>
+
+            <div className="health-workspace">
+              <div className="health-entry-panel">
+                <h2>添加健康资料</h2>
+                <div className="health-source-tabs" role="tablist" aria-label="资料录入方式">
+                  <button className="active" type="button" role="tab" aria-selected="true" onClick={() => setStatus("当前为粘贴文字录入。")}>
+                    <span aria-hidden="true">文</span>粘贴文字
+                  </button>
+                  <button type="button" role="tab" aria-selected="false" onClick={() => setStatus("图片上传功能后续接入。")}>
+                    <span aria-hidden="true">图</span>上传图片
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    onClick={() => {
+                      document.getElementById("health-text-input")?.focus();
+                      setStatus("请在下方手动记录健康资料。");
+                    }}
+                  >
+                    <span aria-hidden="true">记</span>手动记录
+                  </button>
+                </div>
+                <label className="health-text-field" htmlFor="health-text-input">
+                  <span className="sr-only">健康资料内容</span>
+                  <textarea
+                    id="health-text-input"
+                    value={healthText}
+                    onChange={(event) => setHealthText(event.target.value)}
+                    placeholder="粘贴检查报告、处方内容，或血压、血糖等测量记录…"
+                  />
+                </label>
+                <div className="health-actions">
+                  <button className="health-sample-button" type="button" onClick={() => setHealthText("2026-07-16 血压 145/92，近期偶尔头晕。正在按医嘱服用降压药。")}>
+                    <span aria-hidden="true">✧</span>填入示例
+                  </button>
+                  <span className="health-action-note"><i aria-hidden="true" />生成前可继续修改</span>
+                  <button className="health-generate-button" type="button" onClick={generateHealthSummary}>
+                    生成复诊摘要 <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              </div>
+
+              <aside className="health-preview" aria-label="复诊摘要内容预览">
+                <h2>复诊摘要将包含</h2>
+                <ul>
+                  <li><span aria-hidden="true">✓</span>主要检查结果</li>
+                  <li><span aria-hidden="true">✓</span>用药与处方</li>
+                  <li><span aria-hidden="true">✓</span>血压与血糖记录</li>
+                  <li><span aria-hidden="true">✓</span>待向医生确认的问题</li>
+                </ul>
+                <div className="health-document-art" aria-hidden="true">
+                  <span className="document-line wide" />
+                  <span className="document-line medium" />
+                  <span className="document-line short" />
+                  <div className="document-table">
+                    <i /><i /><i /><i /><i /><i />
+                    <b className="bar one" /><b className="bar two" /><b className="bar three" />
+                  </div>
+                </div>
+              </aside>
+            </div>
+
             {healthSummary && (
-              <div className="result">
+              <div className="result health-summary-output" aria-live="polite">
+                <h2>已生成复诊摘要</h2>
                 <pre>{healthSummary}</pre>
                 <div className="actions top-gap">
                   <button
@@ -971,7 +1043,7 @@ export default function Home() {
           </section>
         )}
 
-        <div className="footer-status" role="status" aria-live="polite">{status}</div>
+        <div className={`footer-status ${page === "health" ? "health-status" : ""}`} role="status" aria-live="polite">{status}</div>
           </main>
         </>
       )}
