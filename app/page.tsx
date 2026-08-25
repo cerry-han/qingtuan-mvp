@@ -825,35 +825,64 @@ export default function Home() {
         )}
 
         {page === "fraud" && (
-          <section className="page active">
-            <PageHeader title="查诈骗风险" desc="先暂停操作，不转账，不给验证码，再核实。" />
-            <div className="card">
-              <h2>输入可疑内容</h2>
-              <textarea
-                value={fraudText}
-                onChange={(event) => {
-                  setFraudText(event.target.value);
-                  setFraudResult("none");
-                }}
-                placeholder="把短信、聊天内容或电话里听到的话写在这里。"
-              />
-              <div className="actions top-gap">
-                <button className="btn primary" onClick={analyzeFraud}>
-                  开始分析
-                </button>
-                <button
-                  className="btn"
-                  onClick={() => {
-                    setFraudText("客服说可以退款，但要我提供短信验证码，还让我赶紧转账验证。");
+          <section className="page active fraud-page">
+            <header className="fraud-intro">
+              <p className="fraud-reassurance">先别着急，我们陪您一起看看</p>
+              <h1>查一查是不是诈骗</h1>
+              <p>把短信、聊天内容或电话里听到的话粘贴进来，我们会帮您找出可疑信号。</p>
+            </header>
+
+            <div className="fraud-workspace">
+              <div className="fraud-entry">
+                <label htmlFor="fraud-text"><UiIcon name="message" />输入可疑内容</label>
+                <textarea
+                  id="fraud-text"
+                  value={fraudText}
+                  onChange={(event) => {
+                    setFraudText(event.target.value);
                     setFraudResult("none");
                   }}
-                >
-                  填入示例
-                </button>
+                  placeholder="把内容粘贴在这里……"
+                  aria-describedby="fraud-field-help"
+                />
+                <p className="fraud-field-help" id="fraud-field-help">
+                  不用整理格式，保留对方的原话更容易发现风险。
+                </p>
+                <div className="actions fraud-actions">
+                  <button className="btn primary fraud-primary" onClick={analyzeFraud}>
+                    <UiIcon name="shield" />开始分析
+                  </button>
+                  <button
+                    className="btn fraud-sample"
+                    onClick={() => {
+                      setFraudText("客服说可以退款，但要我提供短信验证码，还让我赶紧转账验证。");
+                      setFraudResult("none");
+                    }}
+                  >
+                    <UiIcon name="leaf" />试试示例
+                  </button>
+                </div>
+                <p className="fraud-privacy"><UiIcon name="privacy" />输入内容只保存在这台设备上</p>
               </div>
+
+              <aside className="fraud-safety" aria-labelledby="fraud-safety-title">
+                <div className="fraud-safety-heading">
+                  <span><UiIcon name="shield" /></span>
+                  <div>
+                    <h2 id="fraud-safety-title">先暂停，再核实</h2>
+                    <p>遇到可疑信息，先记住这三件事。</p>
+                  </div>
+                </div>
+                <ol className="fraud-safety-list">
+                  <li><span><UiIcon name="alert" /></span><div><strong>不转账</strong><p>不要向陌生账户付款。</p></div></li>
+                  <li><span><UiIcon name="privacy" /></span><div><strong>不给验证码</strong><p>验证码和密码都不能告诉别人。</p></div></li>
+                  <li><span><UiIcon name="check" /></span><div><strong>通过官方渠道确认</strong><p>重新拨打官方电话或到线下网点核实。</p></div></li>
+                </ol>
+              </aside>
             </div>
+
             {fraudResult !== "none" && (
-              <div className={`result ${fraudResult === "high" ? "high" : ""}`}>
+              <div className={`result fraud-result ${fraudResult === "high" ? "high" : ""}`}>
                 {fraudResult === "high" ? (
                   <>
                     <strong>风险等级：高</strong>
