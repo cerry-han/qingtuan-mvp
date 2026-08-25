@@ -1346,10 +1346,7 @@
           <section class="context-section today-section">
             <div class="context-heading"><svg class="ui-icon"><use href="#icon-leaf"></use></svg><h2>今天</h2></div>
             <p class="context-date" id="todayLabel"></p>
-            <div class="context-reminders">
-              <button class="done" data-page-link="reminders"><time>08:00</time><span>吃降压药</span><small><svg class="ui-icon"><use href="#icon-check"></use></svg>已完成</small></button>
-              <button class="pending" data-page-link="reminders"><time>15:00</time><span>量血压</span><small><svg class="ui-icon"><use href="#icon-clock"></use></svg>待完成</small></button>
-            </div>
+            <div class="context-reminders" id="contextReminders"></div>
           </section>
           <section class="context-section family-preview">
             <div class="context-heading"><svg class="ui-icon"><use href="#icon-family"></use></svg><h2>家人</h2></div>
@@ -1830,6 +1827,23 @@
     document.getElementById("loadDemoData").onclick = loadDemoData;
     document.getElementById("resetDemoData").onclick = resetDemoData;
 
+    function renderTodayContext() {
+      const context = document.getElementById("contextReminders");
+      context.innerHTML = reminders.slice(0, 2).map(item => `
+        <button class="${item.done ? "done" : "pending"}">
+          <time>${item.time}</time>
+          <span>${item.title}</span>
+          <small>
+            <svg class="ui-icon"><use href="#icon-${item.done ? "check" : "clock"}"></use></svg>
+            ${item.done ? "已完成" : "待完成"}
+          </small>
+        </button>
+      `).join("");
+      context.querySelectorAll("button").forEach(button => {
+        button.addEventListener("click", () => showPage("reminders"));
+      });
+    }
+
     function renderReminders() {
       const html = reminders.map((item, index) => `
         <div class="reminder-item ${item.done ? "is-done" : ""}">
@@ -1847,6 +1861,7 @@
       `).join("");
       document.getElementById("reminderList").innerHTML = html;
       document.getElementById("pendingReminderCount").textContent = reminders.filter(item => !item.done).length + " 项待处理";
+      renderTodayContext();
     }
 
     window.completeReminder = index => {
