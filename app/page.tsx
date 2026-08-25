@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Page = "welcome" | "home" | "chat" | "reminders" | "guide" | "health" | "fraud" | "familyDashboard" | "family" | "help";
+type Page = "welcome" | "chat" | "reminders" | "guide" | "health" | "fraud" | "familyDashboard" | "family" | "help";
 type ChatMessage = { role: "bot" | "user"; text: string };
 type Reminder = { title: string; time: string; done: boolean };
 type FraudResult = "none" | "high" | "careful";
@@ -35,7 +35,6 @@ const STORAGE_KEY = "qingtuan-mvp-state";
 
 const pageNames: Record<Page, string> = {
   welcome: "欢迎页",
-  home: "首页",
   chat: "和青团说话",
   reminders: "今日提醒",
   guide: "问问怎么办",
@@ -118,7 +117,6 @@ export default function Home() {
   const [fontLevel, setFontLevel] = useState<FontLevel>(0);
   const [loudVolume, setLoudVolume] = useState(false);
   const [familyAccessEnabled, setFamilyAccessEnabled] = useState(true);
-  const [homeInput, setHomeInput] = useState("");
   const [chatInput, setChatInput] = useState("");
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
   const [fraudText, setFraudText] = useState("");
@@ -223,7 +221,6 @@ export default function Home() {
     setFontLevel(0);
     setLoudVolume(false);
     setFamilyAccessEnabled(true);
-    setHomeInput("");
     setChatInput("");
     setFraudText(demoFraudText);
     setFraudResult("high");
@@ -243,7 +240,7 @@ export default function Home() {
       { role: "user", text: "有人说退款要验证码。" },
       { role: "bot", text: "这件事可能有风险。先不要转账，不要告诉任何人验证码。我可以帮您查一下风险。" },
     ]);
-    go("home");
+    go("chat");
     setStatus("演示数据已准备好。");
   }
 
@@ -252,7 +249,6 @@ export default function Home() {
     setFontLevel(0);
     setLoudVolume(false);
     setFamilyAccessEnabled(true);
-    setHomeInput("");
     setChatInput("");
     setFraudText("");
     setFraudResult("none");
@@ -298,15 +294,6 @@ export default function Home() {
     }
 
     addChat("bot", "我听着呢。您慢慢说。要是需要我帮忙，也可以直接说“设置提醒”或“找家里人”。");
-  }
-
-  function sendHomeText() {
-    const text = homeInput.trim();
-    if (!text) return;
-    setHomeInput("");
-    go("chat");
-    addChat("user", text);
-    replyTo(text);
   }
 
   function sendChatText() {
@@ -415,14 +402,16 @@ export default function Home() {
 
   function renderReminders() {
     return reminders.map((item, index) => (
-      <div className="reminder-item" key={`${item.time}-${item.title}-${index}`}>
-        <strong>
-          {item.time} {item.title}
-        </strong>
-        <span className="muted">{item.done ? "已完成" : "等待提醒"}</span>
-        <div className="actions">
-          <button className="btn" onClick={() => completeReminder(index)}>
-            完成
+      <div className={`reminder-item ${item.done ? "is-done" : ""}`} key={`${item.time}-${item.title}-${index}`}>
+        <time className="reminder-time">{item.time}</time>
+        <div className="reminder-symbol" aria-hidden="true">{item.title.includes("药") ? "药" : "压"}</div>
+        <div className="reminder-copy">
+          <strong>{item.title}</strong>
+          <span className={`reminder-state ${item.done ? "done" : "pending"}`}>{item.done ? "已完成" : "等待提醒"}</span>
+        </div>
+        <div className="reminder-actions">
+          <button className="btn reminder-complete" disabled={item.done} onClick={() => completeReminder(index)}>
+            {item.done ? "已完成" : "完成"}
           </button>
           <button className="btn" onClick={() => delayReminder(index)}>
             延后10分钟
@@ -456,7 +445,7 @@ export default function Home() {
                   <span>联系家人</span>
                 </div>
               </div>
-              <button className="btn block welcome-entry senior" onClick={() => go("home")}>
+              <button className="btn block welcome-entry senior" onClick={() => go("chat")}>
                 <span className="entry-index">01</span>
                 <span className="entry-label"><strong>老人端进入</strong><small>开始陪伴与生活助手</small></span>
                 <span className="entry-arrow" aria-hidden="true">›</span>
@@ -487,7 +476,7 @@ export default function Home() {
                 <span>青团智能体</span>
               </div>
               <nav className="nav">
-                {(["home", "chat", "reminders", "guide", "health", "fraud", "familyDashboard", "family", "help"] as Page[]).map((item) => (
+                {(["chat", "reminders", "guide", "health", "fraud", "familyDashboard", "family", "help"] as Page[]).map((item) => (
                   <button className={page === item ? "active" : ""} key={item} onClick={() => go(item)}>
                     {pageNames[item]}
                   </button>
@@ -497,15 +486,12 @@ export default function Home() {
             </aside>
           ) : (
             <aside className="elder-sidebar" aria-label="老人端导航">
-              <button className="elder-brand" onClick={() => go("home")} aria-label="回到老人端首页">
+              <button className="elder-brand" onClick={() => go("chat")} aria-label="进入和青团说话">
                 <span className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></span>
                 <span><strong>青团智能体</strong><small>您的生活助手</small></span>
               </button>
 
               <nav className="elder-nav" aria-label="老人端主要功能">
-                <button className={page === "home" ? "active" : ""} onClick={() => go("home")}>
-                  首页
-                </button>
                 {elderNavItems.map((item) => (
                   <button className={page === item.page ? "active" : ""} key={item.page} onClick={() => go(item.page)}>
                     {item.label}
@@ -540,77 +526,17 @@ export default function Home() {
 
           <main className={page === "familyDashboard" ? "main family-main" : "main elder-main"}>
 
-        {page === "home" && (
-          <section className="page active home-page">
-            <div className="topbar home-topbar">
-              <div className="hello">
-                <h1>您好，李阿姨。</h1>
-                <p>今天需要我帮您做什么？</p>
-              </div>
-            </div>
-
-            <section className="talk-area" aria-labelledby="talk-title">
-              <button
-                className={`voice ${voiceState === "listening" ? "listening" : ""}`}
-                onClick={startVoiceInput}
-                aria-pressed={voiceState === "listening"}
-              >
-                <strong id="talk-title">{voiceState === "listening" ? "正在听，请慢慢说" : "和青团说话"}</strong>
-                <span>{voiceState === "listening" ? "说完后请稍等一下" : "点一下开始，我会认真听"}</span>
-              </button>
-              <div className="home-text-entry">
-                <label htmlFor="home-question">也可以打字告诉我</label>
-                <div className="text-row">
-                  <input id="home-question" value={homeInput} onChange={(event) => setHomeInput(event.target.value)} placeholder="例如：下午提醒我量血压" />
-                  <button className="btn primary" onClick={sendHomeText}>
-                    发送
-                  </button>
-                </div>
-              </div>
-            </section>
-
-            <section className="home-section reminder-section" aria-labelledby="today-reminders">
-              <div className="section-heading">
-                <h2 id="today-reminders">今日提醒</h2>
-                <button className="text-link" onClick={() => go("reminders")}>管理全部提醒</button>
-              </div>
-              <div className="reminder-list">{renderReminders()}</div>
-            </section>
-
-            <section className="home-section" aria-labelledby="more-help">
-              <div className="section-heading">
-                <div>
-                  <h2 id="more-help">还可以帮您</h2>
-                  <p>选择一件要做的事，我会一步一步陪您完成。</p>
-                </div>
-              </div>
-              <div className="home-action-list">
-                <button className="home-feature" onClick={() => go("chat")}>
-                  <strong>陪我说说话</strong><span>聊聊今天，或者说说心里话</span>
-                </button>
-                <button className="home-feature" onClick={() => go("reminders")}>
-                  <strong>设置一个提醒</strong><span>吃药、复诊和生活安排</span>
-                </button>
-                <button className="home-feature" onClick={() => go("guide")}>
-                  <strong>问问怎么办</strong><span>挂号、公交和扫码等事情</span>
-                </button>
-                <button className="home-feature" onClick={() => go("fraud")}>
-                  <strong>帮我辨真假</strong><span>可疑短信、电话和转账要求</span>
-                </button>
-                <button className="home-feature" onClick={() => go("health")}>
-                  <strong>看健康资料</strong><span>整理检查记录和复诊问题</span>
-                </button>
-                <button className="home-feature" onClick={() => go("family")}>
-                  <strong>联系家人</strong><span>给女儿或儿子发送消息</span>
-                </button>
-              </div>
-            </section>
-          </section>
-        )}
-
         {page === "chat" && (
           <section className="page active">
             <PageHeader title="对话陪伴" desc="青团会简短回答，并在高风险场景提醒确认。" />
+            <button
+              className={`voice ${voiceState === "listening" ? "listening" : ""}`}
+              onClick={startVoiceInput}
+              aria-pressed={voiceState === "listening"}
+            >
+              <strong>{voiceState === "listening" ? "正在听，请慢慢说" : "和青团说话"}</strong>
+              <span>{voiceState === "listening" ? "说完后请稍等一下" : "点一下开始，我会认真听"}</span>
+            </button>
             <div className="card chat-box">
               {chat.map((item, index) => (
                 <div className={`bubble ${item.role}`} key={`${item.role}-${index}`}>
@@ -641,15 +567,19 @@ export default function Home() {
         )}
 
         {page === "reminders" && (
-          <section className="page active">
-            <PageHeader title="提醒管理" desc="吃药、复诊、量血压，都要先复述确认。" />
-            <div className="card">
+          <section className="page active reminders-page">
+            <PageHeader title="提醒管理" />
+            <div className="reminder-composer">
               <h2>新建提醒</h2>
-              <div className="grid two">
-                <input value={reminderTitle} onChange={(event) => setReminderTitle(event.target.value)} placeholder="提醒内容，例如：吃降压药" />
-                <input type="time" value={reminderTime} onChange={(event) => setReminderTime(event.target.value)} />
-              </div>
-              <div className="actions top-gap">
+              <div className="reminder-form">
+                <label className="reminder-field">
+                  <span>提醒内容</span>
+                  <input value={reminderTitle} onChange={(event) => setReminderTitle(event.target.value)} placeholder="例如：吃降压药" />
+                </label>
+                <label className="reminder-field time-field">
+                  <span>提醒时间</span>
+                  <input type="time" value={reminderTime} onChange={(event) => setReminderTime(event.target.value)} />
+                </label>
                 <button className="btn primary" onClick={prepareReminder}>
                   创建提醒
                 </button>
@@ -670,9 +600,12 @@ export default function Home() {
                 </div>
               )}
             </div>
-            <div className="card">
-              <h2>今日提醒</h2>
-              <div className="grid">{renderReminders()}</div>
+            <div className="reminder-schedule">
+              <div className="reminder-heading">
+                <h2>今日提醒</h2>
+                <span>{reminders.filter((item) => !item.done).length} 项待处理</span>
+              </div>
+              <div className="reminder-list">{renderReminders()}</div>
             </div>
           </section>
         )}
@@ -708,7 +641,7 @@ export default function Home() {
                 <button className="btn primary" disabled={guideStep === guideFlows[guideType].length - 1} onClick={() => setGuideStep(Math.min(guideFlows[guideType].length - 1, guideStep + 1))}>
                   下一步
                 </button>
-                <button className="btn" onClick={() => go("home")}>
+                <button className="btn" onClick={() => go("chat")}>
                   退出指导
                 </button>
               </div>
@@ -1017,12 +950,12 @@ export default function Home() {
   );
 }
 
-function PageHeader({ title, desc }: { title: string; desc: string }) {
+function PageHeader({ title, desc }: { title: string; desc?: string }) {
   return (
     <div className="topbar">
       <div className="hello">
         <h1>{title}</h1>
-        <p>{desc}</p>
+        {desc && <p>{desc}</p>}
       </div>
     </div>
   );
