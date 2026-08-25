@@ -45,13 +45,13 @@ const pageNames: Record<Page, string> = {
   help: "紧急求助",
 };
 
-const elderNavItems: Array<{ page: Page; label: string }> = [
-  { page: "chat", label: "和青团说话" },
-  { page: "reminders", label: "今日提醒" },
-  { page: "guide", label: "问问怎么办" },
-  { page: "health", label: "看健康资料" },
-  { page: "fraud", label: "帮我辨真假" },
-  { page: "family", label: "联系家人" },
+const elderNavItems: Array<{ page: Page; label: string; icon: string }> = [
+  { page: "chat", label: "和青团说话", icon: "▤" },
+  { page: "reminders", label: "今日提醒", icon: "◷" },
+  { page: "guide", label: "问问怎么办", icon: "?" },
+  { page: "health", label: "看健康资料", icon: "♡" },
+  { page: "fraud", label: "帮我辨真假", icon: "◇" },
+  { page: "family", label: "联系家人", icon: "♧" },
 ];
 
 const fontLevelLabels = ["标准字体", "大字模式", "超大字体"] as const;
@@ -488,13 +488,14 @@ export default function Home() {
             <aside className="elder-sidebar" aria-label="老人端导航">
               <button className="elder-brand" onClick={() => go("chat")} aria-label="进入和青团说话">
                 <span className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></span>
-                <span><strong>青团智能体</strong><small>您的生活助手</small></span>
+                <span><strong>青团智能体</strong><small><i aria-hidden="true" />青团在这里</small></span>
               </button>
 
               <nav className="elder-nav" aria-label="老人端主要功能">
                 {elderNavItems.map((item) => (
                   <button className={page === item.page ? "active" : ""} key={item.page} onClick={() => go(item.page)}>
-                    {item.label}
+                    <span className="nav-symbol" aria-hidden="true">{item.icon}</span>
+                    <span>{item.label}</span>
                   </button>
                 ))}
               </nav>
@@ -508,7 +509,7 @@ export default function Home() {
                     setStatus(`已切换为${fontLevelLabels[nextLevel]}。`);
                   }}
                 >
-                  字体：{fontLevelLabels[fontLevel]}
+                  <span aria-hidden="true">文</span><span>字体大小</span><small>{fontLevel === 0 ? "中" : fontLevel === 1 ? "大" : "特大"}</small>
                 </button>
                 <button
                   className="utility"
@@ -517,9 +518,9 @@ export default function Home() {
                     setStatus(!loudVolume ? "音量已调大。" : "音量已恢复正常。");
                   }}
                 >
-                  声音：{loudVolume ? "较大" : "正常"}
+                  <span aria-hidden="true">♪</span><span>声音设置</span><small>{loudVolume ? "较大" : "正常"}</small>
                 </button>
-                <button className="utility help" onClick={() => go("help")}>紧急求助</button>
+                <button className="utility help" onClick={() => go("help")}><span aria-hidden="true">!</span><span>紧急求助</span></button>
               </div>
             </aside>
           )}
@@ -527,42 +528,70 @@ export default function Home() {
           <main className={page === "familyDashboard" ? "main family-main" : "main elder-main"}>
 
         {page === "chat" && (
-          <section className="page active">
-            <PageHeader title="对话陪伴" desc="青团会简短回答，并在高风险场景提醒确认。" />
-            <button
-              className={`voice ${voiceState === "listening" ? "listening" : ""}`}
-              onClick={startVoiceInput}
-              aria-pressed={voiceState === "listening"}
-            >
-              <strong>{voiceState === "listening" ? "正在听，请慢慢说" : "和青团说话"}</strong>
-              <span>{voiceState === "listening" ? "说完后请稍等一下" : "点一下开始，我会认真听"}</span>
-            </button>
-            <div className="card chat-box">
-              {chat.map((item, index) => (
-                <div className={`bubble ${item.role}`} key={`${item.role}-${index}`}>
-                  {item.text}
+          <section className="page active chat-page">
+            <div className="chat-primary">
+              <header className="chat-welcome">
+                <p className="gentle-status"><span aria-hidden="true" />青团在这里</p>
+                <h1>下午好，李阿姨</h1>
+                <p>今天想聊点什么，或者需要我帮您办件事？</p>
+              </header>
+
+              <div className="conversation-area">
+                <div className="assistant-row">
+                  <span className="assistant-avatar"><img src="/brand/qingtuan-logo.png" alt="" /></span>
+                  <div className="bubble bot">您好，我在。您可以直接说，也可以点下面常用的事情。</div>
                 </div>
-              ))}
-            </div>
-            <div className="card">
-              <div className="text-row">
-                <input value={chatInput} onChange={(event) => setChatInput(event.target.value)} placeholder="输入想说的话，例如：我今天有点闷" />
-                <button className="btn primary" onClick={sendChatText}>
-                  发送
-                </button>
+
+                {chat.slice(1).map((item, index) => (
+                  <div className={`bubble ${item.role}`} key={`${item.role}-${index}`}>{item.text}</div>
+                ))}
+
+                <div className="quick-actions" aria-label="常用事情">
+                  <button onClick={() => go("guide")}><span className="quick-icon" aria-hidden="true">＋</span><span>问问怎么去医院</span><b aria-hidden="true">›</b></button>
+                  <button onClick={() => go("reminders")}><span className="quick-icon" aria-hidden="true">◷</span><span>看看今天的提醒</span><b aria-hidden="true">›</b></button>
+                  <button onClick={() => go("fraud")}><span className="quick-icon" aria-hidden="true">▤</span><span>帮我看看这条消息</span><b aria-hidden="true">›</b></button>
+                </div>
+              </div>
+
+              <div className="chat-composer">
+                <label className="chat-input-wrap">
+                  <span className="sr-only">输入想说的话</span>
+                  <input value={chatInput} onChange={(event) => setChatInput(event.target.value)} onKeyDown={(event) => event.key === "Enter" && sendChatText()} placeholder="输入想说的话" />
+                </label>
+                <div className="composer-actions">
+                  <button className="composer-secondary" onClick={() => setStatus("已重复上一句播报。")}>↶ <span>重复上一句</span></button>
+                  <button className={`voice ${voiceState === "listening" ? "listening" : ""}`} onClick={startVoiceInput} aria-pressed={voiceState === "listening"}>
+                    <span aria-hidden="true">●</span><strong>{voiceState === "listening" ? "正在听，请慢慢说" : "按住说话"}</strong>
+                  </button>
+                  <button className="composer-secondary" onClick={() => go("family")}>♧ <span>联系家人</span></button>
+                  <button className="send-round" onClick={sendChatText} aria-label="发送消息">➤</button>
+                </div>
               </div>
             </div>
-            <div className="actions">
-              <button className="btn" onClick={() => setStatus("已重复上一句播报。")}>
-                重复一遍
-              </button>
-              <button className="btn" onClick={() => addChat("bot", "我们可以聊聊今天的天气、家里人，或者您年轻时候喜欢做的事。")}>
-                换个话题
-              </button>
-              <button className="btn" onClick={() => go("family")}>
-                联系家人
-              </button>
-            </div>
+
+            <aside className="chat-context" aria-label="今天的提醒与家人">
+              <section className="context-section today-section">
+                <div className="context-heading"><span aria-hidden="true">⌁</span><h2>今天</h2></div>
+                <p className="context-date">{new Intl.DateTimeFormat("zh-CN", { month: "long", day: "numeric", weekday: "long" }).format(new Date())}</p>
+                <div className="context-reminders">
+                  {reminders.slice(0, 2).map((item) => (
+                    <button key={`${item.time}-${item.title}`} onClick={() => go("reminders")} className={item.done ? "done" : "pending"}>
+                      <time>{item.time}</time><span>{item.title}</span><small>{item.done ? "✓ 已完成" : "◷ 待完成"}</small>
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              <section className="context-section family-preview">
+                <div className="context-heading"><span aria-hidden="true">♧</span><h2>家人</h2></div>
+                <div className="family-person">
+                  <span className="family-avatar" aria-hidden="true">敏</span>
+                  <span><small>女儿</small><strong>王敏</strong></span>
+                  <button onClick={() => go("family")}>联系她</button>
+                </div>
+                <p className="privacy-copy">◇ 只有您主动分享的内容会发送给家人</p>
+              </section>
+            </aside>
           </section>
         )}
 
