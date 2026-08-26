@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -1231,161 +1231,645 @@
       .quick-actions { width: 100%; margin-left: 0; }
     }
 
-    /* Fraud check: warm, calm and task-first. */
-    .fraud-page { gap: 26px; max-width: 1160px; }
-    .fraud-intro { max-width: 780px; }
-    .fraud-reassurance {
+    /* Fraud check: faithful to the approved warm safety-assistant concept. */
+    .app.fraud-mode {
+      display: block;
+      min-height: 100dvh;
+      background: #fbf8ef;
+    }
+
+    .fraud-mode .fraud-main {
+      max-width: none;
+      min-height: 100dvh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .fraud-page {
+      position: relative;
+      display: block;
+      min-height: 100dvh;
+      color: #173d33;
+      background: #fbf8ef;
+    }
+
+    .fraud-app-header {
+      position: relative;
+      z-index: 5;
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 42px;
+      border-bottom: 1px solid #e8e1d4;
+      background: rgba(255, 253, 247, 0.96);
+      box-shadow: 0 3px 8px rgba(92, 74, 45, 0.06);
+    }
+
+    .fraud-brand,
+    .fraud-guide-link {
+      border: 0;
+      background: transparent;
+      color: #1b2e29;
+      cursor: pointer;
+    }
+
+    .fraud-brand {
       display: inline-flex;
       align-items: center;
-      min-height: 38px;
-      margin: 0 0 12px;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: #fbf1e8;
-      color: #73431f;
-      font-weight: 750;
+      gap: 12px;
+      padding: 0;
+      font-size: 1.28rem;
     }
+
+    .fraud-brand-mark {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 3px solid #b8c78c;
+      border-radius: 50%;
+      background: #f7f4df;
+    }
+
+    .fraud-brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .fraud-guide-link {
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 4px;
+      font-weight: 700;
+    }
+
+    .fraud-guide-link .ui-icon {
+      width: 26px;
+      height: 26px;
+      color: #697c38;
+    }
+
+    .fraud-canvas {
+      position: relative;
+      min-height: calc(100dvh - 88px);
+      overflow: hidden;
+      padding: 50px 64px 66px;
+      background:
+        radial-gradient(circle at 4% 58%, rgba(190, 205, 136, 0.22) 0 7px, transparent 8px),
+        radial-gradient(circle at 94% 26%, rgba(190, 205, 136, 0.22) 0 7px, transparent 8px),
+        #fbf8ef;
+    }
+
+    .fraud-layout {
+      position: relative;
+      z-index: 2;
+      width: min(1420px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.38fr) minmax(390px, 0.92fr);
+      gap: clamp(44px, 5vw, 82px);
+      align-items: start;
+    }
+
+    .fraud-left {
+      min-width: 0;
+    }
+
+    .fraud-intro {
+      max-width: 780px;
+      padding: 4px 12px 0;
+    }
+
+    .fraud-reassurance {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 0 0 15px;
+      color: #2e332e;
+      font-size: 1.12rem;
+      font-weight: 650;
+    }
+
+    .fraud-reassurance span {
+      color: #ee8d66;
+      font-size: 2rem;
+      line-height: 1;
+      transform: rotate(-8deg);
+    }
+
     .fraud-intro h1 {
       margin: 0;
-      color: #234b3d;
-      font-size: 2.35rem;
-      line-height: 1.18;
-      letter-spacing: -0.02em;
+      color: #153e34;
+      font-size: 3.35rem;
+      line-height: 1.12;
+      letter-spacing: -0.035em;
       text-wrap: balance;
     }
+
+    .fraud-title-stroke {
+      width: min(420px, 72%);
+      height: 8px;
+      display: block;
+      margin: 13px 0 13px;
+      border-radius: 999px 45% 999px 35%;
+      background: #dce9ae;
+      transform: rotate(-1deg);
+    }
+
     .fraud-intro > p:last-child {
       max-width: 65ch;
-      margin: 14px 0 0;
-      color: #4c6258;
-      line-height: 1.7;
+      margin: 0;
+      color: #294b42;
+      font-size: 1.03rem;
+      line-height: 1.65;
       text-wrap: pretty;
     }
-    .fraud-workspace {
-      display: grid;
-      grid-template-columns: minmax(0, 1.55fr) minmax(310px, 0.85fr);
-      gap: 24px;
-      align-items: stretch;
-    }
+
     .fraud-entry {
-      padding: 26px;
+      margin-top: 24px;
+      padding: 28px 32px 30px;
       border-radius: 16px;
-      background: var(--panel);
-      box-shadow: 0 5px 8px rgba(47, 76, 63, 0.07);
+      background: #fffdfa;
+      box-shadow: 0 6px 8px rgba(88, 72, 46, 0.1);
     }
+
     .fraud-entry label {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-      color: #234b3d;
-      font-size: 1.15rem;
+      gap: 12px;
+      margin-bottom: 14px;
+      color: #173d33;
+      font-size: 1.08rem;
       font-weight: 800;
     }
-    .fraud-entry label .ui-icon { width: 27px; height: 27px; color: var(--green-dark); }
-    .fraud-entry textarea {
-      min-height: 224px;
-      border-color: #c8d5cc;
-      background: #fffdfa;
-      line-height: 1.65;
+
+    .fraud-entry label > span {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #e8f0cc;
+      color: #426f50;
     }
-    .fraud-entry textarea::placeholder { color: #66776f; opacity: 1; }
+
+    .fraud-entry label .ui-icon {
+      width: 23px;
+      height: 23px;
+    }
+
+    .fraud-entry textarea {
+      min-height: 205px;
+      border: 2px solid #e5bf91;
+      border-radius: 12px;
+      background: #fffcf7;
+      color: #263d36;
+      line-height: 1.65;
+      box-shadow: inset 0 2px 5px rgba(151, 111, 67, 0.04);
+    }
+
+    .fraud-entry textarea::placeholder {
+      color: #746f65;
+      opacity: 1;
+    }
+
     .fraud-field-help {
-      margin: 10px 0 0;
-      color: #52665c;
-      font-size: 0.9rem;
+      margin: 8px 0 0;
+      color: #5e695f;
+      font-size: 0.82rem;
       line-height: 1.55;
     }
-    .fraud-actions { margin-top: 20px; gap: 12px; }
+
+    .fraud-actions {
+      margin-top: 20px;
+      gap: 18px;
+    }
+
     .fraud-actions .btn {
       min-height: 60px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 9px;
-      padding-inline: 24px;
+      gap: 10px;
+      padding: 12px 28px;
+      border-radius: 999px;
       white-space: nowrap;
     }
-    .fraud-actions .ui-icon { width: 24px; height: 24px; }
-    .fraud-primary { box-shadow: 0 5px 0 var(--green-dark); }
-    .fraud-primary:hover { box-shadow: 0 4px 0 var(--green-dark); }
-    .fraud-sample { background: #fffaf4; border-color: #dfd5c8; }
-    .fraud-privacy {
-      display: flex;
+
+    .fraud-actions .ui-icon {
+      width: 25px;
+      height: 25px;
+    }
+
+    .fraud-primary {
+      min-width: 205px;
+      background: #397149 !important;
+      border-color: #397149 !important;
+      box-shadow: 0 5px 0 #245536;
+    }
+
+    .fraud-primary:hover {
+      background: #326541 !important;
+      box-shadow: 0 4px 0 #245536;
+    }
+
+    .fraud-sample {
+      min-width: 178px;
+      background: #fffaf3;
+      border-color: #ded3c2;
+    }
+
+    .fraud-recent {
+      width: min(540px, calc(100% - 24px));
+      min-height: 66px;
+      display: grid;
+      grid-template-columns: auto 1px 1fr auto;
+      gap: 18px;
+      align-items: center;
+      margin: 26px 12px 0;
+      padding: 10px 22px;
+      border: 1px solid #e4d8c7;
+      border-radius: 999px;
+      background: rgba(255, 252, 245, 0.9);
+      color: #263d36;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(88, 72, 46, 0.05);
+    }
+
+    .fraud-recent span,
+    .fraud-recent strong {
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin: 22px 0 0;
-      padding-top: 16px;
-      border-top: 1px solid #e3e8e3;
-      color: #53675d;
-      font-size: 0.86rem;
     }
-    .fraud-privacy .ui-icon { width: 21px; height: 21px; flex: 0 0 auto; }
+
+    .fraud-recent span {
+      color: #4e554f;
+      font-weight: 650;
+    }
+
+    .fraud-recent-divider {
+      align-self: stretch;
+      width: 1px;
+      background: #e1d6c5;
+    }
+
+    .fraud-recent .ui-icon {
+      width: 22px;
+      height: 22px;
+      color: #44745a;
+    }
+
+    .fraud-recent > .ui-icon:last-child {
+      color: #49554e;
+    }
+
     .fraud-safety {
-      overflow: hidden;
-      border: 1px solid #d4dfd4;
-      border-radius: 16px;
-      background: #edf3e8;
+      position: relative;
+      z-index: 2;
+      min-height: 650px;
+      margin-top: 80px;
+      padding: 94px 46px 70px;
+      border: 0;
+      border-radius: 7px 12px 14px 8px;
+      background: #fffdf7;
+      box-shadow: 0 8px 8px rgba(94, 77, 49, 0.14);
+      transform: rotate(-1.2deg);
     }
+
+    .fraud-paper-layer {
+      position: absolute;
+      z-index: -1;
+      inset: 12px -14px -14px 14px;
+      border-radius: 9px;
+      background: #fffaf0;
+      box-shadow: 0 5px 8px rgba(94, 77, 49, 0.08);
+      transform: rotate(1.7deg);
+    }
+
     .fraud-safety-heading {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      padding: 22px;
-      background: #f7d8bd;
-    }
-    .fraud-safety-heading > span {
-      width: 48px;
-      height: 48px;
-      flex: 0 0 auto;
+      position: absolute;
+      top: -24px;
+      left: 34px;
+      right: 74px;
+      min-height: 76px;
       display: grid;
       place-items: center;
-      border-radius: 50%;
-      background: #fff8f1;
-      color: #6d462b;
+      padding: 12px 24px;
+      border-radius: 12px;
+      background: #f7cda3;
+      box-shadow: 0 4px 6px rgba(147, 93, 47, 0.12);
+      transform: rotate(-0.7deg);
     }
-    .fraud-safety-heading .ui-icon { width: 27px; height: 27px; }
-    .fraud-safety-heading h2 { margin: 0; color: #3b3d2a; font-size: 1.28rem; }
-    .fraud-safety-heading p { margin: 6px 0 0; color: #5c5144; font-size: 0.88rem; line-height: 1.5; }
-    .fraud-safety-list { margin: 0; padding: 10px 22px 14px; list-style: none; }
+
+    .fraud-safety-heading h2 {
+      margin: 0;
+      color: #46352a;
+      font-size: 1.35rem;
+    }
+
+    .fraud-safety-heading h2 span {
+      color: #ee8d66;
+      font-size: 1.65rem;
+    }
+
+    .fraud-safety-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
     .fraud-safety-list li {
       display: grid;
-      grid-template-columns: 48px minmax(0, 1fr);
-      gap: 14px;
+      grid-template-columns: 76px minmax(0, 1fr);
+      gap: 20px;
       align-items: center;
-      padding: 18px 0;
+      min-height: 145px;
+      padding: 22px 0;
     }
-    .fraud-safety-list li + li { border-top: 1px solid #cfdccf; }
+
+    .fraud-safety-list li + li {
+      border-top: 1px dashed #d8d8a9;
+    }
+
     .fraud-safety-list li > span {
-      width: 46px;
-      height: 46px;
+      width: 72px;
+      height: 72px;
       display: grid;
       place-items: center;
       border-radius: 50%;
-      background: #fffdf7;
-      color: var(--green-dark);
+      background: #edf2cf;
+      color: #315f43;
     }
-    .fraud-safety-list .ui-icon { width: 25px; height: 25px; }
-    .fraud-safety-list strong { color: #234b3d; font-size: 1.03rem; }
-    .fraud-safety-list p { margin: 4px 0 0; color: #4e6258; font-size: 0.84rem; line-height: 1.5; }
-    .fraud-result { margin-top: 0; padding: 22px; }
 
-    @media (max-width: 1080px) {
-      .fraud-workspace { grid-template-columns: 1fr; }
-      .fraud-safety-list { display: block; }
-      .fraud-safety-list li + li { border-top: 1px solid #cfdccf; }
+    .fraud-safety-list .ui-icon {
+      width: 40px;
+      height: 40px;
+      stroke-width: 1.55;
     }
-    @media (max-width: 760px) {
-      .fraud-page { gap: 20px; padding-top: 28px; }
-      .fraud-intro h1 { font-size: 1.8rem; }
-      .fraud-workspace { gap: 18px; }
-      .fraud-entry { padding: 20px; }
-      .fraud-entry textarea { min-height: 190px; }
+
+    .fraud-safety-list strong {
+      color: #173d33;
+      font-size: 1.25rem;
     }
-    @media (max-width: 540px) {
-      .fraud-reassurance { border-radius: 12px; }
-      .fraud-actions .btn { width: 100%; }
-      .fraud-safety-heading { padding: 18px; }
-      .fraud-safety-list { padding-inline: 18px; }
+
+    .fraud-safety-list p {
+      margin: 7px 0 0;
+      color: #4f5146;
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    .fraud-paper-clip {
+      position: absolute;
+      top: 58px;
+      right: 28px;
+      width: 24px;
+      height: 66px;
+      border: 4px solid #869c52;
+      border-radius: 16px;
+      transform: rotate(24deg);
+    }
+
+    .fraud-paper-clip::after {
+      content: "";
+      position: absolute;
+      inset: 6px 5px 20px;
+      border: 2px solid #869c52;
+      border-radius: 12px;
+    }
+
+    .fraud-paper-leaf {
+      position: absolute;
+      right: 54px;
+      bottom: 28px;
+      width: 52px;
+      height: 52px;
+      color: #a8bd70;
+      transform: rotate(-20deg);
+    }
+
+    .fraud-result {
+      position: relative;
+      z-index: 3;
+      width: min(1420px, 100%);
+      margin: 36px auto 0;
+      padding: 24px;
+    }
+
+    .fraud-live-status {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .fraud-decoration {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .curve-one {
+      top: 48px;
+      left: 34px;
+      width: 34px;
+      height: 54px;
+      border: 2px solid #f0cf77;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      transform: rotate(20deg);
+    }
+
+    .curve-two {
+      right: 20px;
+      top: 45px;
+      width: 120px;
+      height: 42px;
+      border-top: 3px dashed #c6d58e;
+      border-radius: 50%;
+      transform: rotate(8deg);
+    }
+
+    .leaf-one {
+      left: -26px;
+      bottom: -34px;
+      width: 160px;
+      height: 140px;
+      border-radius: 80% 15% 80% 20%;
+      background: rgba(131, 157, 95, 0.28);
+      transform: rotate(22deg);
+    }
+
+    @media (max-width: 1240px) {
+      .fraud-canvas {
+        padding-inline: 38px;
+      }
+
+      .fraud-layout {
+        grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.85fr);
+        gap: 38px;
+      }
+
+      .fraud-intro h1 {
+        font-size: 2.9rem;
+      }
+
+      .fraud-safety {
+        padding-inline: 34px;
+      }
+    }
+
+    @media (max-width: 940px) {
+      .fraud-canvas {
+        padding: 38px 30px 56px;
+      }
+
+      .fraud-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .fraud-left,
+      .fraud-intro {
+        max-width: none;
+      }
+
+      .fraud-safety {
+        min-height: auto;
+        margin: 58px 10px 20px;
+        transform: none;
+      }
+
+      .fraud-paper-layer {
+        transform: rotate(0.8deg);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .fraud-app-header {
+        height: 72px;
+        padding: 0 18px;
+      }
+
+      .fraud-brand {
+        font-size: 1rem;
+      }
+
+      .fraud-brand-mark {
+        width: 42px;
+        height: 42px;
+      }
+
+      .fraud-guide-link {
+        font-size: 0.82rem;
+      }
+
+      .fraud-guide-link .ui-icon {
+        width: 22px;
+        height: 22px;
+      }
+
+      .fraud-canvas {
+        min-height: calc(100dvh - 72px);
+        padding: 30px 16px 44px;
+      }
+
+      .fraud-intro {
+        padding-inline: 4px;
+      }
+
+      .fraud-reassurance {
+        font-size: 0.92rem;
+      }
+
+      .fraud-intro h1 {
+        font-size: 2.1rem;
+        letter-spacing: -0.025em;
+      }
+
+      .fraud-title-stroke {
+        height: 6px;
+      }
+
+      .fraud-intro > p:last-child {
+        font-size: 0.94rem;
+      }
+
+      .fraud-entry {
+        margin-top: 20px;
+        padding: 20px 18px 22px;
+      }
+
+      .fraud-entry textarea {
+        min-height: 184px;
+      }
+
+      .fraud-actions .btn {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .fraud-recent {
+        width: 100%;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        margin: 18px 0 0;
+        padding: 12px 18px;
+        border-radius: 14px;
+      }
+
+      .fraud-recent > span:first-child,
+      .fraud-recent-divider {
+        display: none;
+      }
+
+      .fraud-safety {
+        margin-inline: 4px;
+        padding: 82px 22px 54px;
+      }
+
+      .fraud-safety-heading {
+        left: 18px;
+        right: 44px;
+      }
+
+      .fraud-safety-list li {
+        grid-template-columns: 58px minmax(0, 1fr);
+        gap: 14px;
+        min-height: 122px;
+      }
+
+      .fraud-safety-list li > span {
+        width: 56px;
+        height: 56px;
+      }
+
+      .fraud-safety-list .ui-icon {
+        width: 31px;
+        height: 31px;
+      }
+
+      .fraud-safety-list strong {
+        font-size: 1.08rem;
+      }
+
+      .fraud-paper-clip {
+        right: 18px;
+      }
+
+      .fraud-decoration {
+        display: none;
+      }
     }
 
     /* Guided tasks: one calm instruction and one clear next action. */
@@ -1859,37 +2343,57 @@
       </section>
 
       <section id="fraud" class="page fraud-page">
-        <header class="fraud-intro">
-          <p class="fraud-reassurance">先别着急，我们陪您一起看看</p>
-          <h1>查一查是不是诈骗</h1>
-          <p>把短信、聊天内容或电话里听到的话粘贴进来，我们会帮您找出可疑信号。</p>
+        <header class="fraud-app-header">
+          <button class="fraud-brand" data-page-link="chat"><span class="fraud-brand-mark"><img src="assets/qingtuan-logo.png" alt=""></span><strong>青团安全助手</strong></button>
+          <button class="fraud-guide-link" data-page-link="guide"><svg class="ui-icon"><use href="#icon-help"></use></svg>防骗小指南</button>
         </header>
 
-        <div class="fraud-workspace">
-          <div class="fraud-entry">
-            <label for="fraudText"><svg class="ui-icon" aria-hidden="true"><use href="#icon-message"></use></svg>输入可疑内容</label>
-            <textarea id="fraudText" placeholder="把内容粘贴在这里……" aria-describedby="fraudFieldHelp"></textarea>
-            <p class="fraud-field-help" id="fraudFieldHelp">不用整理格式，保留对方的原话更容易发现风险。</p>
-            <div class="actions fraud-actions">
-              <button class="btn primary fraud-primary" id="analyzeFraud"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shield"></use></svg>开始分析</button>
-              <button class="btn fraud-sample" id="fraudSample"><svg class="ui-icon" aria-hidden="true"><use href="#icon-leaf"></use></svg>试试示例</button>
-            </div>
-            <p class="fraud-privacy"><svg class="ui-icon" aria-hidden="true"><use href="#icon-privacy"></use></svg>输入内容只保存在这台设备上</p>
-          </div>
+        <div class="fraud-canvas">
+          <span class="fraud-decoration curve-one" aria-hidden="true"></span>
+          <span class="fraud-decoration curve-two" aria-hidden="true"></span>
+          <span class="fraud-decoration leaf-one" aria-hidden="true"></span>
 
-          <aside class="fraud-safety" aria-labelledby="fraudSafetyTitle">
-            <div class="fraud-safety-heading">
-              <span><svg class="ui-icon" aria-hidden="true"><use href="#icon-shield"></use></svg></span>
-              <div><h2 id="fraudSafetyTitle">先暂停，再核实</h2><p>遇到可疑信息，先记住这三件事。</p></div>
+          <div class="fraud-layout">
+            <div class="fraud-left">
+              <header class="fraud-intro">
+                <p class="fraud-reassurance">先别着急，我们陪您一起看看 <span aria-hidden="true">♡</span></p>
+                <h1>查一查是不是诈骗</h1>
+                <span class="fraud-title-stroke" aria-hidden="true"></span>
+                <p>把短信、聊天内容或电话里听到的话粘贴进来，我们会帮您找出可疑信号。</p>
+              </header>
+
+              <div class="fraud-entry">
+                <label for="fraudText"><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-message"></use></svg></span>输入可疑内容</label>
+                <textarea id="fraudText" placeholder="把内容粘贴在这里……" aria-describedby="fraudFieldHelp"></textarea>
+                <p class="fraud-field-help" id="fraudFieldHelp">不用整理格式，保留对方的原话更容易发现风险。</p>
+                <div class="actions fraud-actions">
+                  <button class="btn primary fraud-primary" id="analyzeFraud"><svg class="ui-icon" aria-hidden="true"><use href="#icon-shield"></use></svg>开始分析</button>
+                  <button class="btn fraud-sample" id="fraudSample"><svg class="ui-icon" aria-hidden="true"><use href="#icon-leaf"></use></svg>试试示例</button>
+                </div>
+              </div>
+
+              <button class="fraud-recent" data-page-link="fraud">
+                <span><svg class="ui-icon"><use href="#icon-clock"></use></svg>刚刚看过</span>
+                <span class="fraud-recent-divider" aria-hidden="true"></span>
+                <strong><svg class="ui-icon"><use href="#icon-message"></use></svg>帮我辨真假</strong>
+                <svg class="ui-icon"><use href="#icon-chevron"></use></svg>
+              </button>
             </div>
-            <ol class="fraud-safety-list">
-              <li><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-alert"></use></svg></span><div><strong>不转账</strong><p>不要向陌生账户付款。</p></div></li>
-              <li><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-privacy"></use></svg></span><div><strong>不给验证码</strong><p>验证码和密码都不能告诉别人。</p></div></li>
-              <li><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"></use></svg></span><div><strong>通过官方渠道确认</strong><p>重新拨打官方电话或到线下网点核实。</p></div></li>
-            </ol>
-          </aside>
+
+            <aside class="fraud-safety" aria-labelledby="fraudSafetyTitle">
+              <span class="fraud-paper-layer" aria-hidden="true"></span>
+              <span class="fraud-paper-clip" aria-hidden="true"></span>
+              <div class="fraud-safety-heading"><h2 id="fraudSafetyTitle">先暂停，再核实 <span aria-hidden="true">♡</span></h2></div>
+              <ol class="fraud-safety-list">
+                <li><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-alert"></use></svg></span><div><strong>不转账</strong><p>任何情况下，不向陌生账户转账。</p></div></li>
+                <li><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-privacy"></use></svg></span><div><strong>不给验证码</strong><p>验证码是账户安全钥匙，绝不提供。</p></div></li>
+                <li><span><svg class="ui-icon" aria-hidden="true"><use href="#icon-check"></use></svg></span><div><strong>通过官方渠道确认</strong><p>通过官方客服电话或 App 核实信息。</p></div></li>
+              </ol>
+              <svg class="ui-icon fraud-paper-leaf" aria-hidden="true"><use href="#icon-leaf"></use></svg>
+            </aside>
+          </div>
+          <div id="fraudResult" class="result fraud-result" style="display:none;"></div>
         </div>
-        <div id="fraudResult" class="result fraud-result" style="display:none;"></div>
       </section>
 
       <section id="familyDashboard" class="page">
@@ -2229,17 +2733,20 @@
     function showPage(id) {
       const isWelcome = id === "welcome";
       const isFamily = id === "familyDashboard";
+      const isFraud = id === "fraud";
       const app = document.querySelector(".app");
       app.classList.toggle("welcome-mode", isWelcome);
       app.classList.toggle("family-mode", isFamily);
+      app.classList.toggle("fraud-mode", isFraud);
       app.classList.toggle("elder-mode", !isWelcome && !isFamily);
       document.getElementById("sideNav").style.display = isFamily ? "flex" : "none";
-      document.getElementById("elderSidebar").style.display = !isWelcome && !isFamily ? "flex" : "none";
+      document.getElementById("elderSidebar").style.display = !isWelcome && !isFamily && !isFraud ? "flex" : "none";
       document.getElementById("welcomeMain").style.display = id === "welcome" ? "grid" : "none";
-      document.getElementById("appMain").style.display = id === "welcome" ? "none" : "grid";
+      document.getElementById("appMain").style.display = id === "welcome" ? "none" : isFraud ? "block" : "grid";
       document.getElementById("appMain").classList.toggle("elder-main", !isWelcome && !isFamily);
-      document.getElementById("status").classList.toggle("chat-hidden", id === "chat" || id === "guide");
-      document.getElementById("status").setAttribute("aria-hidden", id === "guide" ? "true" : "false");
+      document.getElementById("appMain").classList.toggle("fraud-main", isFraud);
+      document.getElementById("status").classList.toggle("chat-hidden", id === "chat" || id === "guide" || isFraud);
+      document.getElementById("status").setAttribute("aria-hidden", id === "guide" || isFraud ? "true" : "false");
       pages.forEach(page => page.classList.toggle("active", page.id === id));
       navButtons.forEach(button => button.classList.toggle("active", button.dataset.page === id));
       elderNavButtons.forEach(button => button.classList.toggle("active", button.dataset.elderPage === id));

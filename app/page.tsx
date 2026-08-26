@@ -173,7 +173,7 @@ export default function Home() {
   const [familyEvents, setFamilyEvents] = useState<FamilyEvent[]>(defaultFamilyEvents);
 
   const appClass = useMemo(() => {
-    const mode = page === "welcome" ? "welcome-mode" : page === "familyDashboard" ? "family-mode" : "elder-mode";
+    const mode = page === "welcome" ? "welcome-mode" : page === "familyDashboard" ? "family-mode" : page === "fraud" ? "elder-mode fraud-mode" : "elder-mode";
     return `app-shell font-level-${fontLevel} ${mode}`;
   }, [fontLevel, page]);
   const fraudFindings = useMemo(() => getFraudFindings(fraudText), [fraudText]);
@@ -518,7 +518,7 @@ export default function Home() {
               </nav>
               <p className="side-note">陪伴、提醒、办事与家属协同，让重要的事情更安心。</p>
             </aside>
-          ) : (
+          ) : page !== "fraud" ? (
             <aside className="elder-sidebar" aria-label="老人端导航">
               <button className="elder-brand" onClick={() => go("chat")} aria-label="进入和青团说话">
                 <span className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></span>
@@ -557,9 +557,9 @@ export default function Home() {
                 <button className="utility help" onClick={() => go("help")}><UiIcon name="alert" /><span>紧急求助</span></button>
               </div>
             </aside>
-          )}
+          ) : null}
 
-          <main className={page === "familyDashboard" ? "main family-main" : "main elder-main"}>
+          <main className={page === "familyDashboard" ? "main family-main" : page === "fraud" ? "main elder-main fraud-main" : "main elder-main"}>
 
         {page === "chat" && (
           <section className="page active chat-page">
@@ -861,63 +861,82 @@ export default function Home() {
 
         {page === "fraud" && (
           <section className="page active fraud-page">
-            <header className="fraud-intro">
-              <p className="fraud-reassurance">先别着急，我们陪您一起看看</p>
-              <h1>查一查是不是诈骗</h1>
-              <p>把短信、聊天内容或电话里听到的话粘贴进来，我们会帮您找出可疑信号。</p>
+            <header className="fraud-app-header">
+              <button className="fraud-brand" onClick={() => go("chat")}>
+                <span className="fraud-brand-mark"><img src="/brand/qingtuan-logo.png" alt="" /></span>
+                <strong>青团安全助手</strong>
+              </button>
+              <button className="fraud-guide-link" onClick={() => go("guide")}><UiIcon name="help" />防骗小指南</button>
             </header>
 
-            <div className="fraud-workspace">
-              <div className="fraud-entry">
-                <label htmlFor="fraud-text"><UiIcon name="message" />输入可疑内容</label>
-                <textarea
-                  id="fraud-text"
-                  value={fraudText}
-                  onChange={(event) => {
-                    setFraudText(event.target.value);
-                    setFraudResult("none");
-                  }}
-                  placeholder="把内容粘贴在这里……"
-                  aria-describedby="fraud-field-help"
-                />
-                <p className="fraud-field-help" id="fraud-field-help">
-                  不用整理格式，保留对方的原话更容易发现风险。
-                </p>
-                <div className="actions fraud-actions">
-                  <button className="btn primary fraud-primary" onClick={analyzeFraud}>
-                    <UiIcon name="shield" />开始分析
-                  </button>
-                  <button
-                    className="btn fraud-sample"
-                    onClick={() => {
-                      setFraudText("客服说可以退款，但要我提供短信验证码，还让我赶紧转账验证。");
-                      setFraudResult("none");
-                    }}
-                  >
-                    <UiIcon name="leaf" />试试示例
+            <div className="fraud-canvas">
+              <span className="fraud-decoration curve-one" aria-hidden="true" />
+              <span className="fraud-decoration curve-two" aria-hidden="true" />
+              <span className="fraud-decoration leaf-one" aria-hidden="true" />
+
+              <div className="fraud-layout">
+                <div className="fraud-left">
+                  <header className="fraud-intro">
+                    <p className="fraud-reassurance">先别着急，我们陪您一起看看 <span aria-hidden="true">♡</span></p>
+                    <h1>查一查是不是诈骗</h1>
+                    <span className="fraud-title-stroke" aria-hidden="true" />
+                    <p>把短信、聊天内容或电话里听到的话粘贴进来，我们会帮您找出可疑信号。</p>
+                  </header>
+
+                  <div className="fraud-entry">
+                    <label htmlFor="fraud-text"><span><UiIcon name="message" /></span>输入可疑内容</label>
+                    <textarea
+                      id="fraud-text"
+                      value={fraudText}
+                      onChange={(event) => {
+                        setFraudText(event.target.value);
+                        setFraudResult("none");
+                      }}
+                      placeholder="把内容粘贴在这里……"
+                      aria-describedby="fraud-field-help"
+                    />
+                    <p className="fraud-field-help" id="fraud-field-help">
+                      不用整理格式，保留对方的原话更容易发现风险。
+                    </p>
+                    <div className="actions fraud-actions">
+                      <button className="btn primary fraud-primary" onClick={analyzeFraud}>
+                        <UiIcon name="shield" />开始分析
+                      </button>
+                      <button
+                        className="btn fraud-sample"
+                        onClick={() => {
+                          setFraudText("客服说可以退款，但要我提供短信验证码，还让我赶紧转账验证。");
+                          setFraudResult("none");
+                        }}
+                      >
+                        <UiIcon name="leaf" />试试示例
+                      </button>
+                    </div>
+                  </div>
+
+                  <button className="fraud-recent" onClick={() => go("fraud")}>
+                    <span><UiIcon name="clock" />刚刚看过</span>
+                    <span className="fraud-recent-divider" aria-hidden="true" />
+                    <strong><UiIcon name="message" />帮我辨真假</strong>
+                    <UiIcon name="chevron" />
                   </button>
                 </div>
-                <p className="fraud-privacy"><UiIcon name="privacy" />输入内容只保存在这台设备上</p>
+
+                <aside className="fraud-safety" aria-labelledby="fraud-safety-title">
+                  <span className="fraud-paper-layer" aria-hidden="true" />
+                  <span className="fraud-paper-clip" aria-hidden="true" />
+                  <div className="fraud-safety-heading"><h2 id="fraud-safety-title">先暂停，再核实 <span aria-hidden="true">♡</span></h2></div>
+                  <ol className="fraud-safety-list">
+                    <li><span><UiIcon name="alert" /></span><div><strong>不转账</strong><p>任何情况下，不向陌生账户转账。</p></div></li>
+                    <li><span><UiIcon name="privacy" /></span><div><strong>不给验证码</strong><p>验证码是账户安全钥匙，绝不提供。</p></div></li>
+                    <li><span><UiIcon name="check" /></span><div><strong>通过官方渠道确认</strong><p>通过官方客服电话或 App 核实信息。</p></div></li>
+                  </ol>
+                  <UiIcon name="leaf" className="fraud-paper-leaf" />
+                </aside>
               </div>
 
-              <aside className="fraud-safety" aria-labelledby="fraud-safety-title">
-                <div className="fraud-safety-heading">
-                  <span><UiIcon name="shield" /></span>
-                  <div>
-                    <h2 id="fraud-safety-title">先暂停，再核实</h2>
-                    <p>遇到可疑信息，先记住这三件事。</p>
-                  </div>
-                </div>
-                <ol className="fraud-safety-list">
-                  <li><span><UiIcon name="alert" /></span><div><strong>不转账</strong><p>不要向陌生账户付款。</p></div></li>
-                  <li><span><UiIcon name="privacy" /></span><div><strong>不给验证码</strong><p>验证码和密码都不能告诉别人。</p></div></li>
-                  <li><span><UiIcon name="check" /></span><div><strong>通过官方渠道确认</strong><p>重新拨打官方电话或到线下网点核实。</p></div></li>
-                </ol>
-              </aside>
-            </div>
-
-            {fraudResult !== "none" && (
-              <div className={`result fraud-result ${fraudResult === "high" ? "high" : ""}`}>
+              {fraudResult !== "none" && (
+                <div className={`result fraud-result ${fraudResult === "high" ? "high" : ""}`}>
                 {fraudResult === "high" ? (
                   <>
                     <strong>风险等级：高</strong>
@@ -973,8 +992,10 @@ export default function Home() {
                     </ul>
                   </>
                 )}
-              </div>
-            )}
+                </div>
+              )}
+              <div className="fraud-live-status" role="status" aria-live="polite">{status}</div>
+            </div>
           </section>
         )}
 
@@ -1138,7 +1159,7 @@ export default function Home() {
           </section>
         )}
 
-        {page !== "guide" && <div className={`footer-status ${page === "health" ? "health-status" : page === "chat" ? "chat-hidden" : ""}`} role="status" aria-live="polite">{status}</div>}
+        {page !== "guide" && page !== "fraud" && <div className={`footer-status ${page === "health" ? "health-status" : page === "chat" ? "chat-hidden" : ""}`} role="status" aria-live="polite">{status}</div>}
           </main>
         </>
       )}
