@@ -1213,7 +1213,8 @@
 
     /* Fraud check: faithful to the approved warm safety-assistant concept. */
     .app.fraud-mode {
-      display: block;
+      display: grid;
+      grid-template-columns: 304px minmax(0, 1fr);
       min-height: 100dvh;
       background: #fbf8ef;
     }
@@ -1242,8 +1243,8 @@
       height: 88px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 42px;
+      justify-content: flex-end;
+      padding: 0 36px;
       border-bottom: 1px solid #e8e1d4;
       background: rgba(255, 253, 247, 0.96);
       box-shadow: 0 3px 8px rgba(92, 74, 45, 0.06);
@@ -1739,6 +1740,10 @@
     }
 
     @media (max-width: 640px) {
+      .app.fraud-mode {
+        display: block;
+      }
+
       .fraud-app-header {
         height: 72px;
         padding: 0 18px;
@@ -2320,7 +2325,6 @@
 
       <section id="fraud" class="page fraud-page">
         <header class="fraud-app-header">
-          <button class="fraud-brand" data-page-link="chat"><span class="fraud-brand-mark"><img src="assets/qingtuan-logo.png" alt=""></span><strong>青团安全助手</strong></button>
           <button class="fraud-guide-link" data-page-link="guide"><svg class="ui-icon"><use href="#icon-help"></use></svg>防骗小指南</button>
         </header>
 
@@ -2716,9 +2720,9 @@
       app.classList.toggle("fraud-mode", isFraud);
       app.classList.toggle("elder-mode", !isWelcome && !isFamily);
       document.getElementById("sideNav").style.display = isFamily ? "flex" : "none";
-      document.getElementById("elderSidebar").style.display = !isWelcome && !isFamily && !isFraud ? "flex" : "none";
+      document.getElementById("elderSidebar").style.display = !isWelcome && !isFamily ? "flex" : "none";
       document.getElementById("welcomeMain").style.display = id === "welcome" ? "grid" : "none";
-      document.getElementById("appMain").style.display = id === "welcome" ? "none" : isFraud ? "block" : "grid";
+      document.getElementById("appMain").style.display = id === "welcome" ? "none" : "grid";
       document.getElementById("appMain").classList.toggle("elder-main", !isWelcome && !isFamily);
       document.getElementById("appMain").classList.toggle("fraud-main", isFraud);
       document.getElementById("status").classList.toggle("chat-hidden", id === "chat" || id === "guide" || isFraud);

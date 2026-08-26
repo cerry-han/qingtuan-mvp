@@ -518,7 +518,7 @@ export default function Home() {
               </nav>
               <p className="side-note">陪伴、提醒、办事与家属协同，让重要的事情更安心。</p>
             </aside>
-          ) : page !== "fraud" ? (
+          ) : (
             <aside className="elder-sidebar" aria-label="老人端导航">
               <button className="elder-brand" onClick={() => go("chat")} aria-label="进入和青团说话">
                 <span className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></span>
@@ -557,7 +557,7 @@ export default function Home() {
                 <button className="utility help" onClick={() => go("help")}><UiIcon name="alert" /><span>紧急求助</span></button>
               </div>
             </aside>
-          ) : null}
+          )}
 
           <main className={page === "familyDashboard" ? "main family-main" : page === "fraud" ? "main elder-main fraud-main" : "main elder-main"}>
 
@@ -852,10 +852,6 @@ export default function Home() {
         {page === "fraud" && (
           <section className="page active fraud-page">
             <header className="fraud-app-header">
-              <button className="fraud-brand" onClick={() => go("chat")}>
-                <span className="fraud-brand-mark"><img src="/brand/qingtuan-logo.png" alt="" /></span>
-                <strong>青团安全助手</strong>
-              </button>
               <button className="fraud-guide-link" onClick={() => go("guide")}><UiIcon name="help" />防骗小指南</button>
             </header>
 
