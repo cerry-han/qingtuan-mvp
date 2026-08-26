@@ -750,15 +750,7 @@ export default function Home() {
                 <h1>健康资料整理</h1>
                 <span className="health-local-badge"><b aria-hidden="true">◇</b> 仅在本地整理</span>
               </div>
-              <p>整理检查报告、处方和测量记录，为复诊做好准备。</p>
             </header>
-
-            <div className="health-breadcrumb" aria-label="当前位置">
-              <span aria-hidden="true">⌂</span>
-              <span>健康资料</span>
-              <b aria-hidden="true">/</b>
-              <span>录入</span>
-            </div>
 
             <ol className="health-steps" aria-label="复诊摘要生成步骤">
               <li className={!healthSummary ? "active" : "done"}><span>1</span><strong>录入资料</strong></li>
