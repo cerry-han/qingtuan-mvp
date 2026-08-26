@@ -2336,10 +2336,13 @@ textarea {
 
 .fraud-page {
   position: relative;
-  display: block;
   min-height: 100dvh;
   color: #173d33;
   background: #fbf8ef;
+}
+
+.fraud-page.active {
+  display: block;
 }
 
 .fraud-app-header {
