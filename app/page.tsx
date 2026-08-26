@@ -522,7 +522,7 @@ export default function Home() {
             <aside className="elder-sidebar" aria-label="老人端导航">
               <button className="elder-brand" onClick={() => go("chat")} aria-label="进入和青团说话">
                 <span className="logo"><img src="/brand/qingtuan-logo.png" alt="" /></span>
-                <span><strong>青团智能体</strong><small><i aria-hidden="true" />青团在这里</small></span>
+                <strong>青团智能体</strong>
               </button>
 
               <nav className="elder-nav" aria-label="老人端主要功能">
@@ -565,7 +565,6 @@ export default function Home() {
           <section className="page active chat-page">
             <div className="chat-primary">
               <header className="chat-welcome">
-                <p className="gentle-status"><span aria-hidden="true" />青团在这里</p>
                 <h1>下午好，李阿姨</h1>
                 <p>今天想聊点什么，或者需要我帮您办件事？</p>
               </header>
@@ -623,7 +622,6 @@ export default function Home() {
                   <span><small>女儿</small><strong>王敏</strong></span>
                   <button onClick={() => go("family")}>联系她</button>
                 </div>
-                <p className="privacy-copy"><UiIcon name="privacy" />只有您主动分享的内容会发送给家人</p>
               </section>
             </aside>
           </section>
